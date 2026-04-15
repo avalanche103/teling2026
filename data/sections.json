@@ -1,0 +1,3314 @@
+[
+  {
+    "id": 253,
+    "name": "Шкафы электротехнические",
+    "parent": 264,
+    "external_id": "shkafy-elektrotekhnicheskie",
+    "metadata": {
+      "id": 253,
+      "name": "Шкафы электротехнические",
+      "sort": 10,
+      "code": "shkafy-elektrotekhnicheskie",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/shkafy-elektrotekhnicheskie/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resta.ssd/d7b/7hi8krrt6k0xx2ol23fou8a0tgne00h9/1_0007_close_gray.webp"
+    }
+  },
+  {
+    "id": 254,
+    "name": "Люки и комплектующие колодцев для строительства связи и энергетики",
+    "parent": 255,
+    "external_id": "lyuki-polimerno-peschanye-1964",
+    "metadata": {
+      "id": 254,
+      "name": "Люки и комплектующие колодцев для строительства связи и энергетики",
+      "sort": 12,
+      "code": "lyuki-polimerno-peschanye-1964",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/lyuki-polimerno-peschanye-1964/",
+      "level": 2,
+      "parent_id": 255,
+      "picture": "https://ssd.ru/upload/resta.ssd/3c2/50r0xyc6h2lbdphv9h9hdyi37kscg6cd/01.webp"
+    }
+  },
+  {
+    "id": 255,
+    "name": "Строительство инженерной инфраструктуры связи, энергетики, водоотведения",
+    "parent": null,
+    "external_id": "stroitelstvo-obektov-infrastruktury-svyazi",
+    "metadata": {
+      "id": 255,
+      "name": "Строительство инженерной инфраструктуры связи, энергетики, водоотведения",
+      "sort": 1,
+      "code": "stroitelstvo-obektov-infrastruktury-svyazi",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/",
+      "level": 1,
+      "parent_id": null,
+      "picture": "https://ssd.ru/upload/resta.ssd/aa5/h9qxp43ir8kp7nnpmykuqez1hun910bo/01.webp"
+    }
+  },
+  {
+    "id": 257,
+    "name": "Монтаж структурированных кабельных систем",
+    "parent": null,
+    "external_id": "stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov",
+    "metadata": {
+      "id": 257,
+      "name": "Монтаж структурированных кабельных систем",
+      "sort": 4,
+      "code": "stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/",
+      "level": 1,
+      "parent_id": null,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/c95/hx4tnsyeyx974yjzzyz6viyhth966rw8/96000_960_1/9192_.webp"
+    }
+  },
+  {
+    "id": 258,
+    "name": "Шкафы и стойки телекоммуникационные",
+    "parent": 257,
+    "external_id": "stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya",
+    "metadata": {
+      "id": 258,
+      "name": "Шкафы и стойки телекоммуникационные",
+      "sort": 1,
+      "code": "stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/",
+      "level": 2,
+      "parent_id": 257,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/027/abm3yvre54ii1aym8f5kx5itgkewd7ez/96000_960_1/SHkaf2.webp"
+    }
+  },
+  {
+    "id": 259,
+    "name": "Шкафы для системы управления дорожным движением АСУДД",
+    "parent": 257,
+    "external_id": "truby-khrizotiltsementnye-i-aksessuary",
+    "metadata": {
+      "id": 259,
+      "name": "Шкафы для системы управления дорожным движением АСУДД",
+      "sort": 11,
+      "code": "truby-khrizotiltsementnye-i-aksessuary",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/truby-khrizotiltsementnye-i-aksessuary/",
+      "level": 2,
+      "parent_id": 257,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/b78/332b6o54abka7r855ha0cry10rz0o5ew/96000_960_1/01.webp"
+    }
+  },
+  {
+    "id": 260,
+    "name": "Железобетонные смотровые устройства (колодцы) для сетей связи",
+    "parent": 255,
+    "external_id": "zhelezobetonnye-izdeliya-dlya-kabelnoy-kanalizatsii",
+    "metadata": {
+      "id": 260,
+      "name": "Железобетонные смотровые устройства (колодцы) для сетей связи",
+      "sort": 1,
+      "code": "zhelezobetonnye-izdeliya-dlya-kabelnoy-kanalizatsii",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zhelezobetonnye-izdeliya-dlya-kabelnoy-kanalizatsii/",
+      "level": 2,
+      "parent_id": 255,
+      "picture": "https://ssd.ru/upload/resta.ssd/498/kl0xhlc4l0cmvyx6puiiw3kae1nlhp1w/110101_00135_01.webp"
+    }
+  },
+  {
+    "id": 261,
+    "name": "Трубы и аксессуары различного назначения",
+    "parent": 255,
+    "external_id": "truby-dlya-kabelnoy-kanalizatsii",
+    "metadata": {
+      "id": 261,
+      "name": "Трубы и аксессуары различного назначения",
+      "sort": 11,
+      "code": "truby-dlya-kabelnoy-kanalizatsii",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/",
+      "level": 2,
+      "parent_id": 255,
+      "picture": "https://ssd.ru/upload/resta.ssd/551/seym7kwh2ja170fq3n9nk9um1vi2fdc6/P1100304_lr.webp"
+    }
+  },
+  {
+    "id": 263,
+    "name": "Электротехническое оборудование",
+    "parent": 264,
+    "external_id": "modulnoe-elektrooborudovanie",
+    "metadata": {
+      "id": 263,
+      "name": "Электротехническое оборудование",
+      "sort": 7,
+      "code": "modulnoe-elektrooborudovanie",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/modulnoe-elektrooborudovanie/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resta.ssd/22b/v4537jmeezkcjrgupqc6vkbeb4yqqig5/01.webp"
+    }
+  },
+  {
+    "id": 264,
+    "name": "Монтаж кабелей связи и энергетики",
+    "parent": null,
+    "external_id": "montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi",
+    "metadata": {
+      "id": 264,
+      "name": "Монтаж кабелей связи и энергетики",
+      "sort": 2,
+      "code": "montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/",
+      "level": 1,
+      "parent_id": null,
+      "picture": "https://ssd.ru/upload/resta.ssd/cef/sgsd1drptbn3j0jiniue22aziddeismg/01.webp"
+    }
+  },
+  {
+    "id": 265,
+    "name": "Полимерные смотровые устройства",
+    "parent": 255,
+    "external_id": "polimernye-smotrovye-ustroystva-dlya-kabelnoy-kanalizatsii",
+    "metadata": {
+      "id": 265,
+      "name": "Полимерные смотровые устройства",
+      "sort": 5,
+      "code": "polimernye-smotrovye-ustroystva-dlya-kabelnoy-kanalizatsii",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/polimernye-smotrovye-ustroystva-dlya-kabelnoy-kanalizatsii/",
+      "level": 2,
+      "parent_id": 255,
+      "picture": "https://ssd.ru/upload/resta.ssd/2d1/x8p6svhfna5ngkfuaenzqp7kertl7eal/04_1.webp"
+    }
+  },
+  {
+    "id": 267,
+    "name": "Плиты для строительства кабельной канализации",
+    "parent": 255,
+    "external_id": "plity-dlya-setey-svyazi",
+    "metadata": {
+      "id": 267,
+      "name": "Плиты для строительства кабельной канализации",
+      "sort": 6,
+      "code": "plity-dlya-setey-svyazi",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/plity-dlya-setey-svyazi/",
+      "level": 2,
+      "parent_id": 255,
+      "picture": "https://ssd.ru/upload/resta.ssd/8a0/gq6wepsdibod82x3rddfkgxpr34ppdtw/01.webp"
+    }
+  },
+  {
+    "id": 273,
+    "name": "Фундаменты бетонные и железобетонные",
+    "parent": 255,
+    "external_id": "izdeliya-dlya-obshchegrazhdanskogo-stroitelstva",
+    "metadata": {
+      "id": 273,
+      "name": "Фундаменты бетонные и железобетонные",
+      "sort": 19,
+      "code": "izdeliya-dlya-obshchegrazhdanskogo-stroitelstva",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/izdeliya-dlya-obshchegrazhdanskogo-stroitelstva/",
+      "level": 2,
+      "parent_id": 255,
+      "picture": "https://ssd.ru/upload/resta.ssd/ac5/b2j2pefi07c578nwzdn40oj0iqtg7r67/110504_00018_1_1.webp"
+    }
+  },
+  {
+    "id": 274,
+    "name": "Специальный инвентарь для монтажа кабеля",
+    "parent": 255,
+    "external_id": "spetsialnyy-inventar-dlya-svyazistov-lineyshchikov",
+    "metadata": {
+      "id": 274,
+      "name": "Специальный инвентарь для монтажа кабеля",
+      "sort": 17,
+      "code": "spetsialnyy-inventar-dlya-svyazistov-lineyshchikov",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/spetsialnyy-inventar-dlya-svyazistov-lineyshchikov/",
+      "level": 2,
+      "parent_id": 255,
+      "picture": "https://ssd.ru/upload/resta.ssd/4ad/b69rja8f060dep1dzycurwjeauwxj4nl/01.webp"
+    }
+  },
+  {
+    "id": 275,
+    "name": "Средства ограждения и оповещения",
+    "parent": 255,
+    "external_id": "sredstva-ograzhdeniya",
+    "metadata": {
+      "id": 275,
+      "name": "Средства ограждения и оповещения",
+      "sort": 18,
+      "code": "sredstva-ograzhdeniya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/sredstva-ograzhdeniya/",
+      "level": 2,
+      "parent_id": 255,
+      "picture": "https://ssd.ru/upload/resta.ssd/399/28wdhjl0f8o4tozg45aockg46mkg2wjr/untitled_1_0002_10082.webp"
+    }
+  },
+  {
+    "id": 276,
+    "name": "Кроссы и шкафы оптические",
+    "parent": 277,
+    "external_id": "stantsionnaya-storona-vols",
+    "metadata": {
+      "id": 276,
+      "name": "Кроссы и шкафы оптические",
+      "sort": 2,
+      "code": "stantsionnaya-storona-vols",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/stantsionnaya-storona-vols/",
+      "level": 2,
+      "parent_id": 277,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/464/80e9unhox9d5v10imxq01x4o8fhm8b02/96000_960_1/05_.webp"
+    }
+  },
+  {
+    "id": 277,
+    "name": "Монтаж оптических кабелей связи",
+    "parent": null,
+    "external_id": "montazh-i-izmereniya-opticheskikh-kabeley-svyazi",
+    "metadata": {
+      "id": 277,
+      "name": "Монтаж оптических кабелей связи",
+      "sort": 3,
+      "code": "montazh-i-izmereniya-opticheskikh-kabeley-svyazi",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/",
+      "level": 1,
+      "parent_id": null,
+      "picture": "https://ssd.ru/upload/resta.ssd/ee1/khqc3y3n0fi42q3ngk00lf7j0d6bsonj/5dm_2227.webp"
+    }
+  },
+  {
+    "id": 279,
+    "name": "Кабеленесущие системы",
+    "parent": 257,
+    "external_id": "kabelenesushchie-sistemy",
+    "metadata": {
+      "id": 279,
+      "name": "Кабеленесущие системы",
+      "sort": 10,
+      "code": "kabelenesushchie-sistemy",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/kabelenesushchie-sistemy/",
+      "level": 2,
+      "parent_id": 257,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/e33/55nzig30ac4sat4x0j47gyof8cadaia0/96000_960_1/01_.webp"
+    }
+  },
+  {
+    "id": 280,
+    "name": "Заземление и молниезащита",
+    "parent": 255,
+    "external_id": "zazemlenie-i-molniezashchita",
+    "metadata": {
+      "id": 280,
+      "name": "Заземление и молниезащита",
+      "sort": 21,
+      "code": "zazemlenie-i-molniezashchita",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zazemlenie-i-molniezashchita/",
+      "level": 2,
+      "parent_id": 255,
+      "picture": "https://ssd.ru/upload/resta.ssd/4f9/n1fknx27yyzuuo7mjh1gpeyq1i3je6ui/01.webp"
+    }
+  },
+  {
+    "id": 281,
+    "name": "Компоненты СКС",
+    "parent": 257,
+    "external_id": "strukturirovannye-kabelnye-sistemy",
+    "metadata": {
+      "id": 281,
+      "name": "Компоненты СКС",
+      "sort": 2,
+      "code": "strukturirovannye-kabelnye-sistemy",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/strukturirovannye-kabelnye-sistemy/",
+      "level": 2,
+      "parent_id": 257,
+      "picture": "https://ssd.ru/upload/resta.ssd/402/khofcc1c9obh5xaxp3e2b2bz3ll5iuqz/e.webp"
+    }
+  },
+  {
+    "id": 282,
+    "name": "Приборы, инструменты и аксессуары для работы ВОЛС",
+    "parent": 277,
+    "external_id": "pribory-i-instrumenty-dlya-vols",
+    "metadata": {
+      "id": 282,
+      "name": "Приборы, инструменты и аксессуары для работы ВОЛС",
+      "sort": 4,
+      "code": "pribory-i-instrumenty-dlya-vols",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/",
+      "level": 2,
+      "parent_id": 277,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/d63/9962vmd2hd6zt5lwlo7yrut1qqb2agi6/96000_960_1/01.webp"
+    }
+  },
+  {
+    "id": 283,
+    "name": "Арматура для подвески оптических кабелей",
+    "parent": 277,
+    "external_id": "armatura-dlya-podveski-opticheskikh-kabeley",
+    "metadata": {
+      "id": 283,
+      "name": "Арматура для подвески оптических кабелей",
+      "sort": 5,
+      "code": "armatura-dlya-podveski-opticheskikh-kabeley",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/",
+      "level": 2,
+      "parent_id": 277,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/2b2/zuameh4fkobhg550qalt4a6z35ez0chx/96000_960_1/01_.webp"
+    }
+  },
+  {
+    "id": 284,
+    "name": "Муфты и аксессуары для оптических кабелей",
+    "parent": 277,
+    "external_id": "mufty-dlya-opticheskikh-kabeley",
+    "metadata": {
+      "id": 284,
+      "name": "Муфты и аксессуары для оптических кабелей",
+      "sort": 1,
+      "code": "mufty-dlya-opticheskikh-kabeley",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/mufty-dlya-opticheskikh-kabeley/",
+      "level": 2,
+      "parent_id": 277,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/1eb/kmitc0m21j7mnwt05osiem81547swau8/96000_960_1/dsc_10968_.webp"
+    }
+  },
+  {
+    "id": 285,
+    "name": "Муфты для кабелей с оболочками из полиэтилена",
+    "parent": 264,
+    "external_id": "mufty-dlya-kabeley-s-obolochkami-iz-polietilena",
+    "metadata": {
+      "id": 285,
+      "name": "Муфты для кабелей с оболочками из полиэтилена",
+      "sort": 3,
+      "code": "mufty-dlya-kabeley-s-obolochkami-iz-polietilena",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-kabeley-s-obolochkami-iz-polietilena/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resta.ssd/70f/o85t689s8fq7ko2t5isspedw7yhgf53f/01.webp"
+    }
+  },
+  {
+    "id": 286,
+    "name": "Монтажные материалы для работы с электрическими кабелями связи",
+    "parent": 264,
+    "external_id": "montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi",
+    "metadata": {
+      "id": 286,
+      "name": "Монтажные материалы для работы с электрическими кабелями связи",
+      "sort": 5,
+      "code": "montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resta.ssd/fa4/ou0gy4b4s9k5gtpbo3j52ow250snglgj/IMG_6232_1.webp"
+    }
+  },
+  {
+    "id": 287,
+    "name": "Муфты для силовых кабелей",
+    "parent": 264,
+    "external_id": "termousazhivaemye-kabelnye-mufty-i-aksessuary",
+    "metadata": {
+      "id": 287,
+      "name": "Муфты для силовых кабелей",
+      "sort": 4,
+      "code": "termousazhivaemye-kabelnye-mufty-i-aksessuary",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/termousazhivaemye-kabelnye-mufty-i-aksessuary/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resta.ssd/211/oq6j13kmesj3g0jzxazf6p8msbbd3hmo/02.webp"
+    }
+  },
+  {
+    "id": 288,
+    "name": "Компоненты оптических сетей",
+    "parent": 277,
+    "external_id": "abonentskaya-storona-vols",
+    "metadata": {
+      "id": 288,
+      "name": "Компоненты оптических сетей",
+      "sort": 3,
+      "code": "abonentskaya-storona-vols",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/",
+      "level": 2,
+      "parent_id": 277,
+      "picture": "https://ssd.ru/upload/resta.ssd/909/qd3glumroex7403v9x68r3rc7ati0mye/130205_00005_1.webp"
+    }
+  },
+  {
+    "id": 291,
+    "name": "Муфты для кабелей с оболочками из свинца, алюминия или стали",
+    "parent": 264,
+    "external_id": "mufty-dlya-kabeley-s-obolochkami-iz-svintsa-alyuminiya-ili-stali",
+    "metadata": {
+      "id": 291,
+      "name": "Муфты для кабелей с оболочками из свинца, алюминия или стали",
+      "sort": 1,
+      "code": "mufty-dlya-kabeley-s-obolochkami-iz-svintsa-alyuminiya-ili-stali",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-kabeley-s-obolochkami-iz-svintsa-alyuminiya-ili-stali/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resta.ssd/6c8/p6yyi5vlq2fw6g1ntq9welf8zsdbcmvp/01.webp"
+    }
+  },
+  {
+    "id": 292,
+    "name": "Источники питания и АКБ",
+    "parent": 257,
+    "external_id": "istochniki-pitaniya",
+    "metadata": {
+      "id": 292,
+      "name": "Источники питания и АКБ",
+      "sort": 9,
+      "code": "istochniki-pitaniya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/istochniki-pitaniya/",
+      "level": 2,
+      "parent_id": 257,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/cbc/m5mcw69grf5mgxp09mlmbam0s8020xtt/96000_960_1/01_.webp"
+    }
+  },
+  {
+    "id": 293,
+    "name": "Активное сетевое оборудование",
+    "parent": 257,
+    "external_id": "aktivnoe-setevoe-oborudovanie",
+    "metadata": {
+      "id": 293,
+      "name": "Активное сетевое оборудование",
+      "sort": 8,
+      "code": "aktivnoe-setevoe-oborudovanie",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/aktivnoe-setevoe-oborudovanie/",
+      "level": 2,
+      "parent_id": 257,
+      "picture": "https://ssd.ru/upload/resta.ssd/e22/tg3bmq662vo96gzxy9wjvg9qanek77wm/01.webp"
+    }
+  },
+  {
+    "id": 294,
+    "name": "Муфты для кабелей связи на объектах РЖД",
+    "parent": 264,
+    "external_id": "mufty-dlya-zheleznykh-dorog",
+    "metadata": {
+      "id": 294,
+      "name": "Муфты для кабелей связи на объектах РЖД",
+      "sort": 2,
+      "code": "mufty-dlya-zheleznykh-dorog",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-zheleznykh-dorog/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resta.ssd/955/grab1yzc006v9kd5k3opwocwe5kmb5pj/20.webp"
+    }
+  },
+  {
+    "id": 295,
+    "name": "Арматура для подвески электрических кабелей и грозотроса",
+    "parent": 264,
+    "external_id": "chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy",
+    "metadata": {
+      "id": 295,
+      "name": "Арматура для подвески электрических кабелей и грозотроса",
+      "sort": 9,
+      "code": "chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resta.ssd/efd/z4x2fespg1l8eazzzokb0uqv9f8dmkvm/01.webp"
+    }
+  },
+  {
+    "id": 296,
+    "name": "Приборы и инструменты для работы с электрическими кабелями связи",
+    "parent": 264,
+    "external_id": "pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi",
+    "metadata": {
+      "id": 296,
+      "name": "Приборы и инструменты для работы с электрическими кабелями связи",
+      "sort": 11,
+      "code": "pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/27c/iyz75nlwxx6nqbqueq9duz9yz3ca98t5/96000_960_1/01_.webp"
+    }
+  },
+  {
+    "id": 297,
+    "name": "Оконечные устройства для электрических кабелей связи",
+    "parent": 264,
+    "external_id": "okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi",
+    "metadata": {
+      "id": 297,
+      "name": "Оконечные устройства для электрических кабелей связи",
+      "sort": 6,
+      "code": "okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru/upload/resta.ssd/345/rfonfslbq1vniznncebh5zoxhhfyw1c6/01.webp"
+    }
+  },
+  {
+    "id": 299,
+    "name": "Оптические кабели связи",
+    "parent": 277,
+    "external_id": "opticheskie-kabeli-svyazi",
+    "metadata": {
+      "id": 299,
+      "name": "Оптические кабели связи",
+      "sort": 6,
+      "code": "opticheskie-kabeli-svyazi",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/opticheskie-kabeli-svyazi/",
+      "level": 2,
+      "parent_id": 277,
+      "picture": "https://ssd.ru/upload/iblock/2d9/ydssp33j326htwimfr5j4sk8fwby1rk7/kabeli-_3_.png"
+    }
+  },
+  {
+    "id": 317,
+    "name": "Муфты оптические",
+    "parent": 284,
+    "external_id": "mufty_opticheskie",
+    "metadata": {
+      "id": 317,
+      "name": "Муфты оптические",
+      "sort": 1001,
+      "code": "mufty_opticheskie",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/mufty-dlya-opticheskikh-kabeley/mufty_opticheskie/",
+      "level": 3,
+      "parent_id": 284,
+      "picture": "https://ssd.ru/upload/resta.ssd/b94/0hubitriyjq85ycla7h6hiae03lbpij0/130103_01027_1.webp"
+    }
+  },
+  {
+    "id": 318,
+    "name": "Общие аксессуары",
+    "parent": 284,
+    "external_id": "obshchie_aksessuary",
+    "metadata": {
+      "id": 318,
+      "name": "Общие аксессуары",
+      "sort": 1002,
+      "code": "obshchie_aksessuary",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/mufty-dlya-opticheskikh-kabeley/obshchie_aksessuary/",
+      "level": 3,
+      "parent_id": 284,
+      "picture": "https://ssd.ru/upload/resta.ssd/f70/zgis2ygezq2zc97417r3riqaoqgvxi68/01.webp"
+    }
+  },
+  {
+    "id": 319,
+    "name": "Изделия для подвеса муфт и запаса кабеля",
+    "parent": 284,
+    "external_id": "izdeliya_dlya_podvesa_muft_i_zapasa_kabelya",
+    "metadata": {
+      "id": 319,
+      "name": "Изделия для подвеса муфт и запаса кабеля",
+      "sort": 1003,
+      "code": "izdeliya_dlya_podvesa_muft_i_zapasa_kabelya",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/mufty-dlya-opticheskikh-kabeley/izdeliya_dlya_podvesa_muft_i_zapasa_kabelya/",
+      "level": 3,
+      "parent_id": 284,
+      "picture": "https://ssd.ru/upload/resta.ssd/e82/xh08w8h1rv11kn600t0g796tslr3jc6c/untitled_1_0000_5dm_5095.webp"
+    }
+  },
+  {
+    "id": 320,
+    "name": "Вставки ремонтные оптические (ВРО)",
+    "parent": 284,
+    "external_id": "vstavka_vro",
+    "metadata": {
+      "id": 320,
+      "name": "Вставки ремонтные оптические (ВРО)",
+      "sort": 1004,
+      "code": "vstavka_vro",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/mufty-dlya-opticheskikh-kabeley/vstavka_vro/",
+      "level": 3,
+      "parent_id": 284,
+      "picture": "https://ssd.ru/upload/resize_cache/iblock/932/o4iwiawcu1jr4hur3inj4v47z5u6vj9y/96000_960_1/VRO_big.png"
+    }
+  },
+  {
+    "id": 321,
+    "name": "Аварийный транспортировочный кабельный комплект (АТКК)",
+    "parent": 284,
+    "external_id": "avariynyy_kabelnyy_komplekt_atkk",
+    "metadata": {
+      "id": 321,
+      "name": "Аварийный транспортировочный кабельный комплект (АТКК)",
+      "sort": 1005,
+      "code": "avariynyy_kabelnyy_komplekt_atkk",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/mufty-dlya-opticheskikh-kabeley/avariynyy_kabelnyy_komplekt_atkk/",
+      "level": 3,
+      "parent_id": 284,
+      "picture": "https://ssd.ru/upload/resta.ssd/995/b13t4e6f35qyufivkluthbccjg2trw7j/atkk_1.webp"
+    }
+  },
+  {
+    "id": 322,
+    "name": "Оптические стоечные кроссы",
+    "parent": 276,
+    "external_id": "opticheskie-stoechnye-krossy",
+    "metadata": {
+      "id": 322,
+      "name": "Оптические стоечные кроссы",
+      "sort": 1001,
+      "code": "opticheskie-stoechnye-krossy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/stantsionnaya-storona-vols/opticheskie-stoechnye-krossy/",
+      "level": 3,
+      "parent_id": 276,
+      "picture": "https://ssd.ru/upload/resta.ssd/737/b9n7lzgofu13q914b7w0tf2qhpyccxoz/1.webp"
+    }
+  },
+  {
+    "id": 323,
+    "name": "Оптические настенные кроссы",
+    "parent": 276,
+    "external_id": "opticheskie-nastennye-krossy",
+    "metadata": {
+      "id": 323,
+      "name": "Оптические настенные кроссы",
+      "sort": 1003,
+      "code": "opticheskie-nastennye-krossy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/stantsionnaya-storona-vols/opticheskie-nastennye-krossy/",
+      "level": 3,
+      "parent_id": 276,
+      "picture": "https://ssd.ru/upload/resta.ssd/950/l0rgbu0blplmaj9fcl8qsjjs9aigid9d/02_.webp"
+    }
+  },
+  {
+    "id": 324,
+    "name": "Шнуры оптические (патч-корды)",
+    "parent": 288,
+    "external_id": "shnury-opticheskie-patch-kordy",
+    "metadata": {
+      "id": 324,
+      "name": "Шнуры оптические (патч-корды)",
+      "sort": 1001,
+      "code": "shnury-opticheskie-patch-kordy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/shnury-opticheskie-patch-kordy/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru/upload/resta.ssd/cc8/c8wswdumctfugze5deg3crx3obi7zzb7/scu_scu.webp"
+    }
+  },
+  {
+    "id": 325,
+    "name": "Шнуры оптические (пигтейлы)",
+    "parent": 288,
+    "external_id": "shnury-opticheskie-pigteyly-3015",
+    "metadata": {
+      "id": 325,
+      "name": "Шнуры оптические (пигтейлы)",
+      "sort": 1002,
+      "code": "shnury-opticheskie-pigteyly-3015",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/shnury-opticheskie-pigteyly-3015/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru/upload/resta.ssd/462/dva9u0aj4djtnobddmwr8yd561iw3iu8/scu.webp"
+    }
+  },
+  {
+    "id": 326,
+    "name": "Адаптеры оптические",
+    "parent": 288,
+    "external_id": "adaptery-opticheskie-3016",
+    "metadata": {
+      "id": 326,
+      "name": "Адаптеры оптические",
+      "sort": 1003,
+      "code": "adaptery-opticheskie-3016",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/adaptery-opticheskie-3016/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru/upload/resta.ssd/909/qd3glumroex7403v9x68r3rc7ati0mye/130205_00005_1.webp"
+    }
+  },
+  {
+    "id": 327,
+    "name": "Оптические разветвители (сплиттеры)",
+    "parent": 288,
+    "external_id": "opticheskie-razvetviteli-splittery",
+    "metadata": {
+      "id": 327,
+      "name": "Оптические разветвители (сплиттеры)",
+      "sort": 1004,
+      "code": "opticheskie-razvetviteli-splittery",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/opticheskie-razvetviteli-splittery/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru/upload/resta.ssd/158/1tagowkt5v0p6n1xxzh0dt3bidhdv7kp/05.webp"
+    }
+  },
+  {
+    "id": 328,
+    "name": "Претерминированные кабельные сборки",
+    "parent": 288,
+    "external_id": "preterminirovannye-kabelnye-sborki-3018",
+    "metadata": {
+      "id": 328,
+      "name": "Претерминированные кабельные сборки",
+      "sort": 1005,
+      "code": "preterminirovannye-kabelnye-sborki-3018",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/preterminirovannye-kabelnye-sborki-3018/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru/upload/resta.ssd/a1b/qovf2s1his5adj90b7gaw7zbl0b9vo4r/1.webp"
+    }
+  },
+  {
+    "id": 329,
+    "name": "Абонентские подвесные дроп-кабели (патч-корды)",
+    "parent": 288,
+    "external_id": "abonentskie-podvesnye-drop-kabeli-patch-kordy",
+    "metadata": {
+      "id": 329,
+      "name": "Абонентские подвесные дроп-кабели (патч-корды)",
+      "sort": 1006,
+      "code": "abonentskie-podvesnye-drop-kabeli-patch-kordy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/abonentskie-podvesnye-drop-kabeli-patch-kordy/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru/upload/resta.ssd/53e/hkl797tbiq3ysndfimacy916knqqweck/P1010027.webp"
+    }
+  },
+  {
+    "id": 330,
+    "name": "Аттенюаторы оптические",
+    "parent": 288,
+    "external_id": "attenyuatory_opticheskie",
+    "metadata": {
+      "id": 330,
+      "name": "Аттенюаторы оптические",
+      "sort": 1007,
+      "code": "attenyuatory_opticheskie",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/attenyuatory_opticheskie/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru/upload/resta.ssd/a07/2807wuetnurg8n2ijfbd320quoezc578/04.webp"
+    }
+  },
+  {
+    "id": 331,
+    "name": "Механические соединители и неполируемые коннекторы",
+    "parent": 288,
+    "external_id": "mekhanicheskie_soediniteli_i_nepoliruemye_konnektory",
+    "metadata": {
+      "id": 331,
+      "name": "Механические соединители и неполируемые коннекторы",
+      "sort": 1008,
+      "code": "mekhanicheskie_soediniteli_i_nepoliruemye_konnektory",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/mekhanicheskie_soediniteli_i_nepoliruemye_konnektory/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru/upload/resta.ssd/d93/xtxc4kdsyf236ufv7am9ropkzw3r73on/01.webp"
+    }
+  },
+  {
+    "id": 335,
+    "name": "Оптические распределительные шкафы и коробки (ОРШ и ОРК)",
+    "parent": 276,
+    "external_id": "opticheskie_raspredelitelnye_shkafy_i_korobki_orsh_i_ork",
+    "metadata": {
+      "id": 335,
+      "name": "Оптические распределительные шкафы и коробки (ОРШ и ОРК)",
+      "sort": 1004,
+      "code": "opticheskie_raspredelitelnye_shkafy_i_korobki_orsh_i_ork",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/stantsionnaya-storona-vols/opticheskie_raspredelitelnye_shkafy_i_korobki_orsh_i_ork/",
+      "level": 3,
+      "parent_id": 276,
+      "picture": "https://ssd.ru/upload/resta.ssd/d41/z7zc2k1glo6sh2ii1vzz5y2y49cbdz3u/untitled_1_0006_10360.webp"
+    }
+  },
+  {
+    "id": 336,
+    "name": "Оптические кроссы высокой плотности",
+    "parent": 276,
+    "external_id": "opticheskie_krossy_vysokoy_plotnosti",
+    "metadata": {
+      "id": 336,
+      "name": "Оптические кроссы высокой плотности",
+      "sort": 1005,
+      "code": "opticheskie_krossy_vysokoy_plotnosti",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/stantsionnaya-storona-vols/opticheskie_krossy_vysokoy_plotnosti/",
+      "level": 3,
+      "parent_id": 276,
+      "picture": "https://ssd.ru/upload/resta.ssd/ef4/yziwoirkojbwf5jao0ngnb34oxiyfgyw/1_0003_Cross_2U_4_3_4_Lay_.webp"
+    }
+  },
+  {
+    "id": 337,
+    "name": "Оптические уличные кроссы",
+    "parent": 276,
+    "external_id": "optichiskie_ulichnye_krossy",
+    "metadata": {
+      "id": 337,
+      "name": "Оптические уличные кроссы",
+      "sort": 1006,
+      "code": "optichiskie_ulichnye_krossy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/stantsionnaya-storona-vols/optichiskie_ulichnye_krossy/",
+      "level": 3,
+      "parent_id": 276,
+      "picture": "https://ssd.ru/upload/resta.ssd/90a/hv6g6c01ha9lg9sikm1gxusmr1eklczz/01.webp"
+    }
+  },
+  {
+    "id": 339,
+    "name": "Тросы и комплектующие",
+    "parent": 283,
+    "external_id": "montazhnye-prisposobleniya",
+    "metadata": {
+      "id": 339,
+      "name": "Тросы и комплектующие",
+      "sort": 1007,
+      "code": "montazhnye-prisposobleniya",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/montazhnye-prisposobleniya/",
+      "level": 3,
+      "parent_id": 283,
+      "picture": "https://ssd.ru/upload/resta.ssd/4cc/yxzh19xum0ffwax3yzd5juz1mi4q42e2/005.webp"
+    }
+  },
+  {
+    "id": 340,
+    "name": "Узлы крепления",
+    "parent": 283,
+    "external_id": "uzly-krepleniya-3024",
+    "metadata": {
+      "id": 340,
+      "name": "Узлы крепления",
+      "sort": 1004,
+      "code": "uzly-krepleniya-3024",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/uzly-krepleniya-3024/",
+      "level": 3,
+      "parent_id": 283,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/0ea/qjb8b3dzn5v17x9pf3g3eslzdcmf58s8/96000_960_1/03.webp"
+    }
+  },
+  {
+    "id": 341,
+    "name": "Натяжная и поддерживающая арматура",
+    "parent": 283,
+    "external_id": "natyazhnaya-i-podderzhivayushchaya-armatura",
+    "metadata": {
+      "id": 341,
+      "name": "Натяжная и поддерживающая арматура",
+      "sort": 1005,
+      "code": "natyazhnaya-i-podderzhivayushchaya-armatura",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/natyazhnaya-i-podderzhivayushchaya-armatura/",
+      "level": 3,
+      "parent_id": 283,
+      "picture": "https://ssd.ru/upload/resta.ssd/803/535z0oft1l6gt8kjoqm56effgiofou22/001.webp"
+    }
+  },
+  {
+    "id": 342,
+    "name": "Защитная арматура",
+    "parent": 283,
+    "external_id": "zashchitnaya-armatura",
+    "metadata": {
+      "id": 342,
+      "name": "Защитная арматура",
+      "sort": 1008,
+      "code": "zashchitnaya-armatura",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/zashchitnaya-armatura/",
+      "level": 3,
+      "parent_id": 283,
+      "picture": "https://ssd.ru/upload/resta.ssd/f5d/1ecx976zdnj9thavr6f2c36gj1aoks2p/IMG_2.webp"
+    }
+  },
+  {
+    "id": 343,
+    "name": "Сцепная арматура",
+    "parent": 283,
+    "external_id": "stsepnaya-armatura-3027",
+    "metadata": {
+      "id": 343,
+      "name": "Сцепная арматура",
+      "sort": 1009,
+      "code": "stsepnaya-armatura-3027",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/stsepnaya-armatura-3027/",
+      "level": 3,
+      "parent_id": 283,
+      "picture": "https://ssd.ru/upload/resta.ssd/54e/u5o7s1zg0pku1tz88mcpu2dzvl056jog/01.webp"
+    }
+  },
+  {
+    "id": 345,
+    "name": "Инструменты для монтажа",
+    "parent": 295,
+    "external_id": "montazhnye-prisposobleniya-3030",
+    "metadata": {
+      "id": 345,
+      "name": "Инструменты для монтажа",
+      "sort": 1001,
+      "code": "montazhnye-prisposobleniya-3030",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/montazhnye-prisposobleniya-3030/",
+      "level": 3,
+      "parent_id": 295,
+      "picture": "https://ssd.ru/upload/resta.ssd/3e4/ktt29oc7njde1idid6392nl547l512u6/01.webp"
+    }
+  },
+  {
+    "id": 346,
+    "name": "Узлы крепления",
+    "parent": 295,
+    "external_id": "uzly-krepleniya-3029",
+    "metadata": {
+      "id": 346,
+      "name": "Узлы крепления",
+      "sort": 1002,
+      "code": "uzly-krepleniya-3029",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/uzly-krepleniya-3029/",
+      "level": 3,
+      "parent_id": 295,
+      "picture": "https://ssd.ru/upload/resta.ssd/f4e/nn3qyme81gs7xav1oabcllguayffqg0w/02.webp"
+    }
+  },
+  {
+    "id": 347,
+    "name": "Натяжная и поддерживающая арматура",
+    "parent": 295,
+    "external_id": "natyazhnaya-i-podderzhivayushchaya-armatura-3034",
+    "metadata": {
+      "id": 347,
+      "name": "Натяжная и поддерживающая арматура",
+      "sort": 1003,
+      "code": "natyazhnaya-i-podderzhivayushchaya-armatura-3034",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/natyazhnaya-i-podderzhivayushchaya-armatura-3034/",
+      "level": 3,
+      "parent_id": 295,
+      "picture": "https://ssd.ru/upload/resta.ssd/777/16vfadnxfjo1j4tduzhwhkm4qqpv2fge/001.webp"
+    }
+  },
+  {
+    "id": 348,
+    "name": "Защитная арматура",
+    "parent": 295,
+    "external_id": "zashchitnaya-armatura-3031",
+    "metadata": {
+      "id": 348,
+      "name": "Защитная арматура",
+      "sort": 1004,
+      "code": "zashchitnaya-armatura-3031",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/zashchitnaya-armatura-3031/",
+      "level": 3,
+      "parent_id": 295,
+      "picture": "https://ssd.ru/upload/resta.ssd/ff3/skwmtxv4ser6ddumfjpq2is506ruu5x5/01.webp"
+    }
+  },
+  {
+    "id": 349,
+    "name": "Сцепная арматура",
+    "parent": 295,
+    "external_id": "stsepnaya-armatura-3036",
+    "metadata": {
+      "id": 349,
+      "name": "Сцепная арматура",
+      "sort": 1005,
+      "code": "stsepnaya-armatura-3036",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/stsepnaya-armatura-3036/",
+      "level": 3,
+      "parent_id": 295,
+      "picture": "https://ssd.ru/upload/resta.ssd/efd/z4x2fespg1l8eazzzokb0uqv9f8dmkvm/01.webp"
+    }
+  },
+  {
+    "id": 350,
+    "name": "Изоляторы",
+    "parent": 295,
+    "external_id": "izolyatory-3035",
+    "metadata": {
+      "id": 350,
+      "name": "Изоляторы",
+      "sort": 1006,
+      "code": "izolyatory-3035",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/izolyatory-3035/",
+      "level": 3,
+      "parent_id": 295,
+      "picture": "https://ssd.ru/upload/resta.ssd/40c/prpllrsc6059cdpo9o49yuxezz5w2365/001.webp"
+    }
+  },
+  {
+    "id": 351,
+    "name": "Арматура для СИП",
+    "parent": 295,
+    "external_id": "armatura-dlya-sip-3028",
+    "metadata": {
+      "id": 351,
+      "name": "Арматура для СИП",
+      "sort": 1007,
+      "code": "armatura-dlya-sip-3028",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/armatura-dlya-sip-3028/",
+      "level": 3,
+      "parent_id": 295,
+      "picture": "https://ssd.ru/upload/resta.ssd/c61/4n4rm378y9fiveppkmet3zeau2se2tev/01.webp"
+    }
+  },
+  {
+    "id": 353,
+    "name": "Оборудование для ВЛ",
+    "parent": 295,
+    "external_id": "oborudovanie-dlya-vl-3032",
+    "metadata": {
+      "id": 353,
+      "name": "Оборудование для ВЛ",
+      "sort": 1009,
+      "code": "oborudovanie-dlya-vl-3032",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/oborudovanie-dlya-vl-3032/",
+      "level": 3,
+      "parent_id": 295,
+      "picture": "https://ssd.ru/upload/resta.ssd/80a/wt0fimv9mkyrr7ny5k8mfn4ni9t6j602/main_img_p1645421_popup_2.webp"
+    }
+  },
+  {
+    "id": 354,
+    "name": "Колодцы ЖБИ",
+    "parent": 260,
+    "external_id": "kolodtsy_kabelnye",
+    "metadata": {
+      "id": 354,
+      "name": "Колодцы ЖБИ",
+      "sort": 1002,
+      "code": "kolodtsy_kabelnye",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zhelezobetonnye-izdeliya-dlya-kabelnoy-kanalizatsii/kolodtsy_kabelnye/",
+      "level": 3,
+      "parent_id": 260,
+      "picture": "https://ssd.ru/upload/resta.ssd/a28/8nl1al301wlf8zzkpo5cnqcqwpjbymtp/01.webp"
+    }
+  },
+  {
+    "id": 405,
+    "name": "Гидроизоляционные материалы",
+    "parent": 260,
+    "external_id": "gidroizolyatsionnye_materialy",
+    "metadata": {
+      "id": 405,
+      "name": "Гидроизоляционные материалы",
+      "sort": 1004,
+      "code": "gidroizolyatsionnye_materialy",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zhelezobetonnye-izdeliya-dlya-kabelnoy-kanalizatsii/gidroizolyatsionnye_materialy/",
+      "level": 3,
+      "parent_id": 260,
+      "picture": "https://ssd.ru/upload/resta.ssd/b37/ybz8qfwmw8g4jbo6naqep04g33219x9u/001.webp"
+    }
+  },
+  {
+    "id": 406,
+    "name": "Кольца ЖБИ",
+    "parent": 260,
+    "external_id": "koltsa_zhbi",
+    "metadata": {
+      "id": 406,
+      "name": "Кольца ЖБИ",
+      "sort": 1005,
+      "code": "koltsa_zhbi",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zhelezobetonnye-izdeliya-dlya-kabelnoy-kanalizatsii/koltsa_zhbi/",
+      "level": 3,
+      "parent_id": 260,
+      "picture": "https://ssd.ru/upload/resta.ssd/765/qub32dh5bmi2p3lhajnokfn2dwbsm6kr/110301_01860_1.webp"
+    }
+  },
+  {
+    "id": 407,
+    "name": "Трубы ССД-Пайп",
+    "parent": 261,
+    "external_id": "truby_pnd_ssd_payp",
+    "metadata": {
+      "id": 407,
+      "name": "Трубы ССД-Пайп",
+      "sort": 1001,
+      "code": "truby_pnd_ssd_payp",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/truby_pnd_ssd_payp/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/230/xstbypu0tqny55rarawez1x98vky2bi8/P1100304_lr.webp"
+    }
+  },
+  {
+    "id": 408,
+    "name": "Аксессуары для труб ССД-Пайп",
+    "parent": 261,
+    "external_id": "aksessuary_dlya_trub_pnd_ssd_payp",
+    "metadata": {
+      "id": 408,
+      "name": "Аксессуары для труб ССД-Пайп",
+      "sort": 1002,
+      "code": "aksessuary_dlya_trub_pnd_ssd_payp",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/aksessuary_dlya_trub_pnd_ssd_payp/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/915/kltow3ndsf74ilzfo01amyuh0jy9cg6a/110604_00426_01.webp"
+    }
+  },
+  {
+    "id": 409,
+    "name": "Трубы хризотилцементные",
+    "parent": 261,
+    "external_id": "truby_khrizotsiltsementnye",
+    "metadata": {
+      "id": 409,
+      "name": "Трубы хризотилцементные",
+      "sort": 1003,
+      "code": "truby_khrizotsiltsementnye",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/truby_khrizotsiltsementnye/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/a4b/p5ie8stn9wj9ir4ht123x0a0uwxhzrog/01.webp"
+    }
+  },
+  {
+    "id": 410,
+    "name": "Аксессуары для х/ц труб",
+    "parent": 261,
+    "external_id": "aksessuary_dlya_kh_ts_trub",
+    "metadata": {
+      "id": 410,
+      "name": "Аксессуары для х/ц труб",
+      "sort": 1004,
+      "code": "aksessuary_dlya_kh_ts_trub",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/aksessuary_dlya_kh_ts_trub/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/73f/xfxiwj3k8twlexvbuzb42v7upruvvz7b/01.webp"
+    }
+  },
+  {
+    "id": 412,
+    "name": "Фундаменты светофоров",
+    "parent": 273,
+    "external_id": "fundamenty_svetoforov",
+    "metadata": {
+      "id": 412,
+      "name": "Фундаменты светофоров",
+      "sort": 1003,
+      "code": "fundamenty_svetoforov",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/izdeliya-dlya-obshchegrazhdanskogo-stroitelstva/fundamenty_svetoforov/",
+      "level": 3,
+      "parent_id": 273,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 413,
+    "name": "Аксессуары для фундаментов",
+    "parent": 273,
+    "external_id": "aksessuary_dlya_fundamentov",
+    "metadata": {
+      "id": 413,
+      "name": "Аксессуары для фундаментов",
+      "sort": 1002,
+      "code": "aksessuary_dlya_fundamentov",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/izdeliya-dlya-obshchegrazhdanskogo-stroitelstva/aksessuary_dlya_fundamentov/",
+      "level": 3,
+      "parent_id": 273,
+      "picture": "https://ssd.ru/upload/resta.ssd/dd2/f1n1ijetzs8bq03tunznzt0g2wl0u1lz/01.webp"
+    }
+  },
+  {
+    "id": 414,
+    "name": "Фундаменты СЦБ для РЖД",
+    "parent": 273,
+    "external_id": "fundamenty_stsb_dlya_rzhd",
+    "metadata": {
+      "id": 414,
+      "name": "Фундаменты СЦБ для РЖД",
+      "sort": 1001,
+      "code": "fundamenty_stsb_dlya_rzhd",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/izdeliya-dlya-obshchegrazhdanskogo-stroitelstva/fundamenty_stsb_dlya_rzhd/",
+      "level": 3,
+      "parent_id": 273,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 415,
+    "name": "Камеры и колодцы пластиковые",
+    "parent": 265,
+    "external_id": "kamery-i-kolodtsy-plastikovye",
+    "metadata": {
+      "id": 415,
+      "name": "Камеры и колодцы пластиковые",
+      "sort": 1001,
+      "code": "kamery-i-kolodtsy-plastikovye",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/polimernye-smotrovye-ustroystva-dlya-kabelnoy-kanalizatsii/kamery-i-kolodtsy-plastikovye/",
+      "level": 3,
+      "parent_id": 265,
+      "picture": "https://ssd.ru/upload/resta.ssd/1ca/0xb3630f7aj1xcpx32awounchd3qpuic/110104_00034_01.webp"
+    }
+  },
+  {
+    "id": 416,
+    "name": "Аксессуары для пластиковых смотровых устройств",
+    "parent": 265,
+    "external_id": "aksesuary-dlya-plastikovykh-smotrovykh-ustroystv",
+    "metadata": {
+      "id": 416,
+      "name": "Аксессуары для пластиковых смотровых устройств",
+      "sort": 1002,
+      "code": "aksesuary-dlya-plastikovykh-smotrovykh-ustroystv",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/polimernye-smotrovye-ustroystva-dlya-kabelnoy-kanalizatsii/aksesuary-dlya-plastikovykh-smotrovykh-ustroystv/",
+      "level": 3,
+      "parent_id": 265,
+      "picture": "https://ssd.ru/upload/resta.ssd/0a6/lazv5mwzts9kteee5bfrtb5yx1odsh2t/01.webp"
+    }
+  },
+  {
+    "id": 417,
+    "name": "Консоли, ерши, кронштейны",
+    "parent": 254,
+    "external_id": "konsoli-ershi-kronshteyny-3043",
+    "metadata": {
+      "id": 417,
+      "name": "Консоли, ерши, кронштейны",
+      "sort": 1005,
+      "code": "konsoli-ershi-kronshteyny-3043",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/lyuki-polimerno-peschanye-1964/konsoli-ershi-kronshteyny-3043/",
+      "level": 3,
+      "parent_id": 254,
+      "picture": "https://ssd.ru/upload/resta.ssd/586/04ojxsd9e1bgxpf9kn2zq5xt8mvkkkiu/kkch_4_1.webp"
+    }
+  },
+  {
+    "id": 418,
+    "name": "Люки колодцев",
+    "parent": 254,
+    "external_id": "lyuki-kolodtsev",
+    "metadata": {
+      "id": 418,
+      "name": "Люки колодцев",
+      "sort": 1001,
+      "code": "lyuki-kolodtsev",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/lyuki-polimerno-peschanye-1964/lyuki-kolodtsev/",
+      "level": 3,
+      "parent_id": 254,
+      "picture": "https://ssd.ru/upload/resta.ssd/3c2/50r0xyc6h2lbdphv9h9hdyi37kscg6cd/01.webp"
+    }
+  },
+  {
+    "id": 419,
+    "name": "Антивандальные запорные устройства",
+    "parent": 254,
+    "external_id": "antivandalnye-zapornye-ustroystva",
+    "metadata": {
+      "id": 419,
+      "name": "Антивандальные запорные устройства",
+      "sort": 1002,
+      "code": "antivandalnye-zapornye-ustroystva",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/lyuki-polimerno-peschanye-1964/antivandalnye-zapornye-ustroystva/",
+      "level": 3,
+      "parent_id": 254,
+      "picture": "https://ssd.ru/upload/resta.ssd/1ee/qldlralrshe9dlv24kej23g2u79fnham/01_4_.webp"
+    }
+  },
+  {
+    "id": 420,
+    "name": "Дождеприемники",
+    "parent": 254,
+    "external_id": "dozhdepriemniki",
+    "metadata": {
+      "id": 420,
+      "name": "Дождеприемники",
+      "sort": 1004,
+      "code": "dozhdepriemniki",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/lyuki-polimerno-peschanye-1964/dozhdepriemniki/",
+      "level": 3,
+      "parent_id": 254,
+      "picture": "https://ssd.ru/upload/resta.ssd/b26/fm2vzhjrun9ez690vn7yvszbqfdvb932/01.webp"
+    }
+  },
+  {
+    "id": 421,
+    "name": "Комплектующие для люков и запорных устройств",
+    "parent": 254,
+    "external_id": "aksessuary-dlya-lyukov",
+    "metadata": {
+      "id": 421,
+      "name": "Комплектующие для люков и запорных устройств",
+      "sort": 1003,
+      "code": "aksessuary-dlya-lyukov",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/lyuki-polimerno-peschanye-1964/aksessuary-dlya-lyukov/",
+      "level": 3,
+      "parent_id": 254,
+      "picture": "https://ssd.ru/upload/resta.ssd/e47/14awugab8fvjaooi0joktokz6lr36zp4/untitled_1_0000_10096.webp"
+    }
+  },
+  {
+    "id": 422,
+    "name": "Изделия для обозначения кабельных трасс",
+    "parent": 275,
+    "external_id": "izdeliya_dlya_oboznacheniya_kabelnykh_trass",
+    "metadata": {
+      "id": 422,
+      "name": "Изделия для обозначения кабельных трасс",
+      "sort": 1001,
+      "code": "izdeliya_dlya_oboznacheniya_kabelnykh_trass",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/sredstva-ograzhdeniya/izdeliya_dlya_oboznacheniya_kabelnykh_trass/",
+      "level": 3,
+      "parent_id": 275,
+      "picture": "https://ssd.ru/upload/resta.ssd/399/28wdhjl0f8o4tozg45aockg46mkg2wjr/untitled_1_0002_10082.webp"
+    }
+  },
+  {
+    "id": 423,
+    "name": "Дорожные столбики, пластины и ИДН",
+    "parent": 275,
+    "external_id": "dorozhnye_stolbiki_plastiny_i_idn",
+    "metadata": {
+      "id": 423,
+      "name": "Дорожные столбики, пластины и ИДН",
+      "sort": 1002,
+      "code": "dorozhnye_stolbiki_plastiny_i_idn",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/sredstva-ograzhdeniya/dorozhnye_stolbiki_plastiny_i_idn/",
+      "level": 3,
+      "parent_id": 275,
+      "picture": "https://ssd.ru/upload/resta.ssd/854/ubxt76vs9m164c266k285wtr7cm861j8/01.webp"
+    }
+  },
+  {
+    "id": 424,
+    "name": "Аварийные и защитные ограждения",
+    "parent": 275,
+    "external_id": "avariynye_i_zashchitnye_ograzhdeniya",
+    "metadata": {
+      "id": 424,
+      "name": "Аварийные и защитные ограждения",
+      "sort": 1003,
+      "code": "avariynye_i_zashchitnye_ograzhdeniya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/sredstva-ograzhdeniya/avariynye_i_zashchitnye_ograzhdeniya/",
+      "level": 3,
+      "parent_id": 275,
+      "picture": "https://ssd.ru/upload/resta.ssd/f75/15fnbk0y3icadcy0rpiuet369oxrbx0m/01.webp"
+    }
+  },
+  {
+    "id": 425,
+    "name": "Аксессуары для установки ограждений",
+    "parent": 275,
+    "external_id": "aksessuary_dlya_ustanovki_ograzhdeniy",
+    "metadata": {
+      "id": 425,
+      "name": "Аксессуары для установки ограждений",
+      "sort": 1004,
+      "code": "aksessuary_dlya_ustanovki_ograzhdeniy",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/sredstva-ograzhdeniya/aksessuary_dlya_ustanovki_ograzhdeniy/",
+      "level": 3,
+      "parent_id": 275,
+      "picture": "https://ssd.ru/upload/resta.ssd/598/lq26k3ycw4ixgz09mzfsc7ti2n0pw07z/8b740b111ee7615cca6b35ffc468c5e4.webp"
+    }
+  },
+  {
+    "id": 426,
+    "name": "Конусы",
+    "parent": 275,
+    "external_id": "konusy",
+    "metadata": {
+      "id": 426,
+      "name": "Конусы",
+      "sort": 1005,
+      "code": "konusy",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/sredstva-ograzhdeniya/konusy/",
+      "level": 3,
+      "parent_id": 275,
+      "picture": "https://ssd.ru/upload/resta.ssd/f90/0wvet7x3cc82u6iccf3pu3etd6lit18u/110608_00220_1.webp"
+    }
+  },
+  {
+    "id": 427,
+    "name": "Средства защиты кабеля",
+    "parent": 275,
+    "external_id": "sredstva_zashchity_kabelya",
+    "metadata": {
+      "id": 427,
+      "name": "Средства защиты кабеля",
+      "sort": 1006,
+      "code": "sredstva_zashchity_kabelya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/sredstva-ograzhdeniya/sredstva_zashchity_kabelya/",
+      "level": 3,
+      "parent_id": 275,
+      "picture": "https://ssd.ru/upload/resta.ssd/c56/i5ks0xti4f04e3hr5gn0de9z7r0n68cy/01.webp"
+    }
+  },
+  {
+    "id": 428,
+    "name": "Колодцы ЖБИ ССД-Пайп",
+    "parent": 260,
+    "external_id": "kolodtsy_zhbi_ssd_payp",
+    "metadata": {
+      "id": 428,
+      "name": "Колодцы ЖБИ ССД-Пайп",
+      "sort": 1001,
+      "code": "kolodtsy_zhbi_ssd_payp",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zhelezobetonnye-izdeliya-dlya-kabelnoy-kanalizatsii/kolodtsy_zhbi_ssd_payp/",
+      "level": 3,
+      "parent_id": 260,
+      "picture": "https://ssd.ru/upload/resta.ssd/40c/iimn765yiovtlre12zvnv04no3u3kbfy/110101_00136_01.webp"
+    }
+  },
+  {
+    "id": 429,
+    "name": "Колодцы ЖБИ ККСС",
+    "parent": 260,
+    "external_id": "kolodtsy-zhbi-kkss",
+    "metadata": {
+      "id": 429,
+      "name": "Колодцы ЖБИ ККСС",
+      "sort": 1003,
+      "code": "kolodtsy-zhbi-kkss",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zhelezobetonnye-izdeliya-dlya-kabelnoy-kanalizatsii/kolodtsy-zhbi-kkss/",
+      "level": 3,
+      "parent_id": 260,
+      "picture": "https://ssd.ru/upload/resta.ssd/9a8/o7d0mkuoc5xc2qel62cxb07eqiqvgtg4/Kolodtsy_KKSS_2.webp"
+    }
+  },
+  {
+    "id": 430,
+    "name": "Трубы со структурированной стенкой",
+    "parent": 261,
+    "external_id": "truby-pnd",
+    "metadata": {
+      "id": 430,
+      "name": "Трубы со структурированной стенкой",
+      "sort": 1005,
+      "code": "truby-pnd",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/truby-pnd/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/8fe/ts7oe800w7x6gdwxr7l4h07r85otkqu3/02.webp"
+    }
+  },
+  {
+    "id": 431,
+    "name": "Трубы ПНД технические",
+    "parent": 261,
+    "external_id": "truby-elektrotekhnicheskie",
+    "metadata": {
+      "id": 431,
+      "name": "Трубы ПНД технические",
+      "sort": 1007,
+      "code": "truby-elektrotekhnicheskie",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/truby-elektrotekhnicheskie/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/ded/34rdbkjt12h3winei5jkbgf52mgdmkd7/01.webp"
+    }
+  },
+  {
+    "id": 432,
+    "name": "Трубы ПНД напорные",
+    "parent": 261,
+    "external_id": "fittingi-i-aksessuary-dlya-elektrotekhnicheskikh-trub",
+    "metadata": {
+      "id": 432,
+      "name": "Трубы ПНД напорные",
+      "sort": 1008,
+      "code": "fittingi-i-aksessuary-dlya-elektrotekhnicheskikh-trub",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/fittingi-i-aksessuary-dlya-elektrotekhnicheskikh-trub/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/c80/30zu8sfzhsy1uzwuax0a2gt28nfzwv24/110605_00230_1.webp"
+    }
+  },
+  {
+    "id": 433,
+    "name": "Трубы ПНД ЗПТ",
+    "parent": 261,
+    "external_id": "truby_pnd_zpt",
+    "metadata": {
+      "id": 433,
+      "name": "Трубы ПНД ЗПТ",
+      "sort": 1009,
+      "code": "truby_pnd_zpt",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/truby_pnd_zpt/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/50f/kpg0mxlze9jl5mju30e7dphbazbmui3o/01.webp"
+    }
+  },
+  {
+    "id": 434,
+    "name": "Трубы электротехнические",
+    "parent": 261,
+    "external_id": "truby_elektrotekhnicheskie",
+    "metadata": {
+      "id": 434,
+      "name": "Трубы электротехнические",
+      "sort": 1011,
+      "code": "truby_elektrotekhnicheskie",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/truby_elektrotekhnicheskie/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/227/9izgsgoozw5a0gp0lt7273fngkdshlq5/07.webp"
+    }
+  },
+  {
+    "id": 435,
+    "name": "Фитинги и аксессуары для труб со структурированной стенкой",
+    "parent": 261,
+    "external_id": "fittingi-i-aksessuary-dlya-trub-pnd",
+    "metadata": {
+      "id": 435,
+      "name": "Фитинги и аксессуары для труб со структурированной стенкой",
+      "sort": 1006,
+      "code": "fittingi-i-aksessuary-dlya-trub-pnd",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/fittingi-i-aksessuary-dlya-trub-pnd/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/857/26pbuk6nf9lw0c7nwdonvpxsyc65yodq/01.webp"
+    }
+  },
+  {
+    "id": 436,
+    "name": "Фитинги и аксессуары для труб ПНД",
+    "parent": 261,
+    "external_id": "fitingi_i_aksessuary_dlya_trub_pnd",
+    "metadata": {
+      "id": 436,
+      "name": "Фитинги и аксессуары для труб ПНД",
+      "sort": 1010,
+      "code": "fitingi_i_aksessuary_dlya_trub_pnd",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/fitingi_i_aksessuary_dlya_trub_pnd/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resta.ssd/0c6/kbrw6g8zr42meopx907lzdhl1fswgfqt/untitled_1_0002_10089.webp"
+    }
+  },
+  {
+    "id": 437,
+    "name": "Аксессуары для электротехнических труб",
+    "parent": 261,
+    "external_id": "aksessuary_dlya_elektrotekhnicheskikh_trub",
+    "metadata": {
+      "id": 437,
+      "name": "Аксессуары для электротехнических труб",
+      "sort": 1012,
+      "code": "aksessuary_dlya_elektrotekhnicheskikh_trub",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/aksessuary_dlya_elektrotekhnicheskikh_trub/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 438,
+    "name": "Муфты свинцовые",
+    "parent": 291,
+    "external_id": "mufty_svintsovye",
+    "metadata": {
+      "id": 438,
+      "name": "Муфты свинцовые",
+      "sort": 1001,
+      "code": "mufty_svintsovye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-kabeley-s-obolochkami-iz-svintsa-alyuminiya-ili-stali/mufty_svintsovye/",
+      "level": 3,
+      "parent_id": 291,
+      "picture": "https://ssd.ru/upload/resta.ssd/441/njfijufnrj4v7mprbiuv5hw2xq2vqp3r/01.webp"
+    }
+  },
+  {
+    "id": 439,
+    "name": "Муфты-трубы",
+    "parent": 291,
+    "external_id": "mufty_truby",
+    "metadata": {
+      "id": 439,
+      "name": "Муфты-трубы",
+      "sort": 1002,
+      "code": "mufty_truby",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-kabeley-s-obolochkami-iz-svintsa-alyuminiya-ili-stali/mufty_truby/",
+      "level": 3,
+      "parent_id": 291,
+      "picture": "https://ssd.ru/upload/resta.ssd/953/zosy8jkkfai36s0cxeets45361dd3l6p/1.webp"
+    }
+  },
+  {
+    "id": 440,
+    "name": "Ремонтные комплекты",
+    "parent": 291,
+    "external_id": "remontnye_komplekty",
+    "metadata": {
+      "id": 440,
+      "name": "Ремонтные комплекты",
+      "sort": 1003,
+      "code": "remontnye_komplekty",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-kabeley-s-obolochkami-iz-svintsa-alyuminiya-ili-stali/remontnye_komplekty/",
+      "level": 3,
+      "parent_id": 291,
+      "picture": "https://ssd.ru/upload/resta.ssd/58a/r5p7aqw5l2qwi79j69i03qdpest0hsbn/02.webp"
+    }
+  },
+  {
+    "id": 442,
+    "name": "Аксессуары для свинцовых муфт",
+    "parent": 291,
+    "external_id": "aksessuary_dlya_svintsovykh_muft",
+    "metadata": {
+      "id": 442,
+      "name": "Аксессуары для свинцовых муфт",
+      "sort": 1005,
+      "code": "aksessuary_dlya_svintsovykh_muft",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-kabeley-s-obolochkami-iz-svintsa-alyuminiya-ili-stali/aksessuary_dlya_svintsovykh_muft/",
+      "level": 3,
+      "parent_id": 291,
+      "picture": "https://ssd.ru/upload/resta.ssd/c02/s8fht5znsxg0c9nnmson2cqk2xwad3h2/1.webp"
+    }
+  },
+  {
+    "id": 443,
+    "name": "Муфты свинцовые для ЖД",
+    "parent": 294,
+    "external_id": "mufty_svintsovye_dlya_zhd",
+    "metadata": {
+      "id": 443,
+      "name": "Муфты свинцовые для ЖД",
+      "sort": 1001,
+      "code": "mufty_svintsovye_dlya_zhd",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-zheleznykh-dorog/mufty_svintsovye_dlya_zhd/",
+      "level": 3,
+      "parent_id": 294,
+      "picture": "https://ssd.ru/upload/resta.ssd/46f/qx02vlte43cf33fr8huiwlfct7vk1990/1.webp"
+    }
+  },
+  {
+    "id": 444,
+    "name": "Муфты термоусаживаемые для ЖД",
+    "parent": 294,
+    "external_id": "mufty_termousazhivaemye_dlya_zhd",
+    "metadata": {
+      "id": 444,
+      "name": "Муфты термоусаживаемые для ЖД",
+      "sort": 1002,
+      "code": "mufty_termousazhivaemye_dlya_zhd",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-zheleznykh-dorog/mufty_termousazhivaemye_dlya_zhd/",
+      "level": 3,
+      "parent_id": 294,
+      "picture": "https://ssd.ru/upload/resta.ssd/237/iz66xt2bxxb23pgr01h5kcstfcqxe7tp/01.webp"
+    }
+  },
+  {
+    "id": 445,
+    "name": "Муфты полиэтиленовые защитные",
+    "parent": 294,
+    "external_id": "mufty_polietilenovye_zashchitnye",
+    "metadata": {
+      "id": 445,
+      "name": "Муфты полиэтиленовые защитные",
+      "sort": 1003,
+      "code": "mufty_polietilenovye_zashchitnye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-zheleznykh-dorog/mufty_polietilenovye_zashchitnye/",
+      "level": 3,
+      "parent_id": 294,
+      "picture": "https://ssd.ru/upload/resta.ssd/3e2/pg4jjlmgx2qcqyqq3v0awjclfkycenv5/01.webp"
+    }
+  },
+  {
+    "id": 446,
+    "name": "Муфты газонепроницаемые (ГМВИ)",
+    "parent": 294,
+    "external_id": "mufty_gmvi",
+    "metadata": {
+      "id": 446,
+      "name": "Муфты газонепроницаемые (ГМВИ)",
+      "sort": 1004,
+      "code": "mufty_gmvi",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-zheleznykh-dorog/mufty_gmvi/",
+      "level": 3,
+      "parent_id": 294,
+      "picture": "https://ssd.ru/upload/resta.ssd/6d1/asya9fpatsn01ez9bxabcjvm25wahzb1/100.webp"
+    }
+  },
+  {
+    "id": 447,
+    "name": "Муфты полиэтиленовые для кабелей типа ТПП",
+    "parent": 285,
+    "external_id": "mufty_mpp_i_mrp",
+    "metadata": {
+      "id": 447,
+      "name": "Муфты полиэтиленовые для кабелей типа ТПП",
+      "sort": 1001,
+      "code": "mufty_mpp_i_mrp",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-kabeley-s-obolochkami-iz-polietilena/mufty_mpp_i_mrp/",
+      "level": 3,
+      "parent_id": 285,
+      "picture": "https://ssd.ru/upload/resta.ssd/987/oclmyu5iu6t1ndpk2k1uvus0kyzty2yk/01.webp"
+    }
+  },
+  {
+    "id": 449,
+    "name": "Муфты полиэтиленовые для кабелей КСПП, ЗКП, ЗКВ",
+    "parent": 285,
+    "external_id": "mufty_polietilenovye_dlya_kabeley_kspp_zkp_zkv",
+    "metadata": {
+      "id": 449,
+      "name": "Муфты полиэтиленовые для кабелей КСПП, ЗКП, ЗКВ",
+      "sort": 1003,
+      "code": "mufty_polietilenovye_dlya_kabeley_kspp_zkp_zkv",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-kabeley-s-obolochkami-iz-polietilena/mufty_polietilenovye_dlya_kabeley_kspp_zkp_zkv/",
+      "level": 3,
+      "parent_id": 285,
+      "picture": "https://ssd.ru/upload/resta.ssd/ca4/jgdppjm89c1pd6gwsunc5z0qgcx2gxoj/01_0.webp"
+    }
+  },
+  {
+    "id": 450,
+    "name": "Муфты компрессионные и термоусаживаемые для кабелей ТПП",
+    "parent": 285,
+    "external_id": "mufty_kompressionnye_i_termousazhivaemye_dlya_kabeley_tpp",
+    "metadata": {
+      "id": 450,
+      "name": "Муфты компрессионные и термоусаживаемые для кабелей ТПП",
+      "sort": 1002,
+      "code": "mufty_kompressionnye_i_termousazhivaemye_dlya_kabeley_tpp",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-kabeley-s-obolochkami-iz-polietilena/mufty_kompressionnye_i_termousazhivaemye_dlya_kabeley_tpp/",
+      "level": 3,
+      "parent_id": 285,
+      "picture": "https://ssd.ru/upload/resta.ssd/d89/e5gam1jfhw21gpwifn2h0twse1661h0z/01.webp"
+    }
+  },
+  {
+    "id": 451,
+    "name": "Кабельные муфты",
+    "parent": 287,
+    "external_id": "kabelnye_mufty",
+    "metadata": {
+      "id": 451,
+      "name": "Кабельные муфты",
+      "sort": 1001,
+      "code": "kabelnye_mufty",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/termousazhivaemye-kabelnye-mufty-i-aksessuary/kabelnye_mufty/",
+      "level": 3,
+      "parent_id": 287,
+      "picture": "https://ssd.ru/upload/resta.ssd/84f/aeuqn2i02tffeok2h46v2q3rd2gu6vj6/01.webp"
+    }
+  },
+  {
+    "id": 453,
+    "name": "Муфты кабельные универсальные для ЖД",
+    "parent": 294,
+    "external_id": "mufty_kabelnye_universalnye_dlya_zhd",
+    "metadata": {
+      "id": 453,
+      "name": "Муфты кабельные универсальные для ЖД",
+      "sort": 1005,
+      "code": "mufty_kabelnye_universalnye_dlya_zhd",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/mufty-dlya-zheleznykh-dorog/mufty_kabelnye_universalnye_dlya_zhd/",
+      "level": 3,
+      "parent_id": 294,
+      "picture": "https://ssd.ru/upload/resta.ssd/47b/0oy3os7e9h30a185soonygfdk47dv93b/2.2.1005.webp"
+    }
+  },
+  {
+    "id": 454,
+    "name": "Ленты монтажные",
+    "parent": 286,
+    "external_id": "lenty_montazhnye",
+    "metadata": {
+      "id": 454,
+      "name": "Ленты монтажные",
+      "sort": 1001,
+      "code": "lenty_montazhnye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/lenty_montazhnye/",
+      "level": 3,
+      "parent_id": 286,
+      "picture": "https://ssd.ru/upload/resta.ssd/6ad/yu8udqmtiorjbt1igirvdd5yb3ez8ub4/IMG_6232_1.webp"
+    }
+  },
+  {
+    "id": 455,
+    "name": "Термоусаживаемые компоненты",
+    "parent": 286,
+    "external_id": "termousazhivaemye_komponenty",
+    "metadata": {
+      "id": 455,
+      "name": "Термоусаживаемые компоненты",
+      "sort": 1003,
+      "code": "termousazhivaemye_komponenty",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/termousazhivaemye_komponenty/",
+      "level": 3,
+      "parent_id": 286,
+      "picture": "https://ssd.ru/upload/resta.ssd/f03/8p7ec55tswbumhb288worbz41c4lcdi4/40_12_1.webp"
+    }
+  },
+  {
+    "id": 457,
+    "name": "Соединители для медных жил",
+    "parent": 286,
+    "external_id": "soediniteli_dlya_mednykh_zhil",
+    "metadata": {
+      "id": 457,
+      "name": "Соединители для медных жил",
+      "sort": 1004,
+      "code": "soediniteli_dlya_mednykh_zhil",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/soediniteli_dlya_mednykh_zhil/",
+      "level": 3,
+      "parent_id": 286,
+      "picture": "https://ssd.ru/upload/resta.ssd/d53/68ubykdiuuc04a339xfveudxb9tx5352/04.webp"
+    }
+  },
+  {
+    "id": 458,
+    "name": "Изделия для заземления кабелей",
+    "parent": 286,
+    "external_id": "izdeliya_dlya_zazemleniya_kabeley",
+    "metadata": {
+      "id": 458,
+      "name": "Изделия для заземления кабелей",
+      "sort": 1006,
+      "code": "izdeliya_dlya_zazemleniya_kabeley",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/izdeliya_dlya_zazemleniya_kabeley/",
+      "level": 3,
+      "parent_id": 286,
+      "picture": "https://ssd.ru/upload/resta.ssd/3f9/joony3v3220w2zvawseumbma7n8a5sxe/01.webp"
+    }
+  },
+  {
+    "id": 459,
+    "name": "Пайка и изолирование скруток",
+    "parent": 286,
+    "external_id": "payka_i_izolirovanie_skrutok",
+    "metadata": {
+      "id": 459,
+      "name": "Пайка и изолирование скруток",
+      "sort": 1007,
+      "code": "payka_i_izolirovanie_skrutok",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/payka_i_izolirovanie_skrutok/",
+      "level": 3,
+      "parent_id": 286,
+      "picture": "https://ssd.ru/upload/resta.ssd/39f/48sx6pef3f9ewu30mma7e2655r5wkc02/03.webp"
+    }
+  },
+  {
+    "id": 460,
+    "name": "Расходные материалы для монтажа и разделки кабеля",
+    "parent": 286,
+    "external_id": "raskhodnye_materialy_dlya_montazha_i_razdelki_kabelya",
+    "metadata": {
+      "id": 460,
+      "name": "Расходные материалы для монтажа и разделки кабеля",
+      "sort": 1008,
+      "code": "raskhodnye_materialy_dlya_montazha_i_razdelki_kabelya",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/raskhodnye_materialy_dlya_montazha_i_razdelki_kabelya/",
+      "level": 3,
+      "parent_id": 286,
+      "picture": "https://ssd.ru/upload/resta.ssd/6dd/j9wwfi56y64w1tsb901y2zjm1b5f3tff/01_1.webp"
+    }
+  },
+  {
+    "id": 461,
+    "name": "Хомуты",
+    "parent": 286,
+    "external_id": "khomuty",
+    "metadata": {
+      "id": 461,
+      "name": "Хомуты",
+      "sort": 1009,
+      "code": "khomuty",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/montazhnye-materialy-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/khomuty/",
+      "level": 3,
+      "parent_id": 286,
+      "picture": "https://ssd.ru/upload/resta.ssd/8a2/0zvn514xvhajaww7emiukg4eb8bunft8/02.webp"
+    }
+  },
+  {
+    "id": 462,
+    "name": "Шкафы кроссовые",
+    "parent": 297,
+    "external_id": "shkafy_krossovye",
+    "metadata": {
+      "id": 462,
+      "name": "Шкафы кроссовые",
+      "sort": 1001,
+      "code": "shkafy_krossovye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/shkafy_krossovye/",
+      "level": 3,
+      "parent_id": 297,
+      "picture": "https://ssd.ru/upload/resta.ssd/1fb/a4h2cmk8x2dodiolgf2ufqqj4jlrd6tc/03.webp"
+    }
+  },
+  {
+    "id": 463,
+    "name": "Плинты телефонные",
+    "parent": 297,
+    "external_id": "plinty",
+    "metadata": {
+      "id": 463,
+      "name": "Плинты телефонные",
+      "sort": 1002,
+      "code": "plinty",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/plinty/",
+      "level": 3,
+      "parent_id": 297,
+      "picture": "https://ssd.ru/upload/resta.ssd/345/arndd1dytij07ww9zj7527pgl22h77nq/01.webp"
+    }
+  },
+  {
+    "id": 464,
+    "name": "Боксы, рамки и несущие для плинтов",
+    "parent": 297,
+    "external_id": "boksy_ramki_i_nesushchie_dlya_plintov",
+    "metadata": {
+      "id": 464,
+      "name": "Боксы, рамки и несущие для плинтов",
+      "sort": 1003,
+      "code": "boksy_ramki_i_nesushchie_dlya_plintov",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/boksy_ramki_i_nesushchie_dlya_plintov/",
+      "level": 3,
+      "parent_id": 297,
+      "picture": "https://ssd.ru/upload/resta.ssd/02f/lic3o3n9104pm13feqpgnl2k6c1rlauc/04.webp"
+    }
+  },
+  {
+    "id": 465,
+    "name": "Ящики кабельные",
+    "parent": 297,
+    "external_id": "yashchiki_kabelnye",
+    "metadata": {
+      "id": 465,
+      "name": "Ящики кабельные",
+      "sort": 1004,
+      "code": "yashchiki_kabelnye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/yashchiki_kabelnye/",
+      "level": 3,
+      "parent_id": 297,
+      "picture": "https://ssd.ru/upload/resta.ssd/59a/57lqqsbtx3rkv4zbyy8ra7q362r50wg6/03.webp"
+    }
+  },
+  {
+    "id": 466,
+    "name": "Шкафы распределительные",
+    "parent": 297,
+    "external_id": "shkafy_raspredelitelnye",
+    "metadata": {
+      "id": 466,
+      "name": "Шкафы распределительные",
+      "sort": 1005,
+      "code": "shkafy_raspredelitelnye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/shkafy_raspredelitelnye/",
+      "level": 3,
+      "parent_id": 297,
+      "picture": "https://ssd.ru/upload/resta.ssd/1ff/ay537ep4ffsj4y0gu09vhzwnvw0notbp/03.webp"
+    }
+  },
+  {
+    "id": 467,
+    "name": "Коробки телефонные",
+    "parent": 297,
+    "external_id": "korobki_telefonnye",
+    "metadata": {
+      "id": 467,
+      "name": "Коробки телефонные",
+      "sort": 1006,
+      "code": "korobki_telefonnye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/korobki_telefonnye/",
+      "level": 3,
+      "parent_id": 297,
+      "picture": "https://ssd.ru/upload/resta.ssd/dc2/rhxw0frnnefkd1qow7h3x3401b0euw8s/01.webp"
+    }
+  },
+  {
+    "id": 468,
+    "name": "Боксы телефонные БММ",
+    "parent": 297,
+    "external_id": "boksy_bmm",
+    "metadata": {
+      "id": 468,
+      "name": "Боксы телефонные БММ",
+      "sort": 1008,
+      "code": "boksy_bmm",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/boksy_bmm/",
+      "level": 3,
+      "parent_id": 297,
+      "picture": "https://ssd.ru/upload/resta.ssd/cb0/4mxt59358gmsr4vhigxiszxq8xx0408m/01.webp"
+    }
+  },
+  {
+    "id": 469,
+    "name": "Модули абонентского ввода",
+    "parent": 297,
+    "external_id": "moduli_abonentskogo_vvoda",
+    "metadata": {
+      "id": 469,
+      "name": "Модули абонентского ввода",
+      "sort": 1009,
+      "code": "moduli_abonentskogo_vvoda",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/moduli_abonentskogo_vvoda/",
+      "level": 3,
+      "parent_id": 297,
+      "picture": "https://ssd.ru/upload/resta.ssd/acc/qzw7r85c68md4884748f5gczwd59e8p4/01.webp"
+    }
+  },
+  {
+    "id": 470,
+    "name": "Фурнитура для телефонии",
+    "parent": 297,
+    "external_id": "furnitura_dlya_telefonii",
+    "metadata": {
+      "id": 470,
+      "name": "Фурнитура для телефонии",
+      "sort": 1010,
+      "code": "furnitura_dlya_telefonii",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/okonechnye-ustroystva-dlya-elektricheskikh-kabeley-svyazi/furnitura_dlya_telefonii/",
+      "level": 3,
+      "parent_id": 297,
+      "picture": "https://ssd.ru/upload/resta.ssd/86b/vk3h9saxg3fszwd2lniijcnkibayj7dt/03.webp"
+    }
+  },
+  {
+    "id": 471,
+    "name": "Трассо-дефектоискатели",
+    "parent": 296,
+    "external_id": "trasso_defektoiskateli",
+    "metadata": {
+      "id": 471,
+      "name": "Трассо-дефектоискатели",
+      "sort": 1001,
+      "code": "trasso_defektoiskateli",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/trasso_defektoiskateli/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/51d/bupgc9znqhfpu5g75gg2w1h61jnsme1r/01.webp"
+    }
+  },
+  {
+    "id": 472,
+    "name": "Маркеры и маркероискатели",
+    "parent": 296,
+    "external_id": "markery_i_markeroiskateli",
+    "metadata": {
+      "id": 472,
+      "name": "Маркеры и маркероискатели",
+      "sort": 1002,
+      "code": "markery_i_markeroiskateli",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/markery_i_markeroiskateli/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/c34/fsgxjq9o2v8qeitmaacv67trk9bcpafu/P1077646_.webp"
+    }
+  },
+  {
+    "id": 473,
+    "name": "Металлоискатели",
+    "parent": 296,
+    "external_id": "metalloiskateli",
+    "metadata": {
+      "id": 473,
+      "name": "Металлоискатели",
+      "sort": 1003,
+      "code": "metalloiskateli",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/metalloiskateli/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/edd/oaltr3wsqsytp441b9yry1nvsixagnxw/01.webp"
+    }
+  },
+  {
+    "id": 474,
+    "name": "Приборы для поиска и тестирования телефонных пар",
+    "parent": 296,
+    "external_id": "pribory_dlya_poiska_i_testirovaniya_telefonnykh_par",
+    "metadata": {
+      "id": 474,
+      "name": "Приборы для поиска и тестирования телефонных пар",
+      "sort": 1004,
+      "code": "pribory_dlya_poiska_i_testirovaniya_telefonnykh_par",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/pribory_dlya_poiska_i_testirovaniya_telefonnykh_par/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/625/mqpcow8jo6z32hiod299ep14zkx9jt1b/untitled_2.webp"
+    }
+  },
+  {
+    "id": 475,
+    "name": "Приборы для кабельных линий",
+    "parent": 296,
+    "external_id": "pribory_dlya_kabelnykh_liniy",
+    "metadata": {
+      "id": 475,
+      "name": "Приборы для кабельных линий",
+      "sort": 1005,
+      "code": "pribory_dlya_kabelnykh_liniy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/pribory_dlya_kabelnykh_liniy/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/d23/581iiwbdij2yfazpcmx7bvuwhol56py9/01.webp"
+    }
+  },
+  {
+    "id": 476,
+    "name": "Приборы для кабельных сетей",
+    "parent": 296,
+    "external_id": "pribory_dlya_kabelnykh_setey",
+    "metadata": {
+      "id": 476,
+      "name": "Приборы для кабельных сетей",
+      "sort": 1006,
+      "code": "pribory_dlya_kabelnykh_setey",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/pribory_dlya_kabelnykh_setey/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/0a4/dx6sqm4q3b9xy2v7s120pjnponqsrowe/01.webp"
+    }
+  },
+  {
+    "id": 477,
+    "name": "Приборы для СКС",
+    "parent": 296,
+    "external_id": "pribory_dlya_sks",
+    "metadata": {
+      "id": 477,
+      "name": "Приборы для СКС",
+      "sort": 1007,
+      "code": "pribory_dlya_sks",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/pribory_dlya_sks/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/05c/xdvoi581ehwfvy50i5ucca7erstoyx0h/01.webp"
+    }
+  },
+  {
+    "id": 479,
+    "name": "Приборы электроизмерительные",
+    "parent": 296,
+    "external_id": "pribory_elektroizmeritelnye",
+    "metadata": {
+      "id": 479,
+      "name": "Приборы электроизмерительные",
+      "sort": 1009,
+      "code": "pribory_elektroizmeritelnye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/pribory_elektroizmeritelnye/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/8c0/hathnuvmxbdukahak8xw0q84cl3z24sv/01.webp"
+    }
+  },
+  {
+    "id": 480,
+    "name": "Средства защиты и малой механизации",
+    "parent": 296,
+    "external_id": "sredstva_zashchity_i_maloy_mekhanizatsii",
+    "metadata": {
+      "id": 480,
+      "name": "Средства защиты и малой механизации",
+      "sort": 1010,
+      "code": "sredstva_zashchity_i_maloy_mekhanizatsii",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/sredstva_zashchity_i_maloy_mekhanizatsii/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/cc7/a0pphtxpq7vxdqizvull8zl5df32h0s6/02.webp"
+    }
+  },
+  {
+    "id": 481,
+    "name": "Приборы для проверки аккумуляторных батарей",
+    "parent": 296,
+    "external_id": "pribory_dlya_proverki_akkumulyatornykh_batarey",
+    "metadata": {
+      "id": 481,
+      "name": "Приборы для проверки аккумуляторных батарей",
+      "sort": 1011,
+      "code": "pribory_dlya_proverki_akkumulyatornykh_batarey",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/pribory_dlya_proverki_akkumulyatornykh_batarey/",
+      "level": 3,
+      "parent_id": 296,
+      "picture": "https://ssd.ru/upload/resta.ssd/51d/7q5rfmbi477kv7se2am9m01332lsczj2/1.webp"
+    }
+  },
+  {
+    "id": 482,
+    "name": "Инструменты для работы с кабелем",
+    "parent": 264,
+    "external_id": "instrumenty_dlya_raboty_s_kabelem",
+    "metadata": {
+      "id": 482,
+      "name": "Инструменты для работы с кабелем",
+      "sort": 13,
+      "code": "instrumenty_dlya_raboty_s_kabelem",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/",
+      "level": 2,
+      "parent_id": 264,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 483,
+    "name": "Наборы инструментов",
+    "parent": 482,
+    "external_id": "nabory_instrumentov",
+    "metadata": {
+      "id": 483,
+      "name": "Наборы инструментов",
+      "sort": 1001,
+      "code": "nabory_instrumentov",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/nabory_instrumentov/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru/upload/resta.ssd/a64/fixses3npcy3q3ssy2e9vp1oz68618iw/SK_51_popup_1_.webp"
+    }
+  },
+  {
+    "id": 484,
+    "name": "Отвертки",
+    "parent": 482,
+    "external_id": "otvertki",
+    "metadata": {
+      "id": 484,
+      "name": "Отвертки",
+      "sort": 1002,
+      "code": "otvertki",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/otvertki/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru/upload/resta.ssd/3cb/ixcw6ggrgrsjivutp8bodbmbcbn9hh13/1.webp"
+    }
+  },
+  {
+    "id": 485,
+    "name": "Инструмент для работы с оптическим кабелем",
+    "parent": 282,
+    "external_id": "instrument_dlya_raboty_s_opticheskim_kabelem",
+    "metadata": {
+      "id": 485,
+      "name": "Инструмент для работы с оптическим кабелем",
+      "sort": 1001,
+      "code": "instrument_dlya_raboty_s_opticheskim_kabelem",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/instrument_dlya_raboty_s_opticheskim_kabelem/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/02d/0cj4y8afhxtyou2qx026obnlg892jy2x/sk_55.webp"
+    }
+  },
+  {
+    "id": 486,
+    "name": "Аксессуары для работы с волокном",
+    "parent": 282,
+    "external_id": "aksessuary_dlya_raboty_s_voloknom",
+    "metadata": {
+      "id": 486,
+      "name": "Аксессуары для работы с волокном",
+      "sort": 1002,
+      "code": "aksessuary_dlya_raboty_s_voloknom",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/aksessuary_dlya_raboty_s_voloknom/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/48b/yz3z1irq45hl22uxij3bod2aja52tw4s/SK_VOLS_5_PRO_2023_1_popup.webp"
+    }
+  },
+  {
+    "id": 487,
+    "name": "Сварочные аппараты",
+    "parent": 282,
+    "external_id": "svarochnye_apparaty",
+    "metadata": {
+      "id": 487,
+      "name": "Сварочные аппараты",
+      "sort": 1003,
+      "code": "svarochnye_apparaty",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/svarochnye_apparaty/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/51b/snnpq1ktgimx696hdbv9gu43qzm87cft/1_.webp"
+    }
+  },
+  {
+    "id": 488,
+    "name": "Скалыватели",
+    "parent": 282,
+    "external_id": "skalyvateli",
+    "metadata": {
+      "id": 488,
+      "name": "Скалыватели",
+      "sort": 1004,
+      "code": "skalyvateli",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/skalyvateli/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/b90/tbllplrvbq6hl928lnzex3z1menbnrsi/010101.webp"
+    }
+  },
+  {
+    "id": 489,
+    "name": "Рефлектометры оптические ",
+    "parent": 282,
+    "external_id": "opticheskie_reflektometry",
+    "metadata": {
+      "id": 489,
+      "name": "Рефлектометры оптические ",
+      "sort": 1005,
+      "code": "opticheskie_reflektometry",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/opticheskie_reflektometry/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/11d/2g9wdoqtekakm5z95vvy30kyyjgy2e8y/01.webp"
+    }
+  },
+  {
+    "id": 490,
+    "name": "Тестеры оптические",
+    "parent": 282,
+    "external_id": "testery_opticheskie",
+    "metadata": {
+      "id": 490,
+      "name": "Тестеры оптические",
+      "sort": 1006,
+      "code": "testery_opticheskie",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/testery_opticheskie/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/5d4/3u79uu79nuvhi21ilxvuispl8vcehw7z/grandway_fhm2a01.webp"
+    }
+  },
+  {
+    "id": 491,
+    "name": "Измерители оптической мощности",
+    "parent": 282,
+    "external_id": "izmeriteli_opticheskoy_moshchnosti",
+    "metadata": {
+      "id": 491,
+      "name": "Измерители оптической мощности",
+      "sort": 1007,
+      "code": "izmeriteli_opticheskoy_moshchnosti",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/izmeriteli_opticheskoy_moshchnosti/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/11f/2lil5n6zsn38i82iuk1e1h3ri9zl9hjz/01.webp"
+    }
+  },
+  {
+    "id": 492,
+    "name": "Источники оптического излучения",
+    "parent": 282,
+    "external_id": "istochniki_opticheskogo_izlucheniya",
+    "metadata": {
+      "id": 492,
+      "name": "Источники оптического излучения",
+      "sort": 1008,
+      "code": "istochniki_opticheskogo_izlucheniya",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/istochniki_opticheskogo_izlucheniya/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/2d7/tiplmvqcc29747qgs80wwdqakz3qskgs/01.webp"
+    }
+  },
+  {
+    "id": 493,
+    "name": "Источники видимого излучения",
+    "parent": 282,
+    "external_id": "istochniki_vidimogo_izlucheniya",
+    "metadata": {
+      "id": 493,
+      "name": "Источники видимого излучения",
+      "sort": 1009,
+      "code": "istochniki_vidimogo_izlucheniya",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/istochniki_vidimogo_izlucheniya/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/089/zw5ixweevsqkecvuy2e2h0obcs0yhpr8/01.webp"
+    }
+  },
+  {
+    "id": 494,
+    "name": "Аттенюаторы оптические",
+    "parent": 282,
+    "external_id": "attenyuatory_opticheskie1",
+    "metadata": {
+      "id": 494,
+      "name": "Аттенюаторы оптические",
+      "sort": 1010,
+      "code": "attenyuatory_opticheskie1",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/attenyuatory_opticheskie1/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/7be/1uw03a32fp2d1676ffcdnlhv0kev0gn7/01.webp"
+    }
+  },
+  {
+    "id": 495,
+    "name": "Детекторы активных волокон",
+    "parent": 282,
+    "external_id": "detektory_aktivnykh_volokon",
+    "metadata": {
+      "id": 495,
+      "name": "Детекторы активных волокон",
+      "sort": 1011,
+      "code": "detektory_aktivnykh_volokon",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/detektory_aktivnykh_volokon/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/ccd/9ot0lrtze0fsal8umg8wk8ts6z4gkdei/01.webp"
+    }
+  },
+  {
+    "id": 496,
+    "name": "Микроскопы и видеомикроскопы",
+    "parent": 282,
+    "external_id": "mikroskopy_i_videomikroskopy",
+    "metadata": {
+      "id": 496,
+      "name": "Микроскопы и видеомикроскопы",
+      "sort": 1012,
+      "code": "mikroskopy_i_videomikroskopy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/mikroskopy_i_videomikroskopy/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/894/a72qdm31irx2rxr3zfnah8vdcr5nvxim/130707_00365_1.webp"
+    }
+  },
+  {
+    "id": 497,
+    "name": "Волоконно-оптические телефоны",
+    "parent": 282,
+    "external_id": "volokonno_opticheskie_telefony",
+    "metadata": {
+      "id": 497,
+      "name": "Волоконно-оптические телефоны",
+      "sort": 1013,
+      "code": "volokonno_opticheskie_telefony",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/pribory-i-instrumenty-dlya-vols/volokonno_opticheskie_telefony/",
+      "level": 3,
+      "parent_id": 282,
+      "picture": "https://ssd.ru/upload/resta.ssd/a6e/s0q22xt4pdszpiah8e5ye538gfrdyrvd/0001.webp"
+    }
+  },
+  {
+    "id": 498,
+    "name": "Ленты монтажные и замки",
+    "parent": 283,
+    "external_id": "lenty_montazhnye_i_zamki",
+    "metadata": {
+      "id": 498,
+      "name": "Ленты монтажные и замки",
+      "sort": 1001,
+      "code": "lenty_montazhnye_i_zamki",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/lenty_montazhnye_i_zamki/",
+      "level": 3,
+      "parent_id": 283,
+      "picture": "https://ssd.ru/upload/resta.ssd/b72/o0j3dpmxgoyk770bvp767v17enykmcjr/01.webp"
+    }
+  },
+  {
+    "id": 499,
+    "name": "Клещи натяжные",
+    "parent": 283,
+    "external_id": "kleshchi_natyazhnye",
+    "metadata": {
+      "id": 499,
+      "name": "Клещи натяжные",
+      "sort": 1002,
+      "code": "kleshchi_natyazhnye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/kleshchi_natyazhnye/",
+      "level": 3,
+      "parent_id": 283,
+      "picture": "https://ssd.ru/upload/resta.ssd/7b6/8aj454ekvft6tsrdyinmpmmqw01bpvrf/01.webp"
+    }
+  },
+  {
+    "id": 500,
+    "name": "Талрепы",
+    "parent": 283,
+    "external_id": "talrepy",
+    "metadata": {
+      "id": 500,
+      "name": "Талрепы",
+      "sort": 1003,
+      "code": "talrepy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/talrepy/",
+      "level": 3,
+      "parent_id": 283,
+      "picture": "https://ssd.ru/upload/resta.ssd/86b/ooepqh0u73lartcnxou1u6bvm6l2cu8n/01.webp"
+    }
+  },
+  {
+    "id": 501,
+    "name": "Стойки телекоммуникационные",
+    "parent": 258,
+    "external_id": "stoyki_telekommunikatsionnye",
+    "metadata": {
+      "id": 501,
+      "name": "Стойки телекоммуникационные",
+      "sort": 1001,
+      "code": "stoyki_telekommunikatsionnye",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/stoyki_telekommunikatsionnye/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/3d4/7212h0vmraetpcd0x3q8v1cqrmcfimu7/02.webp"
+    }
+  },
+  {
+    "id": 502,
+    "name": "Шкафы напольные",
+    "parent": 258,
+    "external_id": "shkafy_napolnye",
+    "metadata": {
+      "id": 502,
+      "name": "Шкафы напольные",
+      "sort": 1002,
+      "code": "shkafy_napolnye",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/shkafy_napolnye/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/6e9/w1angcbmu7sw8qbspcmnywp3xaamxkrf/glass_1.webp"
+    }
+  },
+  {
+    "id": 503,
+    "name": "Шкафы настенные",
+    "parent": 258,
+    "external_id": "shkafy_nastennye",
+    "metadata": {
+      "id": 503,
+      "name": "Шкафы настенные",
+      "sort": 1003,
+      "code": "shkafy_nastennye",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/shkafy_nastennye/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/325/702pff2fkdrhljozarjbk0x79w0zol6f/1_0006_1322_perf_3_4.webp"
+    }
+  },
+  {
+    "id": 504,
+    "name": "Шкафы климатические",
+    "parent": 258,
+    "external_id": "shkafy_klimaticheskie",
+    "metadata": {
+      "id": 504,
+      "name": "Шкафы климатические",
+      "sort": 1004,
+      "code": "shkafy_klimaticheskie",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/shkafy_klimaticheskie/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/fc8/p5llcq10mhj11u70eygbzd02vm4l1ny1/130411_00841_OpenDoor_Front.webp"
+    }
+  },
+  {
+    "id": 505,
+    "name": "Аксессуары для шкафов и стоек",
+    "parent": 258,
+    "external_id": "aksessuary_dlya_shkafov",
+    "metadata": {
+      "id": 505,
+      "name": "Аксессуары для шкафов и стоек",
+      "sort": 1006,
+      "code": "aksessuary_dlya_shkafov",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/aksessuary_dlya_shkafov/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/6fe/vgvbnys70egp80ftrjoc7x5fbtlhrkfo/01.webp"
+    }
+  },
+  {
+    "id": 506,
+    "name": "Шкафы антивандальные",
+    "parent": 258,
+    "external_id": "shkafy_antivandalnye",
+    "metadata": {
+      "id": 506,
+      "name": "Шкафы антивандальные",
+      "sort": 1005,
+      "code": "shkafy_antivandalnye",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/shkafy_antivandalnye/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/c08/g0vdv8pcql39w81mjxgkveltyorpuw5b/02.webp"
+    }
+  },
+  {
+    "id": 507,
+    "name": "Вентиляторные модули",
+    "parent": 258,
+    "external_id": "ventilyatornye_moduli",
+    "metadata": {
+      "id": 507,
+      "name": "Вентиляторные модули",
+      "sort": 1007,
+      "code": "ventilyatornye_moduli",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/ventilyatornye_moduli/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/2ea/vjn9jdvcxs48vn98glu4qw6106lvsm51/01.webp"
+    }
+  },
+  {
+    "id": 508,
+    "name": "Блоки розеток PDU",
+    "parent": 258,
+    "external_id": "bloki_rozetok",
+    "metadata": {
+      "id": 508,
+      "name": "Блоки розеток PDU",
+      "sort": 1013,
+      "code": "bloki_rozetok",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/bloki_rozetok/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/1a3/ppunwr12uh3yosvlv116wcpdmqcdrgdj/01.webp"
+    }
+  },
+  {
+    "id": 510,
+    "name": "Аксессуары для климатических шкафов",
+    "parent": 258,
+    "external_id": "aksessuary_dlya_klimaticheskikh_shkafov",
+    "metadata": {
+      "id": 510,
+      "name": "Аксессуары для климатических шкафов",
+      "sort": 1010,
+      "code": "aksessuary_dlya_klimaticheskikh_shkafov",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/aksessuary_dlya_klimaticheskikh_shkafov/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/7b4/hm90vwf9jipx0ouo9psad98gjxqbg2yo/120502_00115.webp"
+    }
+  },
+  {
+    "id": 511,
+    "name": "Шкафы квартирные и подъездные",
+    "parent": 258,
+    "external_id": "shkafy_kvartirnye_i_podezdnye",
+    "metadata": {
+      "id": 511,
+      "name": "Шкафы квартирные и подъездные",
+      "sort": 1012,
+      "code": "shkafy_kvartirnye_i_podezdnye",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/shkafy_kvartirnye_i_podezdnye/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resta.ssd/2c1/u18xmefwxjfpke0epc6f3931h7g9f5cq/Untitled_2_0006_130411_01178_OpD_.webp"
+    }
+  },
+  {
+    "id": 512,
+    "name": "Витая пара",
+    "parent": 281,
+    "external_id": "vitaya_para",
+    "metadata": {
+      "id": 512,
+      "name": "Витая пара",
+      "sort": 1001,
+      "code": "vitaya_para",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/strukturirovannye-kabelnye-sistemy/vitaya_para/",
+      "level": 3,
+      "parent_id": 281,
+      "picture": "https://ssd.ru/upload/resta.ssd/274/cag3x3fhnoziep74q7h0rbmxiif2wr6o/01.webp"
+    }
+  },
+  {
+    "id": 513,
+    "name": "Патч-панели",
+    "parent": 281,
+    "external_id": "patch_paneli",
+    "metadata": {
+      "id": 513,
+      "name": "Патч-панели",
+      "sort": 1002,
+      "code": "patch_paneli",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/strukturirovannye-kabelnye-sistemy/patch_paneli/",
+      "level": 3,
+      "parent_id": 281,
+      "picture": "https://ssd.ru/upload/resta.ssd/b99/e8zlv3eedbd71876fx0ejg5f5xprxk6z/121203_03203_1.webp"
+    }
+  },
+  {
+    "id": 514,
+    "name": "Патч-корды UTP",
+    "parent": 281,
+    "external_id": "patch_kordy_utp",
+    "metadata": {
+      "id": 514,
+      "name": "Патч-корды UTP",
+      "sort": 1003,
+      "code": "patch_kordy_utp",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/strukturirovannye-kabelnye-sistemy/patch_kordy_utp/",
+      "level": 3,
+      "parent_id": 281,
+      "picture": "https://ssd.ru/upload/resta.ssd/822/m866v5lt6i9j3o9on9eaf6n1v0v8ksn0/1.webp"
+    }
+  },
+  {
+    "id": 515,
+    "name": "Фурнитура для СКС",
+    "parent": 281,
+    "external_id": "furnitura_dlya_sks",
+    "metadata": {
+      "id": 515,
+      "name": "Фурнитура для СКС",
+      "sort": 1004,
+      "code": "furnitura_dlya_sks",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/strukturirovannye-kabelnye-sistemy/furnitura_dlya_sks/",
+      "level": 3,
+      "parent_id": 281,
+      "picture": "https://ssd.ru/upload/resta.ssd/66d/48hebfhz1c8rh6qfgwxe0n3yz0aeugap/01.webp"
+    }
+  },
+  {
+    "id": 516,
+    "name": "Провода и кабели",
+    "parent": 281,
+    "external_id": "provoda_i_kabeli",
+    "metadata": {
+      "id": 516,
+      "name": "Провода и кабели",
+      "sort": 1005,
+      "code": "provoda_i_kabeli",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/strukturirovannye-kabelnye-sistemy/provoda_i_kabeli/",
+      "level": 3,
+      "parent_id": 281,
+      "picture": "https://ssd.ru/upload/resta.ssd/321/ad8g2tb819mt5buuqvlwuy13ovf00s36/0001.webp"
+    }
+  },
+  {
+    "id": 517,
+    "name": "SFP модули",
+    "parent": 293,
+    "external_id": "sfp_moduli",
+    "metadata": {
+      "id": 517,
+      "name": "SFP модули",
+      "sort": 1001,
+      "code": "sfp_moduli",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/aktivnoe-setevoe-oborudovanie/sfp_moduli/",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "https://ssd.ru/upload/resta.ssd/aa9/gfu0qota7k2wsrbigylt0nz2ug9lh188/01.webp"
+    }
+  },
+  {
+    "id": 518,
+    "name": "Медиаконвертеры",
+    "parent": 293,
+    "external_id": "mediakonvertery",
+    "metadata": {
+      "id": 518,
+      "name": "Медиаконвертеры",
+      "sort": 1002,
+      "code": "mediakonvertery",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/aktivnoe-setevoe-oborudovanie/mediakonvertery/",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "https://ssd.ru/upload/resta.ssd/7dc/g5w2cxjnwcg3wcqk9kug869niup2th20/01.webp"
+    }
+  },
+  {
+    "id": 519,
+    "name": "Источники бесперебойного питания",
+    "parent": 292,
+    "external_id": "istochniki_bespereboynogo_pitaniya",
+    "metadata": {
+      "id": 519,
+      "name": "Источники бесперебойного питания",
+      "sort": 1001,
+      "code": "istochniki_bespereboynogo_pitaniya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/istochniki-pitaniya/istochniki_bespereboynogo_pitaniya/",
+      "level": 3,
+      "parent_id": 292,
+      "picture": "https://ssd.ru/upload/resta.ssd/e92/xjoshsqkky27e53ah5w9i7uj1ha13n32/110804_08213.webp"
+    }
+  },
+  {
+    "id": 520,
+    "name": "Аккумуляторные батареи",
+    "parent": 292,
+    "external_id": "akkumulyatornye_batarei",
+    "metadata": {
+      "id": 520,
+      "name": "Аккумуляторные батареи",
+      "sort": 1002,
+      "code": "akkumulyatornye_batarei",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/istochniki-pitaniya/akkumulyatornye_batarei/",
+      "level": 3,
+      "parent_id": 292,
+      "picture": "https://ssd.ru/upload/resta.ssd/804/76fo15dgxfcejtv6ktwn8nivso5uxm2x/GP_12_7.webp"
+    }
+  },
+  {
+    "id": 521,
+    "name": "Шкафы всепогодные для дорожной автоматики",
+    "parent": 259,
+    "external_id": "shkafy_vsepogodnye_dlya_dorozhnoy_avtomatiki",
+    "metadata": {
+      "id": 521,
+      "name": "Шкафы всепогодные для дорожной автоматики",
+      "sort": 1,
+      "code": "shkafy_vsepogodnye_dlya_dorozhnoy_avtomatiki",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/truby-khrizotiltsementnye-i-aksessuary/shkafy_vsepogodnye_dlya_dorozhnoy_avtomatiki/",
+      "level": 3,
+      "parent_id": 259,
+      "picture": "https://ssd.ru/upload/resta.ssd/2fd/kua7u1c4aokyy5kiyawppycvzvktx1hz/01.webp"
+    }
+  },
+  {
+    "id": 522,
+    "name": "Шкафы проектного исполнения",
+    "parent": 259,
+    "external_id": "shkafy_proektnogo_ispolneniya",
+    "metadata": {
+      "id": 522,
+      "name": "Шкафы проектного исполнения",
+      "sort": 2,
+      "code": "shkafy_proektnogo_ispolneniya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/truby-khrizotiltsementnye-i-aksessuary/shkafy_proektnogo_ispolneniya/",
+      "level": 3,
+      "parent_id": 259,
+      "picture": "https://ssd.ru/upload/resta.ssd/9bd/6v5r2wasi9it9g21fxdgv33qvvl981ud/01.webp"
+    }
+  },
+  {
+    "id": 523,
+    "name": "Прочие изделия",
+    "parent": 259,
+    "external_id": "prochie_izdeliya",
+    "metadata": {
+      "id": 523,
+      "name": "Прочие изделия",
+      "sort": 3,
+      "code": "prochie_izdeliya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/truby-khrizotiltsementnye-i-aksessuary/prochie_izdeliya/",
+      "level": 3,
+      "parent_id": 259,
+      "picture": "https://ssd.ru/upload/resta.ssd/463/1qt2e7uxgjkqovj1prks1i1qc1f7tm5k/01.webp"
+    }
+  },
+  {
+    "id": 524,
+    "name": "Гасители вибрации",
+    "parent": 295,
+    "external_id": "gasiteli_vibratsii",
+    "metadata": {
+      "id": 524,
+      "name": "Гасители вибрации",
+      "sort": 1010,
+      "code": "gasiteli_vibratsii",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/chugunnye-i-metallicheskie-izdeliya-dlya-naruzhnykh-kommunikatsiy/gasiteli_vibratsii/",
+      "level": 3,
+      "parent_id": 295,
+      "picture": "https://ssd.ru/upload/resta.ssd/811/hc0ar91kngjb7cit752vvc99o7rpzglp/IMG_2.webp"
+    }
+  },
+  {
+    "id": 525,
+    "name": "Горелки и фены",
+    "parent": 482,
+    "external_id": "gorelki_i_feny",
+    "metadata": {
+      "id": 525,
+      "name": "Горелки и фены",
+      "sort": 1003,
+      "code": "gorelki_i_feny",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/gorelki_i_feny/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru/upload/resta.ssd/491/xe09o41iqygskmrjyud5vm2mmy8099vg/01_1.webp"
+    }
+  },
+  {
+    "id": 529,
+    "name": "Автоматические выключатели",
+    "parent": 263,
+    "external_id": "avtomaticheskie_vyklyuchateli",
+    "metadata": {
+      "id": 529,
+      "name": "Автоматические выключатели",
+      "sort": 1001,
+      "code": "avtomaticheskie_vyklyuchateli",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/modulnoe-elektrooborudovanie/avtomaticheskie_vyklyuchateli/",
+      "level": 3,
+      "parent_id": 263,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 530,
+    "name": "Дифференциальные автоматы",
+    "parent": 263,
+    "external_id": "differentsialnye_avtomaty",
+    "metadata": {
+      "id": 530,
+      "name": "Дифференциальные автоматы",
+      "sort": 1002,
+      "code": "differentsialnye_avtomaty",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/modulnoe-elektrooborudovanie/differentsialnye_avtomaty/",
+      "level": 3,
+      "parent_id": 263,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 531,
+    "name": "Устройства защитного отключения УЗО",
+    "parent": 263,
+    "external_id": "ustroystva_zashchitnogo_otklyucheniya_uzo",
+    "metadata": {
+      "id": 531,
+      "name": "Устройства защитного отключения УЗО",
+      "sort": 1003,
+      "code": "ustroystva_zashchitnogo_otklyucheniya_uzo",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/modulnoe-elektrooborudovanie/ustroystva_zashchitnogo_otklyucheniya_uzo/",
+      "level": 3,
+      "parent_id": 263,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 532,
+    "name": "Прочие модульные устройства",
+    "parent": 263,
+    "external_id": "prochie_modulnye_ustroystva",
+    "metadata": {
+      "id": 532,
+      "name": "Прочие модульные устройства",
+      "sort": 1004,
+      "code": "prochie_modulnye_ustroystva",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/modulnoe-elektrooborudovanie/prochie_modulnye_ustroystva/",
+      "level": 3,
+      "parent_id": 263,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 533,
+    "name": "Корпуса электрические и акссесуары к ним",
+    "parent": 263,
+    "external_id": "korpusa_elektricheskie_i_akssesuary_k_nim",
+    "metadata": {
+      "id": 533,
+      "name": "Корпуса электрические и акссесуары к ним",
+      "sort": 1005,
+      "code": "korpusa_elektricheskie_i_akssesuary_k_nim",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/modulnoe-elektrooborudovanie/korpusa_elektricheskie_i_akssesuary_k_nim/",
+      "level": 3,
+      "parent_id": 263,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 534,
+    "name": "Монтажные материалы для электрических кабелей",
+    "parent": 263,
+    "external_id": "montazhnye_materialy_dlya_elektricheskikh_kabeley",
+    "metadata": {
+      "id": 534,
+      "name": "Монтажные материалы для электрических кабелей",
+      "sort": 1006,
+      "code": "montazhnye_materialy_dlya_elektricheskikh_kabeley",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/modulnoe-elektrooborudovanie/montazhnye_materialy_dlya_elektricheskikh_kabeley/",
+      "level": 3,
+      "parent_id": 263,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 535,
+    "name": "Греющий кабель",
+    "parent": 263,
+    "external_id": "greyushchiy_kabel",
+    "metadata": {
+      "id": 535,
+      "name": "Греющий кабель",
+      "sort": 1007,
+      "code": "greyushchiy_kabel",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/modulnoe-elektrooborudovanie/greyushchiy_kabel/",
+      "level": 3,
+      "parent_id": 263,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 544,
+    "name": "Модульное заземление",
+    "parent": 280,
+    "external_id": "modulnoe_zazemlenie",
+    "metadata": {
+      "id": 544,
+      "name": "Модульное заземление",
+      "sort": 1001,
+      "code": "modulnoe_zazemlenie",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zazemlenie-i-molniezashchita/modulnoe_zazemlenie/",
+      "level": 3,
+      "parent_id": 280,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 545,
+    "name": "Молниеприемники",
+    "parent": 280,
+    "external_id": "molniepriemniki",
+    "metadata": {
+      "id": 545,
+      "name": "Молниеприемники",
+      "sort": 1003,
+      "code": "molniepriemniki",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zazemlenie-i-molniezashchita/molniepriemniki/",
+      "level": 3,
+      "parent_id": 280,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 546,
+    "name": "Аксессуары для заземления",
+    "parent": 280,
+    "external_id": "aksessuary_dlya_zazemleniya",
+    "metadata": {
+      "id": 546,
+      "name": "Аксессуары для заземления",
+      "sort": 1002,
+      "code": "aksessuary_dlya_zazemleniya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/zazemlenie-i-molniezashchita/aksessuary_dlya_zazemleniya/",
+      "level": 3,
+      "parent_id": 280,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 547,
+    "name": "Устройства для заготовки каналов УЗК",
+    "parent": 274,
+    "external_id": "ustroystva_dlya_zagotovki_kanalov_uzk",
+    "metadata": {
+      "id": 547,
+      "name": "Устройства для заготовки каналов УЗК",
+      "sort": 1001,
+      "code": "ustroystva_dlya_zagotovki_kanalov_uzk",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/spetsialnyy-inventar-dlya-svyazistov-lineyshchikov/ustroystva_dlya_zagotovki_kanalov_uzk/",
+      "level": 3,
+      "parent_id": 274,
+      "picture": "https://ssd.ru/upload/resta.ssd/32e/j7rbkiv00o3nkkx4hwusqxrk1mqa9ung/01.webp"
+    }
+  },
+  {
+    "id": 548,
+    "name": "Аксессуары для заготовки каналов",
+    "parent": 274,
+    "external_id": "aksessuary_dlya_zagotovki_kanalov",
+    "metadata": {
+      "id": 548,
+      "name": "Аксессуары для заготовки каналов",
+      "sort": 1002,
+      "code": "aksessuary_dlya_zagotovki_kanalov",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/spetsialnyy-inventar-dlya-svyazistov-lineyshchikov/aksessuary_dlya_zagotovki_kanalov/",
+      "level": 3,
+      "parent_id": 274,
+      "picture": "https://ssd.ru/upload/resta.ssd/675/6iy1k1bp9aagpj946qdica3qarxtfrxz/110607_00105_1.webp"
+    }
+  },
+  {
+    "id": 549,
+    "name": "Аксессуары для кабельной канализации",
+    "parent": 274,
+    "external_id": "aksessuary_dlya_kabelnoy_kanalizatsii",
+    "metadata": {
+      "id": 549,
+      "name": "Аксессуары для кабельной канализации",
+      "sort": 1003,
+      "code": "aksessuary_dlya_kabelnoy_kanalizatsii",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/spetsialnyy-inventar-dlya-svyazistov-lineyshchikov/aksessuary_dlya_kabelnoy_kanalizatsii/",
+      "level": 3,
+      "parent_id": 274,
+      "picture": "https://ssd.ru/upload/resta.ssd/46e/o86h7z39m2x9vz2t4fgt1w1vfh5r26d6/110608_00009_1.webp"
+    }
+  },
+  {
+    "id": 550,
+    "name": "Козлы и подъемные механизмы",
+    "parent": 274,
+    "external_id": "kozly_i_podemnye_mekhanizmy",
+    "metadata": {
+      "id": 550,
+      "name": "Козлы и подъемные механизмы",
+      "sort": 1004,
+      "code": "kozly_i_podemnye_mekhanizmy",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/spetsialnyy-inventar-dlya-svyazistov-lineyshchikov/kozly_i_podemnye_mekhanizmy/",
+      "level": 3,
+      "parent_id": 274,
+      "picture": "https://ssd.ru/upload/resta.ssd/4d4/licjlq0x6eund6ti41g09g6p1796pihp/01.webp"
+    }
+  },
+  {
+    "id": 607,
+    "name": "Аксессуары к оптическим стоечным кроссам ",
+    "parent": 276,
+    "external_id": "aksessuary_k_opticheskim_stoechnym_krossam_",
+    "metadata": {
+      "id": 607,
+      "name": "Аксессуары к оптическим стоечным кроссам ",
+      "sort": 1002,
+      "code": "aksessuary_k_opticheskim_stoechnym_krossam_",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/stantsionnaya-storona-vols/aksessuary_k_opticheskim_stoechnym_krossam_/",
+      "level": 3,
+      "parent_id": 276,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 608,
+    "name": "Инструмент для витой пары и коаксиального кабеля",
+    "parent": 482,
+    "external_id": "instrument_dlya_vitoy_pary_i_koaksialnogo_kabelya",
+    "metadata": {
+      "id": 608,
+      "name": "Инструмент для витой пары и коаксиального кабеля",
+      "sort": 1012,
+      "code": "instrument_dlya_vitoy_pary_i_koaksialnogo_kabelya",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/instrument_dlya_vitoy_pary_i_koaksialnogo_kabelya/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru/upload/resta.ssd/7a0/bt9sij8mx1lqm5c97w1oshl924mb1h95/171575164.webp"
+    }
+  },
+  {
+    "id": 609,
+    "name": "Ножницы",
+    "parent": 482,
+    "external_id": "nozhnitsy",
+    "metadata": {
+      "id": 609,
+      "name": "Ножницы",
+      "sort": 1011,
+      "code": "nozhnitsy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/nozhnitsy/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 610,
+    "name": "Бокорезы и кусачки",
+    "parent": 482,
+    "external_id": "bokorezy_i_kusachki",
+    "metadata": {
+      "id": 610,
+      "name": "Бокорезы и кусачки",
+      "sort": 1004,
+      "code": "bokorezy_i_kusachki",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/bokorezy_i_kusachki/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru/upload/resta.ssd/db6/16fpi3lsel5mpkhms92676fpaoa0txnp/3.webp"
+    }
+  },
+  {
+    "id": 611,
+    "name": "Пассатижи и плоскогубцы",
+    "parent": 482,
+    "external_id": "passatizhi_i_ploskogubtsy",
+    "metadata": {
+      "id": 611,
+      "name": "Пассатижи и плоскогубцы",
+      "sort": 1005,
+      "code": "passatizhi_i_ploskogubtsy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/passatizhi_i_ploskogubtsy/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 612,
+    "name": "Клещи",
+    "parent": 482,
+    "external_id": "kleshchi",
+    "metadata": {
+      "id": 612,
+      "name": "Клещи",
+      "sort": 1006,
+      "code": "kleshchi",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/kleshchi/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 613,
+    "name": "Кабельрезы",
+    "parent": 482,
+    "external_id": "kabelrezy",
+    "metadata": {
+      "id": 613,
+      "name": "Кабельрезы",
+      "sort": 1007,
+      "code": "kabelrezy",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/kabelrezy/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 614,
+    "name": "Ножи",
+    "parent": 482,
+    "external_id": "nozhi",
+    "metadata": {
+      "id": 614,
+      "name": "Ножи",
+      "sort": 1008,
+      "code": "nozhi",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/nozhi/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 615,
+    "name": "Стрипперы",
+    "parent": 482,
+    "external_id": "strippery",
+    "metadata": {
+      "id": 615,
+      "name": "Стрипперы",
+      "sort": 1009,
+      "code": "strippery",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/strippery/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 616,
+    "name": "Ножовки",
+    "parent": 482,
+    "external_id": "nozhovki",
+    "metadata": {
+      "id": 616,
+      "name": "Ножовки",
+      "sort": 1010,
+      "code": "nozhovki",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/nozhovki/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 618,
+    "name": "Паяльники",
+    "parent": 482,
+    "external_id": "payalniki",
+    "metadata": {
+      "id": 618,
+      "name": "Паяльники",
+      "sort": 1013,
+      "code": "payalniki",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/payalniki/",
+      "level": 3,
+      "parent_id": 482,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 631,
+    "name": "Зажимы крепления шлейфа оптического кабеля",
+    "parent": 283,
+    "external_id": "zazhimy_krepleniya_shleyfa_opticheskogo_kabelya",
+    "metadata": {
+      "id": 631,
+      "name": "Зажимы крепления шлейфа оптического кабеля",
+      "sort": 1010,
+      "code": "zazhimy_krepleniya_shleyfa_opticheskogo_kabelya",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/armatura-dlya-podveski-opticheskikh-kabeley/zazhimy_krepleniya_shleyfa_opticheskogo_kabelya/",
+      "level": 3,
+      "parent_id": 283,
+      "picture": "https://ssd.ru/upload/resta.ssd/6b7/c9iyjcrwvqtj97u1p7vp98290bgnvf6y/07.webp"
+    }
+  }
+]
