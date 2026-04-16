@@ -2,34 +2,24 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Phone, Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Menu, X, Phone } from "lucide-react";
+import { SearchAutocomplete } from "@/components/layout/SearchAutocomplete";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
-
-  function handleSearch(e: React.FormEvent) {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/catalog?q=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery("");
-    }
-  }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-red-200 bg-white/95 text-red-950 shadow-sm backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-red-950 shadow-sm backdrop-blur">
       {/* Top bar */}
-      <div className="hidden border-b border-red-200/80 bg-red-700 text-red-50 md:block">
-        <div className="container mx-auto flex items-center justify-between px-4 py-1.5 text-sm text-red-100">
+      <div className="hidden border-b border-slate-700 bg-slate-900 text-slate-100 md:block">
+        <div className="container mx-auto flex items-center justify-between px-4 py-1.5 text-sm text-slate-200">
           <span>г. Минск, ул. Шафарнянская, 11, офис 33</span>
           <div className="flex items-center gap-4">
             <a href="tel:+375172705095" className="flex items-center gap-1 transition-colors hover:text-white">
               <Phone className="w-3.5 h-3.5" />
               +375 (17) 270-50-95
             </a>
-            <span className="text-red-200/70">|</span>
+            <span className="text-slate-500">|</span>
             <span>Пн–Пт 9:00–18:00</span>
           </div>
         </div>
@@ -51,24 +41,7 @@ export function Header() {
           </Link>
 
           {/* Search bar (desktop) */}
-          <form
-            onSubmit={handleSearch}
-            className="relative hidden max-w-xl flex-1 md:flex"
-          >
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Поиск по названию или артикулу…"
-              className="w-full rounded-lg border border-red-200 bg-white px-4 py-2 pr-10 text-sm text-red-950 placeholder-red-300 outline-none transition-colors focus:border-red-500"
-            />
-            <button
-              type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-red-400 hover:text-red-600"
-            >
-              <Search className="w-4 h-4" />
-            </button>
-          </form>
+          <SearchAutocomplete containerClassName="relative hidden max-w-xl flex-1 md:flex" />
 
           {/* Desktop nav links */}
           <nav className="hidden shrink-0 items-center gap-6 text-sm font-semibold md:flex">
@@ -107,18 +80,12 @@ export function Header() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="border-t border-red-200 bg-white px-4 pb-4 md:hidden">
-          <form onSubmit={handleSearch} className="relative mt-4 mb-3">
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Поиск…"
-              className="w-full rounded-lg border border-red-200 bg-white px-4 py-2 pr-10 text-sm text-red-950 placeholder-red-300 outline-none"
-            />
-            <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-red-400">
-              <Search className="w-4 h-4" />
-            </button>
-          </form>
+          <SearchAutocomplete
+            placeholder="Поиск…"
+            containerClassName="relative mt-4 mb-3"
+            inputClassName="w-full rounded-lg border border-red-200 bg-white px-4 py-2 pr-10 text-sm text-red-950 placeholder-red-300 outline-none"
+            onNavigate={() => setMenuOpen(false)}
+          />
           <nav className="flex flex-col gap-3 text-sm font-medium">
             <Link
               href="/"

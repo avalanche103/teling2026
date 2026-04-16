@@ -11,7 +11,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/product/${product.sku}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-red-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
     >
       <div className="relative h-44 bg-slate-100">
         {product.thumbnail ? (
@@ -39,7 +39,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <p className="mt-auto text-sm text-red-800/80">{product.brand}</p>
 
-        <div className="rounded-xl bg-red-50 px-3 py-2">
+        <div className="rounded-xl bg-slate-100 px-3 py-2">
           <span className="text-lg font-bold text-red-800">
             {formatPrice(product.price, product.currency)}
           </span>

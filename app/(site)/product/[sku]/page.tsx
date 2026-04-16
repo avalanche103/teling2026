@@ -50,12 +50,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </h1>
 
           <div className="flex flex-wrap items-center gap-2 text-sm text-red-800/80">
-            <span className="rounded-full bg-red-50 px-3 py-1">Бренд: {product.brand || "—"}</span>
-            <span className="rounded-full bg-red-50 px-3 py-1">Тип: {product.type || "—"}</span>
-            <span className="rounded-full bg-red-50 px-3 py-1">Ед.: {product.unit || "шт"}</span>
+            <span className="rounded-full bg-slate-100 px-3 py-1">Бренд: {product.brand || "—"}</span>
+            <span className="rounded-full bg-slate-100 px-3 py-1">Тип: {product.type || "—"}</span>
+            <span className="rounded-full bg-slate-100 px-3 py-1">Ед.: {product.unit || "шт"}</span>
           </div>
 
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-5">
+          <div className="rounded-2xl border border-slate-200 bg-slate-100 p-5">
             <p className="text-xs font-semibold uppercase tracking-wide text-red-700">Цена</p>
             <p className="mt-2 text-3xl font-black text-red-800">
               {formatPrice(product.price, product.currency)}
@@ -115,7 +115,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     <table className="w-full text-sm">
                       <tbody>
                         {group.items.map((item, itemIdx) => (
-                          <tr key={`${item.name}-${itemIdx}`} className="odd:bg-red-50/60">
+                          <tr key={`${item.name}-${itemIdx}`} className="odd:bg-slate-100/80">
                             <td className="w-1/2 border-b border-red-200 px-3 py-2 text-red-900/80">
                               {item.name}
                             </td>

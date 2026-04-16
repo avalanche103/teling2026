@@ -28,8 +28,8 @@ export default function HomePage() {
 
   return (
     <main className="flex-1">
-      <section className="relative overflow-hidden border-b border-red-200 bg-gradient-to-br from-red-950 via-red-800 to-red-700 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_15%,rgba(255,255,255,0.2),transparent_38%),radial-gradient(circle_at_88%_0%,rgba(255,220,220,0.35),transparent_32%)]" />
+      <section className="relative overflow-hidden border-b border-slate-300 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_15%,rgba(255,255,255,0.2),transparent_38%),radial-gradient(circle_at_88%_0%,rgba(203,213,225,0.35),transparent_32%)]" />
         <div className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:py-14 lg:px-6 lg:py-20">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-red-200">
             Teling Group
@@ -45,7 +45,7 @@ export default function HomePage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/catalog"
-              className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-red-800 transition hover:bg-red-100"
+              className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-slate-800 transition hover:bg-slate-100"
             >
               Перейти в каталог
             </Link>
@@ -80,7 +80,7 @@ export default function HomePage() {
           <ul className="mt-4 space-y-2 text-red-900/85">
             {COMPANY_DIRECTIONS.map((item) => (
               <li key={item} className="flex items-start gap-2">
-                <span className="mt-1 h-2 w-2 rounded-full bg-red-600" />
+                <span className="mt-1 h-2 w-2 rounded-full bg-slate-500" />
                 <span>{item}</span>
               </li>
             ))}

@@ -111,7 +111,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                   ...(search ? { q: search } : {}),
                   page: String(page - 1),
                 }).toString()}`}
-                className="rounded-lg border border-red-200 px-3 py-1.5 hover:bg-red-50"
+                className="rounded-lg border border-red-200 px-3 py-1.5 hover:bg-slate-100"
               >
                 Назад
               </Link>
@@ -123,7 +123,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                   ...(search ? { q: search } : {}),
                   page: String(page + 1),
                 }).toString()}`}
-                className="rounded-lg border border-red-200 px-3 py-1.5 hover:bg-red-50"
+                className="rounded-lg border border-red-200 px-3 py-1.5 hover:bg-slate-100"
               >
                 Вперед
               </Link>

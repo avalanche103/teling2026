@@ -88,7 +88,10 @@ function getProductsBySkuMap(): Map<string, ProductRaw> {
   if (!_productsBySkuMap) {
     _productsBySkuMap = new Map();
     for (const p of getProductsRaw()) {
-      _productsBySkuMap.set(p.sku, p);
+      const sku = typeof p.sku === "string" ? p.sku.trim() : "";
+      if (sku) {
+        _productsBySkuMap.set(sku, p);
+      }
     }
   }
   return _productsBySkuMap;
@@ -200,11 +203,18 @@ function getAllDescendantIds(cat: Category): number[] {
 
 function rawToSummary(p: ProductRaw): ProductSummary {
   const sectionSlug = getSectionSlugByIdMap().get(p.section_id) || "";
-  const localImages = getLocalImageUrls(p.sku);
+  const sku = typeof p.sku === "string" ? p.sku : "";
+  const name =
+    typeof p.name === "string" && p.name.trim()
+      ? p.name
+      : typeof p.original_name === "string" && p.original_name.trim()
+      ? p.original_name
+      : "Без названия";
+  const localImages = sku ? getLocalImageUrls(sku) : [];
   return {
     id: p.id,
-    name: p.name,
-    sku: p.sku,
+    name,
+    sku,
     sectionId: p.section_id,
     sectionName: p.section_name,
     sectionSlug,
@@ -286,12 +296,19 @@ export function getSectionProducts(
   if (search) {
     const q = search.toLowerCase();
     allProducts = allProducts.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.sku.toLowerCase().includes(q) ||
-        (p.metadata?.brand || "").toLowerCase().includes(q)
+      (p) => {
+        const name = typeof p.name === "string" ? p.name.toLowerCase() : "";
+        const sku = typeof p.sku === "string" ? p.sku.toLowerCase() : "";
+        const brand = (p.metadata?.brand || "").toLowerCase();
+        return name.includes(q) || sku.includes(q) || brand.includes(q);
+      }
     );
   }
+
+  // Items without SKU cannot be opened in product route, hide them from UI listings.
+  allProducts = allProducts.filter(
+    (p) => typeof p.sku === "string" && p.sku.trim().length > 0
+  );
 
   const total = allProducts.length;
   const start = (page - 1) * limit;
@@ -303,20 +320,133 @@ export function searchProducts(
   query: string,
   limit = 24
 ): ProductSummary[] {
-  if (!query || query.length < 2) return [];
-  const q = query.toLowerCase();
-  const results: ProductSummary[] = [];
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+
+  const variants = buildSearchVariants(q);
+  const scored: Array<{ p: ProductRaw; score: number }> = [];
+
   for (const p of getProductsRaw()) {
-    if (
-      p.name.toLowerCase().includes(q) ||
-      p.sku.toLowerCase().includes(q) ||
-      (p.metadata?.brand || "").toLowerCase().includes(q)
-    ) {
-      results.push(rawToSummary(p));
-      if (results.length >= limit) break;
+    const sku = normalizeForSearch(typeof p.sku === "string" ? p.sku : "");
+    const name = normalizeForSearch(typeof p.name === "string" ? p.name : "");
+    const brand = normalizeForSearch(p.metadata?.brand || "");
+
+    // Product route requires SKU; skip broken data rows from search results.
+    if (!sku) continue;
+
+    let bestScore = 0;
+
+    for (const term of variants) {
+      if (!term) continue;
+
+      if (sku === term) {
+        bestScore = Math.max(bestScore, 120 + Math.min(term.length, 15));
+      } else if (sku.startsWith(term)) {
+        bestScore = Math.max(bestScore, 100 + Math.min(term.length, 12));
+      } else if (sku.includes(term)) {
+        bestScore = Math.max(bestScore, 80 + Math.min(term.length, 10));
+      }
+
+      if (name.startsWith(term)) {
+        bestScore = Math.max(bestScore, 65 + Math.min(term.length, 10));
+      } else if (name.includes(term)) {
+        bestScore = Math.max(bestScore, 45 + Math.min(term.length, 8));
+      }
+
+      if (brand.includes(term)) {
+        bestScore = Math.max(bestScore, 30 + Math.min(term.length, 6));
+      }
+    }
+
+    if (bestScore > 0) {
+      scored.push({ p, score: bestScore });
     }
   }
-  return results;
+
+  scored.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return a.p.id - b.p.id;
+  });
+
+  return scored.slice(0, limit).map((x) => rawToSummary(x.p));
+}
+
+function normalizeForSearch(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/ё/g, "е")
+    .replace(/[^a-zа-я0-9]+/g, " ")
+    .trim();
+}
+
+function buildSearchVariants(query: string): string[] {
+  const raw = query.trim();
+  if (!raw) return [];
+
+  const candidates = new Set<string>();
+  const add = (v: string) => {
+    const n = normalizeForSearch(v);
+    if (n) candidates.add(n);
+  };
+
+  add(raw);
+  add(swapKeyboardLayout(raw));
+  add(translitRuToLat(raw));
+  add(translitLatToRu(raw));
+
+  // Keep terms with meaningful length first.
+  return [...candidates].sort((a, b) => b.length - a.length);
+}
+
+function swapKeyboardLayout(input: string): string {
+  const en = "`qwertyuiop[]asdfghjkl;'zxcvbnm,./";
+  const ru = "ёйцукенгшщзхъфывапролджэячсмитьбю.";
+  const map = new Map<string, string>();
+
+  for (let i = 0; i < en.length; i += 1) {
+    map.set(en[i], ru[i]);
+    map.set(ru[i], en[i]);
+  }
+
+  return input
+    .split("")
+    .map((ch) => {
+      const lower = ch.toLowerCase();
+      const mapped = map.get(lower);
+      if (!mapped) return ch;
+      return ch === lower ? mapped : mapped.toUpperCase();
+    })
+    .join("");
+}
+
+function translitRuToLat(input: string): string {
+  const m: Record<string, string> = {
+    а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "e", ж: "zh",
+    з: "z", и: "i", й: "y", к: "k", л: "l", м: "m", н: "n", о: "o",
+    п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "h", ц: "ts",
+    ч: "ch", ш: "sh", щ: "sch", ъ: "", ы: "y", ь: "", э: "e", ю: "yu", я: "ya",
+  };
+
+  return input
+    .toLowerCase()
+    .split("")
+    .map((c) => m[c] ?? c)
+    .join("");
+}
+
+function translitLatToRu(input: string): string {
+  let s = input.toLowerCase();
+  const pairs: Array<[string, string]> = [
+    ["sch", "щ"], ["sh", "ш"], ["ch", "ч"], ["yu", "ю"], ["ya", "я"], ["zh", "ж"], ["ts", "ц"],
+    ["a", "а"], ["b", "б"], ["v", "в"], ["g", "г"], ["d", "д"], ["e", "е"], ["z", "з"], ["i", "и"], ["y", "й"],
+    ["k", "к"], ["l", "л"], ["m", "м"], ["n", "н"], ["o", "о"], ["p", "п"], ["r", "р"], ["s", "с"], ["t", "т"],
+    ["u", "у"], ["f", "ф"], ["h", "х"],
+  ];
+
+  for (const [lat, ru] of pairs) {
+    s = s.replace(new RegExp(lat, "g"), ru);
+  }
+  return s;
 }
 
 /** Returns all section external_ids (slugs) for static params generation */
@@ -326,5 +456,7 @@ export function getAllSectionSlugs(): string[] {
 
 /** Returns all product SKUs for static params generation */
 export function getAllProductSkus(): string[] {
-  return getProductsRaw().map((p) => p.sku);
+  return getProductsRaw()
+    .map((p) => (typeof p.sku === "string" ? p.sku.trim() : ""))
+    .filter(Boolean);
 }
