@@ -1,65 +1,110 @@
-import Image from "next/image";
+import Link from "next/link";
+import { CategoryCard } from "@/components/catalog/CategoryCard";
+import { getRootCategories } from "@/lib/data";
 
-export default function Home() {
+const COMPANY_DIRECTIONS = [
+  "локальные вычислительные сети корпоративного назначения",
+  "волоконно-оптические линии связи",
+  "системы видеонаблюдения",
+  "кабельное ТВ",
+  "мультимедийные системы",
+];
+
+const CONTACTS = {
+  address: "г. Минск, ул. Шафарнянская, 11, офис 33",
+  phones: [
+    "+375 (17) 270-50-95",
+    "+375 (17) 270-50-96",
+    "+375 (17) 270-50-97",
+    "+375 (17) 270-50-98",
+    "+375 (17) 270-50-99 (факс)",
+  ],
+  workTime: "Пн-Пт 9.00 - 18.00",
+  email: "info@teling.by",
+};
+
+export default function HomePage() {
+  const topCategories = getRootCategories().slice(0, 4);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="flex-1">
+      <section className="relative overflow-hidden border-b border-red-200 bg-gradient-to-br from-red-950 via-red-800 to-red-700 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_15%,rgba(255,255,255,0.2),transparent_38%),radial-gradient(circle_at_88%_0%,rgba(255,220,220,0.35),transparent_32%)]" />
+        <div className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:py-14 lg:px-6 lg:py-20">
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-red-200">
+            Teling Group
           </p>
+          <h1 className="mt-3 max-w-4xl text-3xl font-black leading-tight tracking-tight sm:text-5xl">
+            Каталог телекоммуникационной продукции для проектирования и монтажа сетей
+          </h1>
+          <p className="mt-5 max-w-3xl text-base text-red-50/95 sm:text-lg">
+            Компания с более чем 20-летним опытом в области телекоммуникаций. Производим и поставляем
+            оборудование, материалы и комплектующие для ввода в эксплуатацию инженерных систем связи.
+          </p>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/catalog"
+              className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-red-800 transition hover:bg-red-100"
+            >
+              Перейти в каталог
+            </Link>
+            <a
+              href="#contacts"
+              className="rounded-xl border border-red-200/70 px-5 py-3 text-sm font-bold text-red-100 transition hover:bg-white/10"
+            >
+              Контакты
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+      </section>
+
+      <section className="mx-auto w-full max-w-7xl px-4 py-10 lg:px-6">
+        <h2 className="mb-6 text-2xl font-black tracking-tight text-red-950">
+          4 основных подраздела каталога
+        </h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {topCategories.map((category) => (
+            <CategoryCard key={category.id} category={category} />
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 pb-10 lg:grid-cols-[1.2fr_1fr] lg:px-6">
+        <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-black tracking-tight text-red-950">О компании</h2>
+          <p className="mt-3 text-red-900/80">
+            Вас приветствует Телинг групп. Мы предлагаем широкий ассортимент оборудования и материалов,
+            позволяющих создать, протестировать и ввести в эксплуатацию линии и сети любой сложности.
+          </p>
+          <ul className="mt-4 space-y-2 text-red-900/85">
+            {COMPANY_DIRECTIONS.map((item) => (
+              <li key={item} className="flex items-start gap-2">
+                <span className="mt-1 h-2 w-2 rounded-full bg-red-600" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div id="contacts" className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-black tracking-tight text-red-950">Контакты</h2>
+          <p className="mt-3 text-red-900/80">{CONTACTS.address}</p>
+          <ul className="mt-4 space-y-1 text-red-950">
+            {CONTACTS.phones.map((phone) => (
+              <li key={phone}>
+                <a href={`tel:${phone.replace(/[^\d+]/g, "")}`} className="hover:text-red-700">
+                  {phone}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-red-900/80">{CONTACTS.workTime}</p>
+          <a className="mt-3 inline-block text-red-700 hover:text-red-900" href={`mailto:${CONTACTS.email}`}>
+            {CONTACTS.email}
           </a>
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }
