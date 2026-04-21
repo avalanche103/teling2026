@@ -23,7 +23,7 @@ interface SearchAutocompleteProps {
 export function SearchAutocomplete({
   placeholder = "Поиск по названию или артикулу…",
   containerClassName = "relative max-w-xl flex-1",
-  inputClassName = "w-full rounded-lg border border-red-200 bg-white px-4 py-2 pr-10 text-sm text-red-950 placeholder-red-300 outline-none transition-colors focus:border-red-500",
+  inputClassName = "w-full rounded-lg border border-slate-200 bg-white px-4 py-2 pr-10 text-sm text-black placeholder-slate-400 outline-none transition-colors focus:border-slate-500",
   onNavigate,
 }: SearchAutocompleteProps) {
   const router = useRouter();
@@ -157,16 +157,16 @@ export function SearchAutocomplete({
       <button
         type="submit"
         disabled={!canSearch}
-        className="absolute right-2 top-1/2 -translate-y-1/2 text-red-400 transition hover:text-red-600 disabled:opacity-40"
+        className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 transition hover:text-black disabled:opacity-40"
         aria-label="Поиск"
       >
         <Search className="h-4 w-4" />
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-[calc(100%+0.45rem)] z-50 overflow-hidden rounded-xl border border-red-200 bg-white shadow-xl">
+        <div className="absolute left-0 right-0 top-[calc(100%+0.45rem)] z-50 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
           {loading ? (
-            <div className="flex items-center gap-2 px-4 py-3 text-sm text-red-700/80">
+            <div className="flex items-center gap-2 px-4 py-3 text-sm text-black/80">
               <Loader2 className="h-4 w-4 animate-spin" />
               Поиск…
             </div>
@@ -184,27 +184,27 @@ export function SearchAutocomplete({
                       idx === activeIndex ? "bg-slate-100" : "hover:bg-slate-100"
                     }`}
                   >
-                    <p className="line-clamp-1 text-sm font-semibold text-red-950">
+                    <p className="line-clamp-1 text-sm font-semibold text-black">
                       {renderHighlightedText(product.name, queryForHighlight)}
                     </p>
-                    <p className="mt-0.5 text-xs text-red-700/80">
+                    <p className="mt-0.5 text-xs text-black/80">
                       {renderHighlightedText(product.sku, queryForHighlight)} • {product.sectionName}
                     </p>
                   </Link>
                 </li>
               ))}
-              <li className="border-t border-red-100">
+              <li className="border-t border-slate-100">
                 <button
                   type="button"
                   onClick={navigateToCatalogResults}
-                  className="block w-full px-4 py-2.5 text-left text-sm font-semibold text-red-700 hover:bg-slate-100"
+                  className="block w-full px-4 py-2.5 text-left text-sm font-semibold text-black hover:bg-slate-100"
                 >
                   Показать все результаты «{query.trim()}»
                 </button>
               </li>
             </ul>
           ) : (
-            <div className="px-4 py-3 text-sm text-red-700/80">
+            <div className="px-4 py-3 text-sm text-black/80">
               Ничего не найдено.
             </div>
           )}
@@ -226,7 +226,7 @@ function renderHighlightedText(text: string, query: string) {
     if (!part) return null;
     if (part.toLowerCase() === q.toLowerCase()) {
       return (
-        <mark key={`${part}-${index}`} className="rounded bg-amber-200/80 px-0.5 text-red-950">
+        <mark key={`${part}-${index}`} className="rounded bg-slate-200 px-0.5 text-black">
           {part}
         </mark>
       );

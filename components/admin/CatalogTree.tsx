@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import type { SectionRaw } from "@/lib/types";
+import type { SectionRaw, SectionFilterOption } from "@/lib/types";
 
 // ---- types ----
 
@@ -15,6 +15,7 @@ interface FormValues {
   sort: string;
   picture: string;
   parent: number | null;
+  selected_filters: string[];
 }
 
 type Mode =
@@ -60,6 +61,7 @@ export function CatalogTree() {
   const [mode, setMode] = useState<Mode>({ type: "idle" });
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   // force re-render helper
@@ -69,7 +71,7 @@ export function CatalogTree() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/sections");
+      const res = await fetch("/api/admin/sections", { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: SectionRaw[] = await res.json();
       setSections(data);
@@ -137,6 +139,7 @@ export function CatalogTree() {
   const handleSave = async (values: FormValues) => {
     setSaving(true);
     setSaveError(null);
+    setSaveSuccess(null);
     try {
       let res: Response;
       if (mode.type === "edit") {
@@ -149,6 +152,7 @@ export function CatalogTree() {
             sort: parseInt(values.sort) || 500,
             picture: values.picture,
             parent: values.parent,
+            selected_filters: values.selected_filters,
           }),
         });
       } else {
@@ -161,6 +165,7 @@ export function CatalogTree() {
             sort: parseInt(values.sort) || 500,
             picture: values.picture,
             parent: values.parent,
+            selected_filters: values.selected_filters,
           }),
         });
       }
@@ -171,6 +176,7 @@ export function CatalogTree() {
       }
       setMode({ type: "idle" });
       await load();
+      setSaveSuccess(mode.type === "edit" ? "Изменения сохранены" : "Раздел создан");
     } catch (e) {
       setSaveError(e instanceof Error ? e.message : "Ошибка сети");
     } finally {
@@ -182,6 +188,7 @@ export function CatalogTree() {
     if (!confirm(`Удалить раздел "${name}"?\n\nЭто действие нельзя отменить.`)) return;
     setSaving(true);
     setSaveError(null);
+    setSaveSuccess(null);
     try {
       const res = await fetch(`/api/admin/sections/${id}`, { method: "DELETE" });
       const json = await res.json();
@@ -190,6 +197,7 @@ export function CatalogTree() {
         return;
       }
       await load();
+      setSaveSuccess("Раздел удален");
     } catch (e) {
       setSaveError(e instanceof Error ? e.message : "Ошибка сети");
     } finally {
@@ -251,6 +259,12 @@ export function CatalogTree() {
         </button>
       </div>
 
+      {saveSuccess && (
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-700">
+          {saveSuccess}
+        </div>
+      )}
+
       {saveError && (
         <div className="rounded-lg border border-slate-300 bg-slate-100 px-4 py-2 text-sm text-slate-700">
           {saveError}
@@ -264,7 +278,7 @@ export function CatalogTree() {
           sections={sections}
           saving={saving}
           onSave={handleSave}
-          onCancel={() => { setMode({ type: "idle" }); setSaveError(null); }}
+          onCancel={() => { setMode({ type: "idle" }); setSaveError(null); setSaveSuccess(null); }}
         />
       )}
 
@@ -290,7 +304,7 @@ export function CatalogTree() {
                 searchQuery={q}
                 onSave={handleSave}
                 onDelete={handleDelete}
-                onCancelForm={() => { setMode({ type: "idle" }); setSaveError(null); }}
+                onCancelForm={() => { setMode({ type: "idle" }); setSaveError(null); setSaveSuccess(null); }}
               />
             ))}
           </ul>
@@ -411,7 +425,7 @@ function TreeNodeRow({
               onClick={() => onDelete(node.id, node.name)}
               title="Удалить"
               disabled={hasChildren}
-              className="rounded px-2 py-1 text-xs text-red-500 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed"
+              className="rounded px-2 py-1 text-xs text-black/70 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed"
             >
               Удалить
             </button>
@@ -494,6 +508,7 @@ function SectionForm({ mode, sections, saving, onSave, onCancel }: SectionFormPr
         sort: String(mode.section.metadata.sort),
         picture: mode.section.metadata.picture ?? "",
         parent: mode.section.parent,
+        selected_filters: mode.section.metadata.selected_filters ?? [],
       }
     : {
         name: "",
@@ -501,17 +516,81 @@ function SectionForm({ mode, sections, saving, onSave, onCancel }: SectionFormPr
         sort: "500",
         picture: "",
         parent: mode.type === "add" ? mode.parentId : null,
+        selected_filters: [],
       };
 
   const [values, setValues] = useState<FormValues>(initial);
+  const [availableFilters, setAvailableFilters] = useState<SectionFilterOption[]>([]);
+  const [filtersLoading, setFiltersLoading] = useState(false);
+  const [filtersError, setFiltersError] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     nameRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    const loadSectionFilters = async () => {
+      if (!isEdit) return;
+      setFiltersLoading(true);
+      setFiltersError(null);
+      try {
+        const res = await fetch(`/api/admin/sections/${mode.section.id}/filters`, {
+          cache: "no-store",
+        });
+        const json: { options?: SectionFilterOption[]; selected?: string[]; error?: string } =
+          await res.json();
+        if (!res.ok) {
+          throw new Error(json.error ?? `HTTP ${res.status}`);
+        }
+        if (cancelled) return;
+        setAvailableFilters(Array.isArray(json.options) ? json.options : []);
+        setValues((prev) => ({
+          ...prev,
+          selected_filters: Array.isArray(json.selected)
+            ? json.selected.filter((v): v is string => typeof v === "string")
+            : prev.selected_filters,
+        }));
+      } catch (e) {
+        if (cancelled) return;
+        setFiltersError(e instanceof Error ? e.message : "Ошибка загрузки фильтров");
+      } finally {
+        if (!cancelled) setFiltersLoading(false);
+      }
+    };
+
+    loadSectionFilters();
+    return () => {
+      cancelled = true;
+    };
+  }, [isEdit, mode]);
+
   const set = (key: keyof FormValues, value: string | number | null) => {
     setValues((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const toggleSelectedFilter = (key: string) => {
+    setValues((prev) => {
+      const exists = prev.selected_filters.includes(key);
+      return {
+        ...prev,
+        selected_filters: exists
+          ? prev.selected_filters.filter((v) => v !== key)
+          : [...prev.selected_filters, key],
+      };
+    });
+  };
+
+  const selectAllFilters = () => {
+    setValues((prev) => ({
+      ...prev,
+      selected_filters: availableFilters.map((f) => f.key),
+    }));
+  };
+
+  const clearAllFilters = () => {
+    setValues((prev) => ({ ...prev, selected_filters: [] }));
   };
 
   const slugify = (s: string) =>
@@ -624,6 +703,74 @@ function SectionForm({ mode, sections, saving, onSave, onCancel }: SectionFormPr
             className="h-8 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none ring-blue-400 focus:ring-2"
           />
         </div>
+
+        {isEdit && (
+          <div className="flex flex-col gap-2 sm:col-span-2">
+            <label className="text-xs font-medium text-slate-600">
+              Доступные фильтры категории
+            </label>
+
+            <div className="rounded-lg border border-slate-200 bg-white p-3 text-sm">
+              {filtersLoading ? (
+                <p className="text-slate-500">Загрузка фильтров…</p>
+              ) : filtersError ? (
+                <p className="text-slate-600">Не удалось загрузить: {filtersError}</p>
+              ) : availableFilters.length === 0 ? (
+                <p className="text-slate-500">Для этого раздела фильтры не найдены.</p>
+              ) : (
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-xs text-slate-500">
+                      Выбрано: {values.selected_filters.filter((key) =>
+                        availableFilters.some((f) => f.key === key)
+                      ).length} из {availableFilters.length}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs">
+                      <button
+                        type="button"
+                        onClick={selectAllFilters}
+                        className="rounded border border-slate-200 px-2 py-1 text-slate-600 hover:bg-slate-50"
+                      >
+                        Отметить все
+                      </button>
+                      <button
+                        type="button"
+                        onClick={clearAllFilters}
+                        className="rounded border border-slate-200 px-2 py-1 text-slate-600 hover:bg-slate-50"
+                      >
+                        Снять все
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                    {availableFilters.map((filter) => (
+                      <label
+                        key={filter.key}
+                        className="flex items-start gap-2 rounded px-1 py-0.5 hover:bg-slate-50"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={values.selected_filters.includes(filter.key)}
+                          onChange={() => toggleSelectedFilter(filter.key)}
+                          className="mt-0.5 h-4 w-4 shrink-0 accent-blue-600"
+                        />
+                        <span className="leading-tight text-slate-700">
+                          {filter.label}
+                          {typeof filter.count === "number" ? (
+                            <span className="ml-1 text-xs text-slate-400">
+                              ({filter.count})
+                            </span>
+                          ) : null}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-2 pt-1">

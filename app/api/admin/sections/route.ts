@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import path from "path";
 import { readFileSync, writeFileSync } from "fs";
 import type { SectionRaw } from "@/lib/types";
+import { invalidateSectionCaches } from "@/lib/data";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const DATA_PATH = path.join(process.cwd(), "data", "sections.json");
 
@@ -16,7 +20,9 @@ function writeSections(sections: SectionRaw[]): void {
 export async function GET() {
   try {
     const sections = readSections();
-    return NextResponse.json(sections);
+    return NextResponse.json(sections, {
+      headers: { "Cache-Control": "no-store, max-age=0" },
+    });
   } catch {
     return NextResponse.json({ error: "Не удалось прочитать разделы" }, { status: 500 });
   }
@@ -30,6 +36,7 @@ export async function POST(request: Request) {
       parent: number | null;
       sort?: number;
       picture?: string;
+      selected_filters?: string[];
     } = await request.json();
 
     if (!body.name?.trim() || !body.external_id?.trim()) {
@@ -72,11 +79,17 @@ export async function POST(request: Request) {
         level,
         parent_id: body.parent ?? null,
         picture: body.picture ?? "",
+        selected_filters: Array.isArray(body.selected_filters)
+          ? body.selected_filters.filter(
+              (v): v is string => typeof v === "string" && v.trim().length > 0
+            )
+          : [],
       },
     };
 
     sections.push(created);
     writeSections(sections);
+    invalidateSectionCaches();
     return NextResponse.json(created, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Не удалось создать раздел" }, { status: 500 });

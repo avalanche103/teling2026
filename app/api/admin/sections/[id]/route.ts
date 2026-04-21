@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import path from "path";
 import { readFileSync, writeFileSync } from "fs";
 import type { SectionRaw } from "@/lib/types";
+import { invalidateSectionCaches } from "@/lib/data";
 
 const DATA_PATH = path.join(process.cwd(), "data", "sections.json");
 
@@ -29,6 +30,7 @@ export async function PUT(request: Request, ctx: RouteContext) {
       parent: number | null;
       sort: number;
       picture: string;
+      selected_filters: string[];
     }> = await request.json();
 
     const sections = readSections();
@@ -71,6 +73,11 @@ export async function PUT(request: Request, ctx: RouteContext) {
     const parent = body.parent !== undefined ? body.parent : current.parent;
     const sort = body.sort ?? current.metadata.sort;
     const picture = body.picture !== undefined ? body.picture : current.metadata.picture;
+    const selected_filters = Array.isArray(body.selected_filters)
+      ? body.selected_filters.filter(
+          (v): v is string => typeof v === "string" && v.trim().length > 0
+        )
+      : (current.metadata.selected_filters ?? []);
 
     let level = current.metadata.level;
     if (parent !== current.parent) {
@@ -90,11 +97,13 @@ export async function PUT(request: Request, ctx: RouteContext) {
         parent_id: parent,
         picture,
         level,
+        selected_filters,
       },
     };
 
     sections[idx] = updated;
     writeSections(sections);
+    invalidateSectionCaches();
     return NextResponse.json(updated);
   } catch {
     return NextResponse.json({ error: "Не удалось обновить раздел" }, { status: 500 });
@@ -125,6 +134,7 @@ export async function DELETE(_request: Request, ctx: RouteContext) {
     }
 
     writeSections(sections.filter((s) => s.id !== id));
+    invalidateSectionCaches();
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Не удалось удалить раздел" }, { status: 500 });

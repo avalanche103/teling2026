@@ -9,7 +9,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-red-950 shadow-sm backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-black shadow-sm backdrop-blur">
       {/* Top bar */}
       <div className="hidden border-b border-slate-700 bg-slate-900 text-slate-100 md:block">
         <div className="container mx-auto flex items-center justify-between px-4 py-1.5 text-sm text-slate-200">
@@ -30,14 +30,9 @@ export function Header() {
         <div className="flex h-16 items-center justify-between gap-4">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="flex flex-col leading-none">
-              <span className="text-xl font-black tracking-wide text-red-700">
-                ТЕЛИНГ
-              </span>
-              <span className="text-xs font-medium uppercase tracking-widest text-red-500">
-                групп
-              </span>
-            </div>
+            <span className="text-xl font-black tracking-wide text-black">
+              ТЕЛИНГ ГРУПП
+            </span>
           </Link>
 
           {/* Search bar (desktop) */}
@@ -45,18 +40,18 @@ export function Header() {
 
           {/* Desktop nav links */}
           <nav className="hidden shrink-0 items-center gap-6 text-sm font-semibold md:flex">
-            <Link href="/" className="transition-colors hover:text-red-600">
+            <Link href="/" className="transition-colors hover:text-black/70">
               Главная
             </Link>
             <Link
               href="/catalog"
-              className="transition-colors hover:text-red-600"
+              className="transition-colors hover:text-black/70"
             >
               Каталог
             </Link>
             <Link
               href="/#contacts"
-              className="transition-colors hover:text-red-600"
+              className="transition-colors hover:text-black/70"
             >
               Контакты
             </Link>
@@ -64,7 +59,7 @@ export function Header() {
 
           {/* Mobile menu toggle */}
           <button
-            className="text-red-700 md:hidden"
+            className="text-black md:hidden"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Меню"
           >
@@ -79,38 +74,38 @@ export function Header() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="border-t border-red-200 bg-white px-4 pb-4 md:hidden">
+        <div className="border-t border-slate-200 bg-white px-4 pb-4 md:hidden">
           <SearchAutocomplete
             placeholder="Поиск…"
             containerClassName="relative mt-4 mb-3"
-            inputClassName="w-full rounded-lg border border-red-200 bg-white px-4 py-2 pr-10 text-sm text-red-950 placeholder-red-300 outline-none"
+            inputClassName="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 pr-10 text-sm text-black placeholder-slate-400 outline-none"
             onNavigate={() => setMenuOpen(false)}
           />
           <nav className="flex flex-col gap-3 text-sm font-medium">
             <Link
               href="/"
               onClick={() => setMenuOpen(false)}
-              className="py-1 hover:text-red-600"
+              className="py-1 hover:text-black/70"
             >
               Главная
             </Link>
             <Link
               href="/catalog"
               onClick={() => setMenuOpen(false)}
-              className="py-1 hover:text-red-600"
+              className="py-1 hover:text-black/70"
             >
               Каталог
             </Link>
             <Link
               href="/#contacts"
               onClick={() => setMenuOpen(false)}
-              className="py-1 hover:text-red-600"
+              className="py-1 hover:text-black/70"
             >
               Контакты
             </Link>
             <a
               href="tel:+375172705095"
-              className="flex items-center gap-2 py-1 text-red-700"
+              className="flex items-center gap-2 py-1 text-black"
             >
               <Phone className="w-4 h-4" />
               +375 (17) 270-50-95

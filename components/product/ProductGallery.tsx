@@ -15,7 +15,7 @@ export function ProductGallery({ localImages, alt }: ProductGalleryProps) {
 
   if (images.length === 0) {
     return (
-      <div className="flex h-96 items-center justify-center rounded-2xl border border-red-200 bg-slate-100 text-slate-500">
+      <div className="flex h-96 items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 text-slate-500">
         Изображение отсутствует
       </div>
     );
@@ -25,7 +25,7 @@ export function ProductGallery({ localImages, alt }: ProductGalleryProps) {
 
   return (
     <div className="space-y-3">
-      <div className="relative h-96 overflow-hidden rounded-2xl border border-red-200 bg-white">
+      <div className="relative h-96 overflow-hidden rounded-2xl border border-slate-200 bg-white">
         <Image src={current} alt={alt} fill className="object-contain p-4" />
       </div>
 
@@ -36,7 +36,7 @@ export function ProductGallery({ localImages, alt }: ProductGalleryProps) {
               key={`${src}-${idx}`}
               onClick={() => setActive(idx)}
               className={`relative h-16 overflow-hidden rounded-lg border ${
-                idx === active ? "border-red-500" : "border-red-200"
+                idx === active ? "border-slate-700" : "border-slate-200"
               }`}
             >
               <Image src={src} alt={`${alt} ${idx + 1}`} fill className="object-cover" />

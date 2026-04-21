@@ -6,24 +6,24 @@ import type {
   Category,
   Product,
   ProductSummary,
+  SectionFacets,
+  CharFacet,
+  FacetItem,
 } from "./types";
 
 // ---- Module-level lazy caches ----
 
-let _sections: SectionRaw[] | null = null;
 let _products: ProductRaw[] | null = null;
-let _categoryTree: Category[] | null = null;
 let _productsBySkuMap: Map<string, ProductRaw> | null = null;
 let _productsBySectionMap: Map<number, ProductRaw[]> | null = null;
-let _sectionBySlugMap: Map<string, SectionRaw> | null = null;
-let _sectionSlugByIdMap: Map<number, string> | null = null;
+
+export function invalidateSectionCaches(): void {
+  // Section caches were removed to always read fresh section state from disk.
+}
 
 function getSectionsRaw(): SectionRaw[] {
-  if (!_sections) {
-    const filePath = path.join(process.cwd(), "data", "sections.json");
-    _sections = JSON.parse(readFileSync(filePath, "utf-8")) as SectionRaw[];
-  }
-  return _sections;
+  const filePath = path.join(process.cwd(), "data", "sections.json");
+  return JSON.parse(readFileSync(filePath, "utf-8")) as SectionRaw[];
 }
 
 function getProductsRaw(): ProductRaw[] {
@@ -35,23 +35,19 @@ function getProductsRaw(): ProductRaw[] {
 }
 
 function getSectionBySlugMap(): Map<string, SectionRaw> {
-  if (!_sectionBySlugMap) {
-    _sectionBySlugMap = new Map();
-    for (const s of getSectionsRaw()) {
-      _sectionBySlugMap.set(s.external_id, s);
-    }
+  const map = new Map<string, SectionRaw>();
+  for (const s of getSectionsRaw()) {
+    map.set(s.external_id, s);
   }
-  return _sectionBySlugMap;
+  return map;
 }
 
 function getSectionSlugByIdMap(): Map<number, string> {
-  if (!_sectionSlugByIdMap) {
-    _sectionSlugByIdMap = new Map();
-    for (const s of getSectionsRaw()) {
-      _sectionSlugByIdMap.set(s.id, s.external_id);
-    }
+  const map = new Map<number, string>();
+  for (const s of getSectionsRaw()) {
+    map.set(s.id, s.external_id);
   }
-  return _sectionSlugByIdMap;
+  return map;
 }
 
 function getLocalImageUrls(sku: string): string[] {
@@ -149,10 +145,7 @@ function buildCategoryTree(sections: SectionRaw[]): Category[] {
 }
 
 export function getCategoryTree(): Category[] {
-  if (!_categoryTree) {
-    _categoryTree = buildCategoryTree(getSectionsRaw());
-  }
-  return _categoryTree;
+  return buildCategoryTree(getSectionsRaw());
 }
 
 export function getRootCategories(): Category[] {
@@ -176,6 +169,19 @@ export function getCategoryBySlug(slug: string): Category | null {
   const section = getSectionBySlugMap().get(slug);
   if (!section) return null;
   return getCategoryById(section.id);
+}
+
+/**
+ * Returns selected filter keys for a section.
+ * null => section has no explicit selection yet (treat as all available active by default)
+ * []   => explicit empty selection (no filters enabled)
+ */
+export function getSectionSelectedFilters(sectionId: number): string[] | null {
+  const section = getSectionsRaw().find((s) => s.id === sectionId);
+  if (!section) return null;
+  const selected = section.metadata?.selected_filters;
+  if (!Array.isArray(selected)) return null;
+  return selected.filter((v): v is string => typeof v === "string" && v.trim().length > 0);
 }
 
 /** Returns ancestor chain from root to parent (not including self) */
@@ -267,6 +273,10 @@ export interface GetSectionProductsOptions {
   limit?: number;
   search?: string;
   includeDescendants?: boolean;
+  brands?: string[];
+  priceMin?: number;
+  priceMax?: number;
+  charFilters?: Record<string, string[]>;
 }
 
 export function getSectionProducts(
@@ -278,6 +288,10 @@ export function getSectionProducts(
     limit = 24,
     search = "",
     includeDescendants = true,
+    brands,
+    priceMin,
+    priceMax,
+    charFilters,
   } = options;
 
   const bySection = getProductsBySectionMap();
@@ -309,6 +323,46 @@ export function getSectionProducts(
   allProducts = allProducts.filter(
     (p) => typeof p.sku === "string" && p.sku.trim().length > 0
   );
+
+  // Brand filter
+  if (brands && brands.length > 0) {
+    const brandSet = new Set(brands);
+    allProducts = allProducts.filter((p) => {
+      const b = (p.metadata?.brand || p.vendor || "").trim();
+      return brandSet.has(b);
+    });
+  }
+
+  // Price filter
+  if (priceMin !== undefined && priceMin > 0) {
+    allProducts = allProducts.filter((p) => p.price >= priceMin!);
+  }
+  if (priceMax !== undefined && priceMax > 0) {
+    allProducts = allProducts.filter((p) => p.price <= priceMax!);
+  }
+
+  // Dynamic char filters
+  if (charFilters && Object.keys(charFilters).length > 0) {
+    allProducts = allProducts.filter((p) => {
+      for (const [paramName, selectedValues] of Object.entries(charFilters)) {
+        if (!selectedValues.length) continue;
+        let found = false;
+        outer: for (const group of (p.metadata?.chars ?? [])) {
+          for (const item of group.items) {
+            if (
+              item.name?.trim() === paramName &&
+              selectedValues.includes(item.value?.trim())
+            ) {
+              found = true;
+              break outer;
+            }
+          }
+        }
+        if (!found) return false;
+      }
+      return true;
+    });
+  }
 
   const total = allProducts.length;
   const start = (page - 1) * limit;
@@ -447,6 +501,83 @@ function translitLatToRu(input: string): string {
     s = s.replace(new RegExp(lat, "g"), ru);
   }
   return s;
+}
+
+export function getSectionFacets(sectionId: number): SectionFacets {
+  const bySection = getProductsBySectionMap();
+  let allProducts: ProductRaw[] = [];
+  const cat = getCategoryById(sectionId);
+  const ids = cat ? getAllDescendantIds(cat) : [sectionId];
+  for (const id of ids) {
+    allProducts.push(...(bySection.get(id) ?? []));
+  }
+  allProducts = allProducts.filter(
+    (p) => typeof p.sku === "string" && p.sku.trim().length > 0
+  );
+
+  // Brands
+  const brandCounts = new Map<string, number>();
+  for (const p of allProducts) {
+    const brand = (p.metadata?.brand || p.vendor || "").trim();
+    if (brand) brandCounts.set(brand, (brandCounts.get(brand) ?? 0) + 1);
+  }
+  const brands: FacetItem[] = [...brandCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([value, count]) => ({ value, count }));
+
+  // Price range
+  let priceMin = Infinity;
+  let priceMax = 0;
+  for (const p of allProducts) {
+    if (p.price > 0) {
+      priceMin = Math.min(priceMin, p.price);
+      priceMax = Math.max(priceMax, p.price);
+    }
+  }
+  if (!isFinite(priceMin)) priceMin = 0;
+
+  // Char names that duplicate the brands facet — skip to avoid two "Производитель" groups
+  const BRAND_CHAR_NAMES = new Set(
+    ["производитель", "бренд", "brand", "марка", "торговая марка"].map((s) =>
+      s.toLowerCase()
+    )
+  );
+
+  // Dynamic char facets — flatten all char items across products
+  const charMap = new Map<string, Map<string, number>>();
+  for (const p of allProducts) {
+    for (const group of (p.metadata?.chars ?? [])) {
+      for (const item of group.items) {
+        const name = item.name?.trim();
+        const value = item.value?.trim();
+        if (!name || !value) continue;
+        // Skip char names that are already covered by the brands facet
+        if (BRAND_CHAR_NAMES.has(name.toLowerCase())) continue;
+        if (!charMap.has(name)) charMap.set(name, new Map());
+        const vm = charMap.get(name)!;
+        vm.set(value, (vm.get(value) ?? 0) + 1);
+      }
+    }
+  }
+
+  const chars: CharFacet[] = [];
+  for (const [name, valMap] of charMap.entries()) {
+    // Only include facets with 2–30 distinct values
+    if (valMap.size < 2 || valMap.size > 30) continue;
+    const values: FacetItem[] = [...valMap.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([value, count]) => ({ value, count }));
+    chars.push({ name, values });
+  }
+
+  // Sort by total coverage, keep top 12
+  chars.sort((a, b) => {
+    const sa = a.values.reduce((s, v) => s + v.count, 0);
+    const sb = b.values.reduce((s, v) => s + v.count, 0);
+    return sb - sa;
+  });
+
+  return { brands, priceMin, priceMax, chars: chars.slice(0, 12) };
 }
 
 /** Returns all section external_ids (slugs) for static params generation */

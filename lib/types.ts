@@ -14,6 +14,7 @@ export interface SectionRaw {
     level: number;
     parent_id: number | null;
     picture: string;
+    selected_filters?: string[];
   };
 }
 
@@ -122,4 +123,37 @@ export interface Product extends ProductSummary {
   externalUrl: string;
   minQty: number;
   updatedAt: string;
+}
+
+// ---- Filter / Facet types ----
+
+export interface FacetItem {
+  value: string;
+  count: number;
+}
+
+export interface CharFacet {
+  /** Parameter name, e.g. "Сечение жилы" */
+  name: string;
+  values: FacetItem[];
+}
+
+export interface SectionFacets {
+  brands: FacetItem[];
+  priceMin: number;
+  priceMax: number;
+  chars: CharFacet[];
+}
+
+export interface ActiveFilters {
+  brands: string[];
+  priceMin: number | null;
+  priceMax: number | null;
+  charFilters: Record<string, string[]>;
+}
+
+export interface SectionFilterOption {
+  key: string;
+  label: string;
+  count?: number;
 }

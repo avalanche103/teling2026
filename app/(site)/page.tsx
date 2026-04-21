@@ -28,16 +28,15 @@ export default function HomePage() {
 
   return (
     <main className="flex-1">
-      <section className="relative overflow-hidden border-b border-slate-300 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_15%,rgba(255,255,255,0.2),transparent_38%),radial-gradient(circle_at_88%_0%,rgba(203,213,225,0.35),transparent_32%)]" />
+      <section className="relative overflow-hidden border-b border-slate-300 bg-slate-900 text-white">
         <div className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:py-14 lg:px-6 lg:py-20">
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-red-200">
-            Teling Group
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-200">
+            ТЕЛИНГ ГРУПП
           </p>
           <h1 className="mt-3 max-w-4xl text-3xl font-black leading-tight tracking-tight sm:text-5xl">
             Каталог телекоммуникационной продукции для проектирования и монтажа сетей
           </h1>
-          <p className="mt-5 max-w-3xl text-base text-red-50/95 sm:text-lg">
+          <p className="mt-5 max-w-3xl text-slate-100/95 sm:text-lg">
             Компания с более чем 20-летним опытом в области телекоммуникаций. Производим и поставляем
             оборудование, материалы и комплектующие для ввода в эксплуатацию инженерных систем связи.
           </p>
@@ -51,7 +50,7 @@ export default function HomePage() {
             </Link>
             <a
               href="#contacts"
-              className="rounded-xl border border-red-200/70 px-5 py-3 text-sm font-bold text-red-100 transition hover:bg-white/10"
+              className="rounded-xl border border-slate-300/70 px-5 py-3 text-sm font-bold text-slate-100 transition hover:bg-white/10"
             >
               Контакты
             </a>
@@ -60,8 +59,8 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto w-full max-w-7xl px-4 py-10 lg:px-6">
-        <h2 className="mb-6 text-2xl font-black tracking-tight text-red-950">
-          4 основных подраздела каталога
+        <h2 className="mb-6 text-2xl font-black tracking-tight text-black">
+          Каталог продукции
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {topCategories.map((category) => (
@@ -71,13 +70,13 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 pb-10 lg:grid-cols-[1.2fr_1fr] lg:px-6">
-        <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-black tracking-tight text-red-950">О компании</h2>
-          <p className="mt-3 text-red-900/80">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-black tracking-tight text-black">О компании</h2>
+          <p className="mt-3 text-black/80">
             Вас приветствует Телинг групп. Мы предлагаем широкий ассортимент оборудования и материалов,
             позволяющих создать, протестировать и ввести в эксплуатацию линии и сети любой сложности.
           </p>
-          <ul className="mt-4 space-y-2 text-red-900/85">
+          <ul className="mt-4 space-y-2 text-black/85">
             {COMPANY_DIRECTIONS.map((item) => (
               <li key={item} className="flex items-start gap-2">
                 <span className="mt-1 h-2 w-2 rounded-full bg-slate-500" />
@@ -87,20 +86,20 @@ export default function HomePage() {
           </ul>
         </div>
 
-        <div id="contacts" className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-black tracking-tight text-red-950">Контакты</h2>
-          <p className="mt-3 text-red-900/80">{CONTACTS.address}</p>
-          <ul className="mt-4 space-y-1 text-red-950">
+        <div id="contacts" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-black tracking-tight text-black">Контакты</h2>
+          <p className="mt-3 text-black/80">{CONTACTS.address}</p>
+          <ul className="mt-4 space-y-1 text-black">
             {CONTACTS.phones.map((phone) => (
               <li key={phone}>
-                <a href={`tel:${phone.replace(/[^\d+]/g, "")}`} className="hover:text-red-700">
+                <a href={`tel:${phone.replace(/[^\d+]/g, "")}`} className="hover:text-black/80">
                   {phone}
                 </a>
               </li>
             ))}
           </ul>
-          <p className="mt-3 text-red-900/80">{CONTACTS.workTime}</p>
-          <a className="mt-3 inline-block text-red-700 hover:text-red-900" href={`mailto:${CONTACTS.email}`}>
+          <p className="mt-3 text-black/80">{CONTACTS.workTime}</p>
+          <a className="mt-3 inline-block text-black hover:text-black/80" href={`mailto:${CONTACTS.email}`}>
             {CONTACTS.email}
           </a>
         </div>

@@ -44,7 +44,12 @@
       "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/",
       "level": 1,
       "parent_id": null,
-      "picture": "https://ssd.ru/upload/resta.ssd/aa5/h9qxp43ir8kp7nnpmykuqez1hun910bo/01.webp"
+      "picture": "https://ssd.ru/upload/resta.ssd/aa5/h9qxp43ir8kp7nnpmykuqez1hun910bo/01.webp",
+      "selected_filters": [
+        "brand",
+        "char:Сопротивление сжатию, Н",
+        "char:Отрезок трубы"
+      ]
     }
   },
   {
