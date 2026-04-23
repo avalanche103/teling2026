@@ -178,7 +178,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         </section>
       )}
 
-      <div className="flex items-start gap-6">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         {hasFacets && (
           <CategoryFilters
             facets={facets}
