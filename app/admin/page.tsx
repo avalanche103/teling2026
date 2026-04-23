@@ -29,6 +29,25 @@ export default function AdminDashboard() {
             </div>
           </div>
         </Link>
+
+        <Link
+          href="/admin/products"
+          className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
+        >
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 text-2xl">
+              📦
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-slate-900 group-hover:text-emerald-700">
+                Товары
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Поиск товаров и управление их видимостью на сайте через чекбоксы
+              </p>
+            </div>
+          </div>
+        </Link>
       </div>
     </div>
   );

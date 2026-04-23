@@ -1,12 +1,22 @@
-/** Format price in BYN with 2 decimal places */
-export function formatPrice(price: number, currency = "Br"): string {
-  if (price == null || isNaN(price)) return "—";
-  return `${price.toFixed(2).replace(".", ",")} ${currency}`;
+/** Check whether a price is available for display */
+export function hasPrice(price: number | null | undefined): price is number {
+  return typeof price === "number" && !isNaN(price) && price > 0;
+}
+
+export function normalizeCurrency(currency: string | null | undefined): string {
+  if (!currency) return "BYN";
+  return currency === "Br" ? "BYN" : currency;
+}
+
+/** Format price with 2 decimal places */
+export function formatPrice(price: number | null | undefined, currency = "BYN"): string {
+  if (!hasPrice(price)) return "По запросу";
+  return `${price.toFixed(2).replace(".", ",")} ${normalizeCurrency(currency)}`;
 }
 
 /** Format price without currency symbol */
-export function formatPriceValue(price: number): string {
-  if (price == null || isNaN(price)) return "—";
+export function formatPriceValue(price: number | null | undefined): string {
+  if (!hasPrice(price)) return "По запросу";
   return price.toFixed(2).replace(".", ",");
 }
 

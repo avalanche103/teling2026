@@ -25,6 +25,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             >
               Каталог
             </Link>
+            <Link
+              href="/admin/products"
+              className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+            >
+              Товары
+            </Link>
           </nav>
           <Link
             href="/"

@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ProductSummary } from "@/lib/types";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, hasPrice } from "@/lib/format";
 
 interface ProductCardProps {
   product: ProductSummary;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const showVatLabel = hasPrice(product.price);
+
   return (
     <Link
       href={`/product/${product.sku}`}
@@ -43,6 +45,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className="text-lg font-bold text-black">
             {formatPrice(product.price, product.currency)}
           </span>
+          {showVatLabel && <span className="ml-2 text-xs text-black/60">с НДС</span>}
         </div>
       </div>
     </Link>

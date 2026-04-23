@@ -20,7 +20,9 @@ export function Header() {
               +375 (17) 270-50-95
             </a>
             <span className="text-slate-500">|</span>
-            <span>Пн–Пт 9:00–18:00</span>
+            <a href="mailto:info@teling.by" className="transition-colors hover:text-white">
+              info@teling.by
+            </a>
           </div>
         </div>
       </div>

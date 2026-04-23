@@ -40,6 +40,7 @@ export interface ProductRaw {
   original_name: string;
   custom_name: string | null;
   sku: string;
+  visible?: boolean;
   section_id: number;
   section_name: string;
   price: number;
@@ -92,6 +93,7 @@ export interface ProductSummary {
   id: number;
   name: string;
   sku: string;
+  visible: boolean;
   sectionId: number;
   sectionName: string;
   sectionSlug: string;
@@ -123,6 +125,77 @@ export interface Product extends ProductSummary {
   externalUrl: string;
   minQty: number;
   updatedAt: string;
+}
+
+export interface AdminProductListItem {
+  id: number;
+  sku: string;
+  name: string;
+  originalName: string;
+  customName: string | null;
+  sectionId: number;
+  sectionName: string;
+  brand: string;
+  vendor: string;
+  price: number;
+  priceWithoutVat: number;
+  currency: string;
+  visible: boolean;
+}
+
+export type ProductImportConflictAction = "skip" | "use-sku" | "use-id";
+export type ProductImportMissingAction = "keep" | "hide" | "delete";
+
+export interface ProductImportPreviewProduct {
+  importKey: string;
+  id: number;
+  sku: string;
+  name: string;
+  sectionName: string;
+  brand: string;
+  price: number;
+  currency: string;
+}
+
+export interface ProductImportConflictItem extends ProductImportPreviewProduct {
+  conflictType: "sku" | "id" | "cross" | "duplicate";
+  currentBySku: AdminProductListItem | null;
+  currentById: AdminProductListItem | null;
+}
+
+export interface ProductImportMissingItem {
+  currentKey: string;
+  product: AdminProductListItem;
+}
+
+export interface ProductImportPreview {
+  token: string;
+  importedAt: string;
+  currentCount: number;
+  incomingCount: number;
+  exactMatchCount: number;
+  newProducts: ProductImportPreviewProduct[];
+  conflicts: ProductImportConflictItem[];
+  missingProducts: ProductImportMissingItem[];
+}
+
+export interface ProductImportApplyRequest {
+  token: string;
+  addNewProductKeys: string[];
+  conflictActions: Record<string, ProductImportConflictAction>;
+  missingActions: Record<string, ProductImportMissingAction>;
+}
+
+// ---- Import History ----
+
+export interface ImportHistoryEntry {
+  id: string; // UUID
+  timestamp: string; // ISO 8601 date-time
+  filename: string;
+  addedCount: number;
+  updatedCount: number;
+  hiddenCount: number;
+  deletedCount: number;
 }
 
 // ---- Filter / Facet types ----

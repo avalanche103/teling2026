@@ -1,5 +1,5 @@
 import path from "path";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import type {
   SectionRaw,
   ProductRaw,
@@ -21,6 +21,12 @@ export function invalidateSectionCaches(): void {
   // Section caches were removed to always read fresh section state from disk.
 }
 
+export function invalidateProductCaches(): void {
+  _products = null;
+  _productsBySkuMap = null;
+  _productsBySectionMap = null;
+}
+
 function getSectionsRaw(): SectionRaw[] {
   const filePath = path.join(process.cwd(), "data", "sections.json");
   return JSON.parse(readFileSync(filePath, "utf-8")) as SectionRaw[];
@@ -32,6 +38,14 @@ function getProductsRaw(): ProductRaw[] {
     _products = JSON.parse(readFileSync(filePath, "utf-8")) as ProductRaw[];
   }
   return _products;
+}
+
+function isProductVisible(product: ProductRaw): boolean {
+  return product.visible !== false;
+}
+
+function getVisibleProductsRaw(): ProductRaw[] {
+  return getProductsRaw().filter(isProductVisible);
 }
 
 function getSectionBySlugMap(): Map<string, SectionRaw> {
@@ -50,25 +64,41 @@ function getSectionSlugByIdMap(): Map<number, string> {
   return map;
 }
 
+const PUBLIC_IMAGES_DIR = path.join(process.cwd(), "public", "images");
+
+function getProductImageSources() {
+  const sources = [{ dir: PUBLIC_IMAGES_DIR, publicBase: "/images" }];
+  const legacyImagesDir = process.env.IMAGES_DIR;
+
+  if (
+    legacyImagesDir &&
+    path.resolve(legacyImagesDir) !== path.resolve(PUBLIC_IMAGES_DIR)
+  ) {
+    sources.push({ dir: legacyImagesDir, publicBase: "/image" });
+  }
+
+  return sources;
+}
+
 function getLocalImageUrls(sku: string): string[] {
-  const imagesDir =
-    process.env.IMAGES_DIR || path.join(process.cwd(), "public", "images");
   const extensions = ["webp", "jpg", "jpeg", "png"];
   const found: string[] = [];
+  const imageSources = getProductImageSources();
 
   for (let i = 1; i <= 8; i += 1) {
     let matched = false;
     for (const ext of extensions) {
       const filename = `${sku}_${i}.${ext}`;
-      const abs = path.join(imagesDir, filename);
-      try {
-        readFileSync(abs, { encoding: null });
-        found.push(`/image/${encodeURIComponent(filename)}`);
-        matched = true;
-        break;
-      } catch {
-        // File doesn't exist or cannot be read.
+      for (const source of imageSources) {
+        const abs = path.join(source.dir, filename);
+        if (existsSync(abs)) {
+          found.push(`${source.publicBase}/${encodeURIComponent(filename)}`);
+          matched = true;
+          break;
+        }
       }
+
+      if (matched) break;
     }
 
     // Stop scanning when the sequence is broken after at least one image found.
@@ -83,7 +113,7 @@ function getLocalImageUrls(sku: string): string[] {
 function getProductsBySkuMap(): Map<string, ProductRaw> {
   if (!_productsBySkuMap) {
     _productsBySkuMap = new Map();
-    for (const p of getProductsRaw()) {
+    for (const p of getVisibleProductsRaw()) {
       const sku = typeof p.sku === "string" ? p.sku.trim() : "";
       if (sku) {
         _productsBySkuMap.set(sku, p);
@@ -96,7 +126,7 @@ function getProductsBySkuMap(): Map<string, ProductRaw> {
 function getProductsBySectionMap(): Map<number, ProductRaw[]> {
   if (!_productsBySectionMap) {
     _productsBySectionMap = new Map();
-    for (const p of getProductsRaw()) {
+    for (const p of getVisibleProductsRaw()) {
       const arr = _productsBySectionMap.get(p.section_id) ?? [];
       arr.push(p);
       _productsBySectionMap.set(p.section_id, arr);
@@ -211,7 +241,9 @@ function rawToSummary(p: ProductRaw): ProductSummary {
   const sectionSlug = getSectionSlugByIdMap().get(p.section_id) || "";
   const sku = typeof p.sku === "string" ? p.sku : "";
   const name =
-    typeof p.name === "string" && p.name.trim()
+    typeof p.custom_name === "string" && p.custom_name.trim()
+      ? p.custom_name
+      : typeof p.name === "string" && p.name.trim()
       ? p.name
       : typeof p.original_name === "string" && p.original_name.trim()
       ? p.original_name
@@ -221,6 +253,7 @@ function rawToSummary(p: ProductRaw): ProductSummary {
     id: p.id,
     name,
     sku,
+    visible: isProductVisible(p),
     sectionId: p.section_id,
     sectionName: p.section_name,
     sectionSlug,
@@ -312,9 +345,10 @@ export function getSectionProducts(
     allProducts = allProducts.filter(
       (p) => {
         const name = typeof p.name === "string" ? p.name.toLowerCase() : "";
+        const customName = typeof p.custom_name === "string" ? p.custom_name.toLowerCase() : "";
         const sku = typeof p.sku === "string" ? p.sku.toLowerCase() : "";
         const brand = (p.metadata?.brand || "").toLowerCase();
-        return name.includes(q) || sku.includes(q) || brand.includes(q);
+        return name.includes(q) || customName.includes(q) || sku.includes(q) || brand.includes(q);
       }
     );
   }
@@ -381,8 +415,11 @@ export function searchProducts(
   const scored: Array<{ p: ProductRaw; score: number }> = [];
 
   for (const p of getProductsRaw()) {
+    if (!isProductVisible(p)) continue;
+
     const sku = normalizeForSearch(typeof p.sku === "string" ? p.sku : "");
     const name = normalizeForSearch(typeof p.name === "string" ? p.name : "");
+    const customName = normalizeForSearch(typeof p.custom_name === "string" ? p.custom_name : "");
     const brand = normalizeForSearch(p.metadata?.brand || "");
 
     // Product route requires SKU; skip broken data rows from search results.
@@ -405,6 +442,12 @@ export function searchProducts(
         bestScore = Math.max(bestScore, 65 + Math.min(term.length, 10));
       } else if (name.includes(term)) {
         bestScore = Math.max(bestScore, 45 + Math.min(term.length, 8));
+      }
+
+      if (customName.startsWith(term)) {
+        bestScore = Math.max(bestScore, 70 + Math.min(term.length, 10));
+      } else if (customName.includes(term)) {
+        bestScore = Math.max(bestScore, 50 + Math.min(term.length, 8));
       }
 
       if (brand.includes(term)) {
@@ -587,7 +630,7 @@ export function getAllSectionSlugs(): string[] {
 
 /** Returns all product SKUs for static params generation */
 export function getAllProductSkus(): string[] {
-  return getProductsRaw()
+  return getVisibleProductsRaw()
     .map((p) => (typeof p.sku === "string" ? p.sku.trim() : ""))
     .filter(Boolean);
 }

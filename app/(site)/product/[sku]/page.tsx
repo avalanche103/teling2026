@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { getCategoryById, getProductBySku } from "@/lib/data";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, formatPriceValue, hasPrice, normalizeCurrency } from "@/lib/format";
 
 interface ProductPageProps {
   params: Promise<{
@@ -16,6 +16,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   if (!product) notFound();
 
   const category = getCategoryById(product.sectionId);
+  const showVatDetails = hasPrice(product.price);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-6">
@@ -60,6 +61,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <p className="mt-2 text-3xl font-black text-black">
               {formatPrice(product.price, product.currency)}
             </p>
+            {showVatDetails && (
+              <p className="mt-1 text-sm text-black/60">
+                (без НДС {formatPriceValue(product.priceWithoutVat)} {normalizeCurrency(product.currency)})
+              </p>
+            )}
           </div>
 
           {product.timeDelivery && (
