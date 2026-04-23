@@ -42,6 +42,4 @@ next-env.d.ts
 
 # product catalog data (keep local only)
 /public/images/
-/data/products.json
-/data/catalog_tree.json
 /data/products.import.tmp.json
