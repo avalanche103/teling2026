@@ -64,7 +64,11 @@ function getSectionSlugByIdMap(): Map<number, string> {
   return map;
 }
 
-const PUBLIC_IMAGES_DIR = path.join(process.cwd(), "public", "images");
+const PUBLIC_IMAGES_DIR = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "images"
+);
 
 function getProductImageSources() {
   const sources = [{ dir: PUBLIC_IMAGES_DIR, publicBase: "/images" }];
@@ -72,7 +76,8 @@ function getProductImageSources() {
 
   if (
     legacyImagesDir &&
-    path.resolve(legacyImagesDir) !== path.resolve(PUBLIC_IMAGES_DIR)
+    path.resolve(/* turbopackIgnore: true */ legacyImagesDir) !==
+      path.resolve(PUBLIC_IMAGES_DIR)
   ) {
     sources.push({ dir: legacyImagesDir, publicBase: "/image" });
   }
@@ -90,7 +95,7 @@ function getLocalImageUrls(sku: string): string[] {
     for (const ext of extensions) {
       const filename = `${sku}_${i}.${ext}`;
       for (const source of imageSources) {
-        const abs = path.join(source.dir, filename);
+        const abs = path.join(/* turbopackIgnore: true */ source.dir, filename);
         if (existsSync(abs)) {
           found.push(`${source.publicBase}/${encodeURIComponent(filename)}`);
           matched = true;
@@ -249,6 +254,9 @@ function rawToSummary(p: ProductRaw): ProductSummary {
       ? p.original_name
       : "Без названия";
   const localImages = sku ? getLocalImageUrls(sku) : [];
+  const externalImages = (p.metadata?.pictures || []).filter(
+    (url): url is string => typeof url === "string" && url.trim().length > 0,
+  );
   return {
     id: p.id,
     name,
@@ -263,12 +271,15 @@ function rawToSummary(p: ProductRaw): ProductSummary {
     brand: p.metadata?.brand || p.vendor || "",
     unit: p.metadata?.unit || "шт",
     type: p.metadata?.type || "",
-    thumbnail: localImages[0] ?? null,
+    thumbnail: localImages[0] ?? externalImages[0] ?? null,
   };
 }
 
 function rawToProduct(p: ProductRaw): Product {
   const localImages = getLocalImageUrls(p.sku);
+  const externalImages = (p.metadata?.pictures || []).filter(
+    (url): url is string => typeof url === "string" && url.trim().length > 0,
+  );
   return {
     ...rawToSummary(p),
     priceWithoutVat: p.price_without_vat,
@@ -277,7 +288,7 @@ function rawToProduct(p: ProductRaw): Product {
     weight: p.metadata?.weight || 0,
     volume: p.metadata?.volume || 0,
     localImages,
-    externalImages: [],
+    externalImages,
     video: p.metadata?.video || [],
     documents: p.metadata?.documents || [],
     relatedSkus: p.metadata?.soputst || [],

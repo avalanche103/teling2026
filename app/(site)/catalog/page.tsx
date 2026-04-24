@@ -3,6 +3,9 @@ import { CategoryCard } from "@/components/catalog/CategoryCard";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { getRootCategories, searchProducts } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface CatalogIndexPageProps {
   searchParams: Promise<{
     q?: string;

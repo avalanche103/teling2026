@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import path from "path";
 import { readFileSync, writeFileSync } from "fs";
-import type { AdminProductListItem, ProductRaw } from "@/lib/types";
+import type { AdminProductListItem, ProductDocument, ProductRaw, SectionRaw } from "@/lib/types";
 import { invalidateProductCaches } from "@/lib/data";
+
+const SECTIONS_PATH = path.join(process.cwd(), "data", "sections.json");
+
+function readSections(): SectionRaw[] {
+  return JSON.parse(readFileSync(SECTIONS_PATH, "utf-8")) as SectionRaw[];
+}
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -71,7 +77,31 @@ function toListItem(product: ProductRaw): AdminProductListItem {
     priceWithoutVat: product.price_without_vat,
     currency: product.currency,
     visible: isVisible(product),
+    picture: product.metadata?.pictures?.[0] || null,
+    description: product.metadata?.description || "",
+    documents: product.metadata?.documents || [],
   };
+}
+
+function normalizeDocuments(input: unknown): ProductDocument[] {
+  if (!Array.isArray(input)) return [];
+  const items = input
+    .map((doc) => {
+      if (!doc || typeof doc !== "object") return null;
+      const d = doc as Partial<ProductDocument>;
+      const type = typeof d.type === "string" ? d.type.trim() : "";
+      const name = typeof d.name === "string" ? d.name.trim() : "";
+      const url = typeof d.url === "string" ? d.url.trim() : "";
+      if (!name || !url) return null;
+      return {
+        type: type || "Документ",
+        name,
+        url,
+      } satisfies ProductDocument;
+    })
+    .filter((doc): doc is ProductDocument => Boolean(doc));
+
+  return items.slice(0, 50);
 }
 
 export async function GET(request: Request) {
@@ -176,5 +206,110 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ success: true, updatedCount });
   } catch {
     return NextResponse.json({ error: "Не удалось сохранить видимость товаров" }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body: {
+      name: string;
+      sku: string;
+      brand?: string;
+      section_id: number;
+      price: number;
+      price_without_vat: number;
+      description?: string;
+      picture_url?: string;
+      documents?: ProductDocument[];
+      visible?: boolean;
+    } = await request.json();
+
+    const nameTrimmed = body.name?.trim() ?? "";
+    const skuTrimmed = body.sku?.trim() ?? "";
+
+    if (!nameTrimmed) {
+      return NextResponse.json({ error: "Название обязательно" }, { status: 400 });
+    }
+    if (!skuTrimmed) {
+      return NextResponse.json({ error: "SKU обязателен" }, { status: 400 });
+    }
+    if (!Number.isInteger(body.section_id)) {
+      return NextResponse.json({ error: "Выберите раздел" }, { status: 400 });
+    }
+    if (!Number.isFinite(body.price) || body.price < 0) {
+      return NextResponse.json({ error: "Цена должна быть неотрицательным числом" }, { status: 400 });
+    }
+    if (!Number.isFinite(body.price_without_vat) || body.price_without_vat < 0) {
+      return NextResponse.json({ error: "Цена без НДС должна быть неотрицательным числом" }, { status: 400 });
+    }
+
+    const products = readProducts();
+
+    if (products.some((p) => p.sku === skuTrimmed)) {
+      return NextResponse.json({ error: `SKU "${skuTrimmed}" уже используется` }, { status: 409 });
+    }
+
+    const sections = readSections();
+    const section = sections.find((s) => s.id === body.section_id);
+    if (!section) {
+      return NextResponse.json({ error: "Раздел не найден" }, { status: 400 });
+    }
+
+    const maxId = products.reduce((max, p) => Math.max(max, p.id), 0);
+    const newId = maxId + 1;
+
+    const price = body.price;
+    const priceWithoutVat = body.price_without_vat;
+    const vatAmount = Number(Math.max(0, price - priceWithoutVat).toFixed(2));
+    const brand = (body.brand ?? "").trim();
+
+    const newProduct: ProductRaw = {
+      id: newId,
+      name: nameTrimmed,
+      original_name: nameTrimmed,
+      custom_name: null,
+      sku: skuTrimmed,
+      visible: body.visible ?? true,
+      section_id: section.id,
+      section_name: section.name,
+      price,
+      calculated_price: price,
+      price_override: null,
+      price_without_vat: priceWithoutVat,
+      vat_amount: vatAmount,
+      currency: "Br",
+      currency_code: "BYN",
+      vendor: brand,
+      metadata: {
+        articul: skuTrimmed,
+        type: "",
+        url: "",
+        sections: [section.id],
+        brand,
+        unit: "шт",
+        minQty: 1,
+        multiplicity: 1,
+        timeDelivery: "",
+        weight: 0,
+        volume: 0,
+        updated: new Date().toISOString(),
+        pictures: (body.picture_url?.trim()) ? [body.picture_url.trim()] : [],
+        video: [],
+        documents: normalizeDocuments(body.documents),
+        zamena: [],
+        analog: [],
+        soputst: [],
+        chars: [],
+        description: (body.description?.trim()) || "",
+      },
+    };
+
+    products.push(newProduct);
+    writeProducts(products);
+    invalidateProductCaches();
+
+    return NextResponse.json({ success: true, product: newProduct }, { status: 201 });
+  } catch {
+    return NextResponse.json({ error: "Не удалось создать товар" }, { status: 500 });
   }
 }

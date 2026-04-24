@@ -2,7 +2,11 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { type NextRequest } from "next/server";
 
-const PUBLIC_IMAGES_DIR = path.join(process.cwd(), "public", "images");
+const PUBLIC_IMAGES_DIR = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "images"
+);
 const LEGACY_IMAGES_DIR = process.env.IMAGES_DIR;
 
 const CONTENT_TYPES: Record<string, string> = {
@@ -34,7 +38,8 @@ function getImageCandidates(filename: string): string[] {
 
   if (
     LEGACY_IMAGES_DIR &&
-    path.resolve(LEGACY_IMAGES_DIR) !== path.resolve(PUBLIC_IMAGES_DIR)
+    path.resolve(/* turbopackIgnore: true */ LEGACY_IMAGES_DIR) !==
+      path.resolve(PUBLIC_IMAGES_DIR)
   ) {
     const legacyPath = resolveInsideRoot(LEGACY_IMAGES_DIR, filename);
     if (legacyPath) {

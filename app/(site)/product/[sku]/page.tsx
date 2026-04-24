@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ProductCard } from "@/components/catalog/ProductCard";
 import { ProductGallery } from "@/components/product/ProductGallery";
-import { getCategoryById, getProductBySku } from "@/lib/data";
+import { ProductCharacteristics } from "@/components/product/ProductCharacteristics";
+import { ViewedProducts } from "@/components/product/ViewedProducts";
+import { getCategoryById, getProductBySku, getProductSummaryBySku } from "@/lib/data";
 import { formatPrice, formatPriceValue, hasPrice, normalizeCurrency } from "@/lib/format";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface ProductPageProps {
   params: Promise<{
@@ -17,6 +23,24 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   const category = getCategoryById(product.sectionId);
   const showVatDetails = hasPrice(product.price);
+  const maxCharRows = product.chars.reduce(
+    (max, group) => Math.max(max, group.items.length),
+    0,
+  );
+  const charsBasedHeight = maxCharRows > 0 ? 280 + maxCharRows * 48 : 0;
+  // 12 lines of description text (leading-7) plus card paddings/title area.
+  const minDescriptionHeight = 220 + 12 * 28;
+  const sharedDetailsHeight = Math.max(charsBasedHeight, minDescriptionHeight);
+
+  const relatedProducts = Array.from(new Set(product.relatedSkus))
+    .filter((relatedSku) => relatedSku && relatedSku !== product.sku)
+    .map((relatedSku) => getProductSummaryBySku(relatedSku))
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+  const similarProducts = Array.from(new Set(product.analogSkus))
+    .filter((analogSku) => analogSku && analogSku !== product.sku)
+    .map((analogSku) => getProductSummaryBySku(analogSku))
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-6">
@@ -39,6 +63,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.2fr_1fr]">
         <ProductGallery
           localImages={product.localImages}
+          externalImages={product.externalImages}
           alt={product.name}
         />
 
@@ -96,49 +121,62 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </div>
 
-      <section className="mt-10 space-y-6">
+      <section
+        className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2"
+        style={
+          sharedDetailsHeight
+            ? ({ "--details-height": `${sharedDetailsHeight}px` } as { [key: string]: string })
+            : undefined
+        }
+      >
+        {product.chars.length > 0 && (
+          <ProductCharacteristics
+            groups={product.chars}
+            heightPx={sharedDetailsHeight}
+          />
+        )}
+
         {product.description && (
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+          <div
+            className="flex flex-col rounded-2xl border border-slate-200 bg-white p-5 lg:h-[var(--details-height)]"
+          >
             <h2 className="mb-3 text-lg font-bold text-black">Описание</h2>
             <div
-              className="prose prose-slate max-w-none prose-headings:text-black prose-p:text-black prose-li:text-black"
+              className="prose prose-slate min-h-0 max-w-none flex-1 overflow-y-auto pr-1 prose-headings:text-black prose-p:text-black prose-li:text-black [&_p]:text-justify [&_p]:indent-6 [&_p]:leading-7 [&_p]:mb-4 [&_p:last-child]:mb-0"
               // Trusted supplier HTML from imported JSON source.
               dangerouslySetInnerHTML={{ __html: product.description }}
             />
           </div>
         )}
-
-        {product.chars.length > 0 && (
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <h2 className="mb-4 text-lg font-bold text-black">Характеристики</h2>
-            <div className="space-y-5">
-              {product.chars.map((group, idx) => (
-                <div key={`${group.name}-${idx}`}>
-                  <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-black/70">
-                    {group.name}
-                  </h3>
-                  <div className="overflow-hidden rounded-lg border border-slate-200">
-                    <table className="w-full text-sm">
-                      <tbody>
-                        {group.items.map((item, itemIdx) => (
-                          <tr key={`${item.name}-${itemIdx}`} className="odd:bg-slate-100/80">
-                            <td className="w-1/2 border-b border-slate-200 px-3 py-2 text-black/80">
-                              {item.name}
-                            </td>
-                            <td className="border-b border-slate-200 px-3 py-2 font-medium text-black">
-                              {item.value}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </section>
+
+      {(relatedProducts.length > 0 || similarProducts.length > 0) && (
+        <section className="mt-12 space-y-10">
+          {relatedProducts.length > 0 && (
+            <div>
+              <h2 className="mb-4 text-xl font-black text-black">Сопутствующие товары</h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {relatedProducts.slice(0, 8).map((item) => (
+                  <ProductCard key={`related-${item.sku}`} product={item} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {similarProducts.length > 0 && (
+            <div>
+              <h2 className="mb-4 text-xl font-black text-black">Похожие товары</h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {similarProducts.slice(0, 8).map((item) => (
+                  <ProductCard key={`similar-${item.sku}`} product={item} />
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      <ViewedProducts currentSku={product.sku} />
     </main>
   );
 }

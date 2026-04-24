@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.next-dev/
 /out/
 
 # production
@@ -43,3 +44,6 @@ next-env.d.ts
 # product catalog data (keep local only)
 /public/images/
 /data/products.import.tmp.json
+
+# local diagnostics
+/typecheck_output.txt

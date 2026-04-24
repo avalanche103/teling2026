@@ -12,8 +12,15 @@ import {
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const PRODUCTS_PATH = path.join(process.cwd(), "data", "products.json");
-const TMP_PATH = path.join(process.cwd(), PRODUCT_IMPORT_TMP_PATH);
+const PRODUCTS_PATH = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "data",
+  "products.json"
+);
+const TMP_PATH = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  PRODUCT_IMPORT_TMP_PATH
+);
 
 function readCurrentProducts(): ProductRaw[] {
   return JSON.parse(readFileSync(PRODUCTS_PATH, "utf-8")) as ProductRaw[];

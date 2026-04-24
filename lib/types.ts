@@ -141,6 +141,9 @@ export interface AdminProductListItem {
   priceWithoutVat: number;
   currency: string;
   visible: boolean;
+  picture?: string | null;
+  description?: string;
+  documents?: ProductDocument[];
 }
 
 export type ProductImportConflictAction = "skip" | "use-sku" | "use-id";

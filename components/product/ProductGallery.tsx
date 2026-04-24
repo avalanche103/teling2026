@@ -5,11 +5,16 @@ import { useState } from "react";
 
 interface ProductGalleryProps {
   localImages: string[];
+  externalImages?: string[];
   alt: string;
 }
 
-export function ProductGallery({ localImages, alt }: ProductGalleryProps) {
-  const images = localImages;
+function isExternalUrl(src: string): boolean {
+  return src.startsWith("http://") || src.startsWith("https://");
+}
+
+export function ProductGallery({ localImages, externalImages = [], alt }: ProductGalleryProps) {
+  const images = [...localImages, ...externalImages];
 
   const [active, setActive] = useState(0);
 
@@ -26,7 +31,11 @@ export function ProductGallery({ localImages, alt }: ProductGalleryProps) {
   return (
     <div className="space-y-3">
       <div className="relative h-96 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <Image src={current} alt={alt} fill className="object-contain p-4" />
+        {isExternalUrl(current) ? (
+          <img src={current} alt={alt} className="h-full w-full object-contain p-4" />
+        ) : (
+          <Image src={current} alt={alt} fill className="object-contain p-4" />
+        )}
       </div>
 
       {images.length > 1 && (
@@ -39,7 +48,11 @@ export function ProductGallery({ localImages, alt }: ProductGalleryProps) {
                 idx === active ? "border-slate-700" : "border-slate-200"
               }`}
             >
-              <Image src={src} alt={`${alt} ${idx + 1}`} fill className="object-cover" />
+              {isExternalUrl(src) ? (
+                <img src={src} alt={`${alt} ${idx + 1}`} className="h-full w-full object-cover" />
+              ) : (
+                <Image src={src} alt={`${alt} ${idx + 1}`} fill className="object-cover" />
+              )}
             </button>
           ))}
         </div>

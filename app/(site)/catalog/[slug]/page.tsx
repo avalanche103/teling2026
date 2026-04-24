@@ -12,6 +12,9 @@ import {
 } from "@/lib/data";
 import type { ActiveFilters, SectionFacets } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
