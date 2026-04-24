@@ -1,0 +1,118 @@
+[
+  {
+    "blocked": false,
+    "visitorInfo": {
+      "phone": "+37296870416",
+      "language": "ru",
+      "locale": "ru",
+      "timeZone": "Europe/Minsk",
+      "platform": "Win32",
+      "deviceType": "desktop",
+      "viewport": "1912x956",
+      "screen": "1920x1080",
+      "colorScheme": "light",
+      "referrer": "http://localhost:3000/",
+      "ip": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0"
+    },
+    "id": "9ef32a64-291d-4837-b0af-926e45a09403",
+    "visitorId": "77c2b392-2d1a-4a65-bdb1-3ccd02d91cd7",
+    "createdAt": "2026-04-24T20:28:55.914Z",
+    "updatedAt": "2026-04-24T21:02:27.114Z",
+    "messages": [
+      {
+        "type": "text",
+        "id": "718c5211-2279-4f0b-beed-5e13808afcbb",
+        "role": "visitor",
+        "text": "Тук тук",
+        "createdAt": "2026-04-24T20:28:55.914Z"
+      },
+      {
+        "type": "text",
+        "id": "3553a195-8c95-4e21-93fd-9f4747ec78d1",
+        "role": "support",
+        "text": "Добрый вечер",
+        "createdAt": "2026-04-24T20:29:14.041Z"
+      },
+      {
+        "type": "text",
+        "id": "642a2d2e-b8c0-4065-9f1b-c60d7630705a",
+        "role": "visitor",
+        "text": "Подскажите, если кошкам еды не докладывают, то что делать?",
+        "createdAt": "2026-04-24T20:29:32.047Z"
+      },
+      {
+        "type": "text",
+        "id": "727d297f-8b1d-431f-b111-ff175abe564c",
+        "role": "support",
+        "text": "Надо делать муфты)",
+        "createdAt": "2026-04-24T20:29:43.055Z"
+      },
+      {
+        "type": "text",
+        "id": "5ae776c1-7051-4a2d-8c6b-e2f39d7d8de3",
+        "role": "visitor",
+        "text": "Добрый вечер",
+        "createdAt": "2026-04-24T20:35:02.308Z"
+      },
+      {
+        "type": "text",
+        "id": "96c40117-16c2-4d92-80cc-01ce1e36a136",
+        "role": "visitor",
+        "text": "ну что?",
+        "createdAt": "2026-04-24T20:36:52.901Z"
+      },
+      {
+        "type": "text",
+        "id": "378733f5-9567-4d3d-b3d1-47f432246ea7",
+        "role": "visitor",
+        "text": "тут",
+        "createdAt": "2026-04-24T20:37:11.466Z"
+      },
+      {
+        "type": "text",
+        "id": "e2e7f0b1-6931-47a0-a361-9eb3d021c8e2",
+        "role": "visitor",
+        "text": "прповап",
+        "createdAt": "2026-04-24T20:39:08.548Z"
+      },
+      {
+        "type": "text",
+        "id": "fb204551-6525-4ba2-a5c7-22b42b71d9f6",
+        "role": "visitor",
+        "text": "иораим",
+        "createdAt": "2026-04-24T20:56:31.912Z"
+      },
+      {
+        "type": "contact_request",
+        "id": "69daa1c3-4d7a-4d95-9692-ec95c07edab3",
+        "role": "support",
+        "text": "пожалуйста, укажите ваш телефон",
+        "createdAt": "2026-04-24T20:56:54.611Z",
+        "field": "phone"
+      },
+      {
+        "type": "contact_response",
+        "id": "ea64f041-f35e-44e3-b0bc-cee0bfd6679d",
+        "role": "visitor",
+        "text": "+37296870416",
+        "createdAt": "2026-04-24T20:58:34.204Z",
+        "field": "phone"
+      },
+      {
+        "type": "text",
+        "id": "24804ffe-45d8-4af2-a54b-b258adb68752",
+        "role": "visitor",
+        "text": "пап",
+        "createdAt": "2026-04-24T21:01:54.549Z"
+      },
+      {
+        "id": "1107769a-4667-4c1b-a917-1b7cf96940f0",
+        "role": "visitor",
+        "type": "text",
+        "text": "пап",
+        "createdAt": "2026-04-24T21:02:27.114Z"
+      }
+    ]
+  }
+]

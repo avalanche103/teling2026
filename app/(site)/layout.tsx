@@ -1,4 +1,5 @@
 import { Header } from "@/components/layout/Header";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 import type { ReactNode } from "react";
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
@@ -6,6 +7,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
     <>
       <Header />
       {children}
+      <ChatWidget />
     </>
   );
 }

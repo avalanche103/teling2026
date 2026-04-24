@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { AdminChatBadge } from "@/components/admin/AdminChatBadge";
 
 export const metadata: Metadata = {
   title: "Администрирование | Teling",
@@ -30,6 +31,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
             >
               Товары
+            </Link>
+            <Link
+              href="/admin/chat"
+              className="flex items-center rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+            >
+              Чат
+              <AdminChatBadge />
             </Link>
           </nav>
           <Link
