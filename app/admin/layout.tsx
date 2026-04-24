@@ -21,12 +21,6 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             Teling Admin
           </Link>
           <nav className="flex flex-1 items-center gap-1 text-sm">
-            <Link
-              href="/admin"
-              className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-            >
-              Главная
-            </Link>
             {(user.role === "admin" || user.role === "employee") && (
               <>
                 <Link
@@ -69,6 +63,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <p className="font-medium text-slate-200">{user.name}</p>
             <p>{user.username} · {user.role}</p>
           </div>
+          <Link
+            href="/"
+            className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+          >
+            ← Сайт
+          </Link>
           <LogoutButton />
         </div>
       </header>

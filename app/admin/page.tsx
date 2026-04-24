@@ -54,6 +54,25 @@ export default async function AdminDashboard() {
                 </div>
               </div>
             </Link>
+
+            <Link
+              href="/admin/content"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-100 text-rose-700 text-2xl">
+                  📝
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-slate-900 group-hover:text-rose-700">
+                    Контент
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Управление текстовыми блоками: основной баннер, о компании и контакты
+                  </p>
+                </div>
+              </div>
+            </Link>
           </>
         )}
 
