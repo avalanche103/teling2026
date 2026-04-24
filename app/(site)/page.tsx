@@ -94,20 +94,9 @@ export default async function HomePage() {
 
         <div id="contacts" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-black tracking-tight text-black">{contactsBlock?.title || "Контакты"}</h2>
-          <p className="mt-3 whitespace-pre-wrap text-black/80">{contactsBlock?.content || CONTACTS.address}</p>
-          <ul className="mt-4 space-y-1 text-black">
-            {CONTACTS.phones.map((phone) => (
-              <li key={phone}>
-                <a href={`tel:${phone.replace(/[^\d+]/g, "")}`} className="hover:text-black/80">
-                  {phone}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-black/80">{CONTACTS.workTime}</p>
-          <a className="mt-3 inline-block text-black hover:text-black/80" href={`mailto:${CONTACTS.email}`}>
-            {CONTACTS.email}
-          </a>
+          <p className="mt-3 whitespace-pre-wrap text-black/80">
+            {contactsBlock?.content || CONTACTS.address}
+          </p>
         </div>
       </section>
     </main>
