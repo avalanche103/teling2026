@@ -18,7 +18,7 @@
     "id": "9ef32a64-291d-4837-b0af-926e45a09403",
     "visitorId": "77c2b392-2d1a-4a65-bdb1-3ccd02d91cd7",
     "createdAt": "2026-04-24T20:28:55.914Z",
-    "updatedAt": "2026-04-24T21:02:27.114Z",
+    "updatedAt": "2026-04-24T21:37:25.411Z",
     "messages": [
       {
         "type": "text",
@@ -112,6 +112,13 @@
         "type": "text",
         "text": "пап",
         "createdAt": "2026-04-24T21:02:27.114Z"
+      },
+      {
+        "id": "0115c1d1-1a91-403f-8391-2c1924e851eb",
+        "role": "visitor",
+        "type": "text",
+        "text": "hgh",
+        "createdAt": "2026-04-24T21:37:25.411Z"
       }
     ]
   }

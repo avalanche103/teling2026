@@ -3,6 +3,7 @@ import path from "path";
 import { readFileSync, writeFileSync } from "fs";
 import type { ProductDocument, ProductRaw, SectionRaw } from "@/lib/types";
 import { invalidateProductCaches } from "@/lib/data";
+import { requireApiSession } from "@/lib/auth";
 
 const PRODUCTS_PATH = path.join(process.cwd(), "data", "products.json");
 const SECTIONS_PATH = path.join(process.cwd(), "data", "sections.json");
@@ -43,6 +44,8 @@ function normalizeDocuments(input: unknown): ProductDocument[] {
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function PUT(request: Request, ctx: RouteContext) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const { id: idStr } = await ctx.params;
     const id = parseInt(idStr, 10);
@@ -130,6 +133,8 @@ export async function PUT(request: Request, ctx: RouteContext) {
 }
 
 export async function DELETE(_request: Request, ctx: RouteContext) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const { id: idStr } = await ctx.params;
     const id = parseInt(idStr, 10);

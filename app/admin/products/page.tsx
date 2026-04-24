@@ -1,11 +1,14 @@
 import { ProductsImportManager } from "@/components/admin/ProductsImportManager";
 import { ProductsManager } from "@/components/admin/ProductsManager";
+import { requireSession } from "@/lib/auth";
 
 export const metadata = {
   title: "Товары | Admin",
 };
 
-export default function AdminProductsPage() {
+export default async function AdminProductsPage() {
+  await requireSession(["admin", "employee"]);
+
   return (
     <div className="space-y-6">
       <div>

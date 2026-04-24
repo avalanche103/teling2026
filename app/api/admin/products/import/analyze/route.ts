@@ -8,6 +8,7 @@ import {
   createStoredImportSnapshot,
   parseImportedProducts,
 } from "@/lib/product-import";
+import { requireApiSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -27,6 +28,8 @@ function readCurrentProducts(): ProductRaw[] {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const formData = await request.formData();
     const file = formData.get("file");

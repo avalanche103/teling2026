@@ -233,3 +233,13 @@ export interface SectionFilterOption {
   label: string;
   count?: number;
 }
+
+// ---- Content Management ----
+
+export interface ContentBlock {
+  id: string;
+  key: "hero" | "about" | "contacts";
+  title: string;
+  content: string;
+  updatedAt: string;
+}

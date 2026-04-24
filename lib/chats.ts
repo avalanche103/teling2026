@@ -53,8 +53,8 @@ function readChats(): Chat[] {
       visitorInfo: {},
       ...c,
       messages: (c.messages ?? []).map((m) => ({
-        type: "text" as const,
         ...m,
+        type: m.type ?? "text",
       })),
     })) as Chat[];
   } catch {

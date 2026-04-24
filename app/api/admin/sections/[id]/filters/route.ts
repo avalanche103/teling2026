@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSectionFacets, getSectionSelectedFilters } from "@/lib/data";
 import type { SectionFilterOption } from "@/lib/types";
+import { requireApiSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -8,6 +9,8 @@ export const revalidate = 0;
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function GET(_request: Request, ctx: RouteContext) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const { id: idStr } = await ctx.params;
     const id = parseInt(idStr, 10);

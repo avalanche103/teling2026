@@ -3,6 +3,7 @@ import path from "path";
 import { readFileSync, writeFileSync } from "fs";
 import type { SectionRaw } from "@/lib/types";
 import { invalidateSectionCaches } from "@/lib/data";
+import { requireApiSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -18,6 +19,8 @@ function writeSections(sections: SectionRaw[]): void {
 }
 
 export async function GET() {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const sections = readSections();
     return NextResponse.json(sections, {
@@ -29,6 +32,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const body: {
       name: string;

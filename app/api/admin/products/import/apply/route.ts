@@ -15,6 +15,7 @@ import {
 } from "@/lib/product-import";
 import { invalidateProductCaches } from "@/lib/data";
 import { saveImportHistoryEntry } from "@/lib/import-history";
+import { requireApiSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -88,6 +89,8 @@ function resolveConflictTarget(
 }
 
 export async function POST(request: Request) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const body = (await request.json()) as ProductImportApplyRequest;
     const snapshot = readSnapshot();

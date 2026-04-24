@@ -1,10 +1,13 @@
 import { CatalogTree } from "@/components/admin/CatalogTree";
+import { requireSession } from "@/lib/auth";
 
 export const metadata = {
   title: "Структура каталога | Admin",
 };
 
-export default function AdminCatalogPage() {
+export default async function AdminCatalogPage() {
+  await requireSession(["admin", "employee"]);
+
   return (
     <div className="space-y-6">
       <div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CategoryCard } from "@/components/catalog/CategoryCard";
 import { getRootCategories } from "@/lib/data";
+import { getContentBlock } from "@/lib/content";
 
 const COMPANY_DIRECTIONS = [
   "локальные вычислительные сети корпоративного назначения",
@@ -23,8 +24,15 @@ const CONTACTS = {
   email: "info@teling.by",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
   const topCategories = getRootCategories().slice(0, 4);
+  
+  // Load dynamic content blocks
+  const [heroBlock, aboutBlock, contactsBlock] = await Promise.all([
+    getContentBlock("hero"),
+    getContentBlock("about"),
+    getContentBlock("contacts"),
+  ]);
 
   return (
     <main className="flex-1">
@@ -34,11 +42,10 @@ export default function HomePage() {
             ТЕЛИНГ ГРУПП
           </p>
           <h1 className="mt-3 max-w-4xl text-3xl font-black leading-tight tracking-tight sm:text-5xl">
-            Каталог телекоммуникационной продукции для проектирования и монтажа сетей
+            {heroBlock?.title || "Каталог телекоммуникационной продукции для проектирования и монтажа сетей"}
           </h1>
           <p className="mt-5 max-w-3xl text-slate-100/95 sm:text-lg">
-            Компания с более чем 20-летним опытом в области телекоммуникаций. Производим и поставляем
-            оборудование, материалы и комплектующие для ввода в эксплуатацию инженерных систем связи.
+            {heroBlock?.content || "Компания с более чем 20-летним опытом в области телекоммуникаций. Производим и поставляем оборудование, материалы и комплектующие для ввода в эксплуатацию инженерных систем связи."}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -71,10 +78,9 @@ export default function HomePage() {
 
       <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 pb-10 lg:grid-cols-[1.2fr_1fr] lg:px-6">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-black tracking-tight text-black">О компании</h2>
+          <h2 className="text-xl font-black tracking-tight text-black">{aboutBlock?.title || "О компании"}</h2>
           <p className="mt-3 text-black/80">
-            Вас приветствует Телинг групп. Мы предлагаем широкий ассортимент оборудования и материалов,
-            позволяющих создать, протестировать и ввести в эксплуатацию линии и сети любой сложности.
+            {aboutBlock?.content || "Вас приветствует Телинг групп. Мы предлагаем широкий ассортимент оборудования и материалов, позволяющих создать, протестировать и ввести в эксплуатацию линии и сети любой сложности."}
           </p>
           <ul className="mt-4 space-y-2 text-black/85">
             {COMPANY_DIRECTIONS.map((item) => (
@@ -87,8 +93,8 @@ export default function HomePage() {
         </div>
 
         <div id="contacts" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-black tracking-tight text-black">Контакты</h2>
-          <p className="mt-3 text-black/80">{CONTACTS.address}</p>
+          <h2 className="text-xl font-black tracking-tight text-black">{contactsBlock?.title || "Контакты"}</h2>
+          <p className="mt-3 whitespace-pre-wrap text-black/80">{contactsBlock?.content || CONTACTS.address}</p>
           <ul className="mt-4 space-y-1 text-black">
             {CONTACTS.phones.map((phone) => (
               <li key={phone}>

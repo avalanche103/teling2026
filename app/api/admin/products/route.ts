@@ -3,6 +3,7 @@ import path from "path";
 import { readFileSync, writeFileSync } from "fs";
 import type { AdminProductListItem, ProductDocument, ProductRaw, SectionRaw } from "@/lib/types";
 import { invalidateProductCaches } from "@/lib/data";
+import { requireApiSession } from "@/lib/auth";
 
 const SECTIONS_PATH = path.join(process.cwd(), "data", "sections.json");
 
@@ -105,6 +106,8 @@ function normalizeDocuments(input: unknown): ProductDocument[] {
 }
 
 export async function GET(request: Request) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("query")?.trim().toLowerCase() ?? "";
@@ -137,6 +140,8 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const body: {
       updates?: Array<{ id: number; visible: boolean }>;
@@ -210,6 +215,8 @@ export async function PATCH(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const body: {
       name: string;

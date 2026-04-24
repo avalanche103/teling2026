@@ -3,6 +3,7 @@ import path from "path";
 import { readFileSync, writeFileSync } from "fs";
 import type { SectionRaw } from "@/lib/types";
 import { invalidateSectionCaches } from "@/lib/data";
+import { requireApiSession } from "@/lib/auth";
 
 const DATA_PATH = path.join(process.cwd(), "data", "sections.json");
 
@@ -17,6 +18,8 @@ function writeSections(sections: SectionRaw[]): void {
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function PUT(request: Request, ctx: RouteContext) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const { id: idStr } = await ctx.params;
     const id = parseInt(idStr, 10);
@@ -111,6 +114,8 @@ export async function PUT(request: Request, ctx: RouteContext) {
 }
 
 export async function DELETE(_request: Request, ctx: RouteContext) {
+  const auth = await requireApiSession(["admin", "employee"]);
+  if (!auth.ok) return auth.response;
   try {
     const { id: idStr } = await ctx.params;
     const id = parseInt(idStr, 10);

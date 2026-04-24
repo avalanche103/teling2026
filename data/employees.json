@@ -1,0 +1,24 @@
+[
+  {
+    "id": "seed-admin",
+    "username": "admin",
+    "name": "Главный администратор",
+    "role": "admin",
+    "passwordSalt": "52d0f775d99122f12dab0ff30bb8dfab",
+    "passwordHash": "f60d36c1a584fb80b3635e7555c372e80d832f09066cbcd0591eb2db43dff066ee4fe7e46cb7110671a59e3e939ed5f7099a129ecae48f90a29a6c396fafd69d",
+    "active": true,
+    "createdAt": "2026-04-25T00:00:00.000Z",
+    "updatedAt": "2026-04-24T21:34:31.038Z"
+  },
+  {
+    "id": "9fbeabae9662bdd37d9f2925",
+    "username": "gilevich",
+    "name": "Андрей Гилевич",
+    "role": "employee",
+    "passwordSalt": "e15040f488b64f324d4a30744ba232ca",
+    "passwordHash": "5161af0ae62d51f8a2d1a859bbf0fa4ec4cfe109d29ee9cb9392e10fd31b7bd0cc354b101b5e628f0883e7581d0a446e5ea6d7c37c48dfc9d1a1a07002a592fe",
+    "active": true,
+    "createdAt": "2026-04-24T21:36:42.387Z",
+    "updatedAt": "2026-04-24T21:36:42.387Z"
+  }
+]
