@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block title %}Главная - SSD Каталог{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>Управление каталогом SSD</h1>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Статистика базы данных</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card text-white bg-primary">
+                            <div class="card-body">
+                                <h3>{{ stats.sections }}</h3>
+                                <p>Разделов</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card text-white bg-success">
+                            <div class="card-body">
+                                <h3>{{ stats.products }}</h3>
+                                <p>Товаров</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Импорт данных</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/import">
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="reset" name="reset">
+                        <label class="form-check-label" for="reset">
+                            Сбросить чекпоинт и начать с первой страницы
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="import-btn">
+                        Запустить импорт
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Статус импорта</h5>
+            </div>
+            <div class="card-body">
+                <div id="status-display">
+                    <p class="status-{{ status.status }}">{{ status.message }}</p>
+                    {% if status.status == 'running' %}
+                    <div class="progress mb-2">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"
+                             role="progressbar"
+                             style="width: {{ status.progress }}%">
+                            {{ status.progress }}%
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function updateStatus() {
+    fetch('/status')
+        .then(response => response.json())
+        .then(data => {
+            const statusDiv = document.getElementById('status-display');
+            statusDiv.innerHTML = `
+                <p class="status-${data.status}">${data.message}</p>
+                ${data.status === 'running' ? `
+                <div class="progress mb-2">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                         role="progressbar"
+                         style="width: ${data.progress}%">
+                        ${data.progress}%
+                    </div>
+                </div>
+                ` : ''}
+            `;
+
+            // Обновить кнопку импорта
+            const importBtn = document.getElementById('import-btn');
+            if (data.status === 'running') {
+                importBtn.disabled = true;
+                importBtn.textContent = 'Импорт выполняется...';
+            } else {
+                importBtn.disabled = false;
+                importBtn.textContent = 'Запустить импорт';
+            }
+        })
+        .catch(error => console.error('Error updating status:', error));
+}
+
+// Обновлять статус каждые 2 секунды
+setInterval(updateStatus, 2000);
+</script>
+{% endblock %}

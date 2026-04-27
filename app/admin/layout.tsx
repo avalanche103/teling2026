@@ -7,6 +7,10 @@ import { requireSession } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Администрирование | Teling",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
@@ -40,6 +44,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                   className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
                 >
                   Контент
+                </Link>
+                <Link
+                  href="/admin/supplier"
+                  className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+                >
+                  SSD база
                 </Link>
               </>
             )}

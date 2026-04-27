@@ -44,6 +44,34 @@ function isProductVisible(product: ProductRaw): boolean {
   return product.visible !== false;
 }
 
+function parseUpdatedTimestamp(value: string | undefined): Date | null {
+  if (!value) return null;
+  const match = value.match(
+    /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})$/,
+  );
+  if (!match) return null;
+
+  const [, y, m, d, hh, mm, ss] = match;
+  const parsed = new Date(
+    Date.UTC(
+      Number(y),
+      Number(m) - 1,
+      Number(d),
+      Number(hh),
+      Number(mm),
+      Number(ss),
+    ),
+  );
+
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function maxDate(a: Date | null, b: Date | null): Date | null {
+  if (!a) return b;
+  if (!b) return a;
+  return a.getTime() >= b.getTime() ? a : b;
+}
+
 function getVisibleProductsRaw(): ProductRaw[] {
   return getProductsRaw().filter(isProductVisible);
 }
@@ -644,4 +672,77 @@ export function getAllProductSkus(): string[] {
   return getVisibleProductsRaw()
     .map((p) => (typeof p.sku === "string" ? p.sku.trim() : ""))
     .filter(Boolean);
+}
+
+/** Returns latest product update timestamp across visible products. */
+export function getLatestProductsUpdatedAt(): Date | null {
+  let latest: Date | null = null;
+
+  for (const p of getVisibleProductsRaw()) {
+    latest = maxDate(latest, parseUpdatedTimestamp(p.metadata?.updated));
+  }
+
+  return latest;
+}
+
+/** Returns per-product (SKU) update timestamps where available. */
+export function getProductLastModifiedBySku(): Map<string, Date> {
+  const map = new Map<string, Date>();
+
+  for (const p of getVisibleProductsRaw()) {
+    const sku = typeof p.sku === "string" ? p.sku.trim() : "";
+    if (!sku) continue;
+
+    const updated = parseUpdatedTimestamp(p.metadata?.updated);
+    if (!updated) continue;
+
+    const prev = map.get(sku) ?? null;
+    map.set(sku, maxDate(prev, updated)!);
+  }
+
+  return map;
+}
+
+/** Returns per-category (slug) last modified timestamps from products in section subtree. */
+export function getSectionLastModifiedBySlug(): Map<string, Date> {
+  const sections = getSectionsRaw();
+  const childrenByParent = new Map<number, number[]>();
+
+  for (const s of sections) {
+    if (s.parent == null) continue;
+    const arr = childrenByParent.get(s.parent) ?? [];
+    arr.push(s.id);
+    childrenByParent.set(s.parent, arr);
+  }
+
+  const ownMaxBySectionId = new Map<number, Date>();
+  for (const p of getVisibleProductsRaw()) {
+    const updated = parseUpdatedTimestamp(p.metadata?.updated);
+    if (!updated) continue;
+    const prev = ownMaxBySectionId.get(p.section_id) ?? null;
+    ownMaxBySectionId.set(p.section_id, maxDate(prev, updated)!);
+  }
+
+  const cache = new Map<number, Date | null>();
+  const getSubtreeMax = (sectionId: number): Date | null => {
+    if (cache.has(sectionId)) return cache.get(sectionId) ?? null;
+
+    let latest: Date | null = ownMaxBySectionId.get(sectionId) ?? null;
+    for (const childId of childrenByParent.get(sectionId) ?? []) {
+      latest = maxDate(latest, getSubtreeMax(childId));
+    }
+
+    cache.set(sectionId, latest);
+    return latest;
+  };
+
+  const bySlug = new Map<string, Date>();
+  for (const s of sections) {
+    const latest = getSubtreeMax(s.id);
+    if (latest && s.external_id) {
+      bySlug.set(s.external_id, latest);
+    }
+  }
+
+  return bySlug;
 }

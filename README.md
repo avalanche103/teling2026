@@ -16,6 +16,44 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## SSD Supplier App In Admin Panel
+
+The admin panel now has a section **SSD база** (`/admin/supplier`) that opens the supplier Flask app copied into this repository (`ssd-admin-app/`).
+
+1. Install Python dependencies once:
+
+```bash
+npm run ssd:install
+```
+
+2. Start the supplier app from the project root:
+
+```bash
+npm run ssd:start
+```
+
+3. Open `/admin/supplier` in this project.
+
+Export output paths:
+
+- JSON/CSV files: `ssd-admin-app/export/`
+- Downloaded product images: `public/images/`
+
+The SSD interface is available from the same site host via:
+
+```text
+http://localhost:3000/admin/supplier/proxy
+```
+
+So it now works under `localhost:3000` together with the main site.
+
+By default, the integration uses `http://127.0.0.1:5000`.
+If you use a different host/port, set this in `.env.local`:
+
+```bash
+SSD_ADMIN_APP_URL=http://127.0.0.1:5000
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

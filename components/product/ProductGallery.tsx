@@ -34,7 +34,14 @@ export function ProductGallery({ localImages, externalImages = [], alt }: Produc
         {isExternalUrl(current) ? (
           <img src={current} alt={alt} className="h-full w-full object-contain p-4" />
         ) : (
-          <Image src={current} alt={alt} fill className="object-contain p-4" />
+          <Image
+            src={current}
+            alt={alt}
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 60vw"
+            className="object-contain p-4"
+          />
         )}
       </div>
 
@@ -51,7 +58,13 @@ export function ProductGallery({ localImages, externalImages = [], alt }: Produc
               {isExternalUrl(src) ? (
                 <img src={src} alt={`${alt} ${idx + 1}`} className="h-full w-full object-cover" />
               ) : (
-                <Image src={src} alt={`${alt} ${idx + 1}`} fill className="object-cover" />
+                <Image
+                  src={src}
+                  alt={`${alt} ${idx + 1}`}
+                  fill
+                  sizes="64px"
+                  className="object-cover"
+                />
               )}
             </button>
           ))}

@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title %}Экспорт - SSD Каталог{% endblock %}
+
+{% block content %}
+<h1>Экспорт данных</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Экспорт для сайта</h5>
+            </div>
+            <div class="card-body">
+                <p>Экспортирует данные в JSON формат для использования на сайте.</p>
+                <ul>
+                    <li>sections.json - разделы</li>
+                    <li>products.json - товары с учетом сохраненных правок и итоговой цены в BYN</li>
+                    <li>catalog_tree.json - дерево каталога</li>
+                    <li>в товарах добавляются скидка дистрибьютора, НДС и итоговая цена в <code>Br</code></li>
+                </ul>
+                <form method="post" action="/run_export">
+                    <input type="hidden" name="type" value="json">
+                    <button type="submit" class="btn btn-success">Экспорт JSON</button>
+                </form>
+                <a href="/products" class="btn btn-outline-secondary btn-sm mt-2">Открыть редактирование товаров</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Экспорт в CSV</h5>
+            </div>
+            <div class="card-body">
+                <p>Экспортирует данные в CSV формат для Excel и таблиц.</p>
+                <ul>
+                    <li>sections.csv - разделы</li>
+                    <li>products.csv - товары с итоговым названием, ценой в BYN, НДС и скидкой</li>
+                </ul>
+                <form method="post" action="/run_export">
+                    <input type="hidden" name="type" value="csv">
+                    <button type="submit" class="btn btn-info">Экспорт CSV</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Скачивание изображений</h5>
+            </div>
+            <div class="card-body">
+                <p>Скачивает все изображения товаров сразу в папку public/images/ основного сайта.</p>
+                <p class="text-warning">Внимание: может занять много времени!</p>
+                <form method="post" action="/run_export">
+                    <input type="hidden" name="type" value="images">
+                    <button type="submit" class="btn btn-warning">Скачать изображения</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Статистика</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card text-white bg-primary">
+                            <div class="card-body text-center">
+                                <h4>{{ stats.sections }}</h4>
+                                <small>Разделов</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card text-white bg-success">
+                            <div class="card-body text-center">
+                                <h4>{{ stats.products }}</h4>
+                                <small>Товаров</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

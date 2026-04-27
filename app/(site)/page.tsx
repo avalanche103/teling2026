@@ -24,8 +24,18 @@ const CONTACTS = {
   email: "info@teling.by",
 };
 
+function getSiteOrigin(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.SITE_URL?.trim() || "https://teling.by";
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return "https://teling.by";
+  }
+}
+
 export default async function HomePage() {
   const topCategories = getRootCategories().slice(0, 4);
+  const origin = getSiteOrigin();
   
   // Load dynamic content blocks
   const [heroBlock, aboutBlock, contactsBlock] = await Promise.all([
@@ -34,8 +44,52 @@ export default async function HomePage() {
     getContentBlock("contacts"),
   ]);
 
+  // Organization schema for SEO
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Teling.by",
+    url: origin,
+    logo: `${origin}/logo.png`,
+    description: "Компания с более чем 20-летним опытом в области телекоммуникаций. Производим и поставляем оборудование, материалы и комплектующие для ввода в эксплуатацию инженерных систем связи.",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "ул. Шафарнянская, 11, офис 33",
+      addressLocality: "Минск",
+      addressCountry: "BY",
+    },
+    telephone: "+375 (17) 270-50-95",
+    email: "info@teling.by",
+    priceRange: "$$",
+    image: `${origin}/og-image.png`,
+    areaServed: "BY",
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Teling.by",
+    url: origin,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${origin}/catalog?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
-    <main className="flex-1">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        suppressHydrationWarning
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        suppressHydrationWarning
+      />
+      <main className="flex-1">
       <section className="relative overflow-hidden border-b border-slate-300 bg-slate-900 text-white">
         <div className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:py-14 lg:px-6 lg:py-20">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-200">
@@ -100,5 +154,6 @@ export default async function HomePage() {
         </div>
       </section>
     </main>
+    </>
   );
 }

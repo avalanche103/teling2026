@@ -121,5 +121,35 @@
         "createdAt": "2026-04-24T21:37:25.411Z"
       }
     ]
+  },
+  {
+    "id": "98fc30cc-79f2-45e4-aefd-bc91399176d1",
+    "visitorId": "d08776da-3c5d-47a6-9963-fca7886a6335",
+    "createdAt": "2026-04-27T20:53:34.032Z",
+    "updatedAt": "2026-04-27T20:53:34.032Z",
+    "blocked": false,
+    "visitorInfo": {
+      "firstSeenAt": "2026-04-27T20:53:34.032Z",
+      "language": "ru-RU",
+      "locale": "ru-RU",
+      "timeZone": "Europe/Minsk",
+      "platform": "Win32",
+      "deviceType": "desktop",
+      "viewport": "1745x835",
+      "screen": "1920x1080",
+      "colorScheme": "light",
+      "referrer": "http://localhost:3000/catalog/mufty_kompressionnye_i_termousazhivaemye_dlya_kabeley_tpp?page=2",
+      "ip": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+    },
+    "messages": [
+      {
+        "id": "e7a9aaae-c9dd-477d-bc5c-628e0d094825",
+        "role": "visitor",
+        "type": "text",
+        "text": "тест",
+        "createdAt": "2026-04-27T20:53:34.032Z"
+      }
+    ]
   }
 ]

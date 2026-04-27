@@ -24,6 +24,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
             src={category.imageUrl}
             alt={category.name}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
             className="object-contain object-bottom transition duration-300 group-hover:scale-105"
           />
         ) : (

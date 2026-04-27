@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { ProductGallery } from "@/components/product/ProductGallery";
@@ -16,10 +17,72 @@ interface ProductPageProps {
   }>;
 }
 
+function stripHtml(input: string): string {
+  return input.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function getSiteOrigin(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.SITE_URL?.trim() || "https://teling.by";
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return "https://teling.by";
+  }
+}
+
+function toAbsoluteUrl(pathOrUrl: string, origin: string): string {
+  if (!pathOrUrl) return pathOrUrl;
+  if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://")) return pathOrUrl;
+  return `${origin}${pathOrUrl.startsWith("/") ? "" : "/"}${pathOrUrl}`;
+}
+
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { sku } = await params;
+  const product = getProductBySku(sku);
+  const origin = getSiteOrigin();
+
+  if (!product) {
+    return {
+      title: "Товар не найден",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const shortDescription = stripHtml(product.description || "").slice(0, 180);
+  const description = shortDescription || `Товар ${product.name} (артикул ${product.sku}) в каталоге Teling.by.`;
+  const canonicalPath = `/product/${encodeURIComponent(product.sku)}`;
+  const imageUrl = product.thumbnail ? toAbsoluteUrl(product.thumbnail, origin) : undefined;
+
+  return {
+    title: `${product.name} (${product.sku})`,
+    description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      title: `${product.name} - Teling.by`,
+      description,
+      url: canonicalPath,
+      type: "website",
+      images: imageUrl ? [{ url: imageUrl, alt: product.name }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.name} - Teling.by`,
+      description,
+      images: imageUrl ? [imageUrl] : undefined,
+    },
+  };
+}
+
 export default async function ProductPage({ params }: ProductPageProps) {
   const { sku } = await params;
   const product = getProductBySku(sku);
   if (!product) notFound();
+  const origin = getSiteOrigin();
 
   const category = getCategoryById(product.sectionId);
   const showVatDetails = hasPrice(product.price);
@@ -42,8 +105,87 @@ export default async function ProductPage({ params }: ProductPageProps) {
     .map((analogSku) => getProductSummaryBySku(analogSku))
     .filter((item): item is NonNullable<typeof item> => Boolean(item));
 
+  const canonicalPath = `/product/${encodeURIComponent(product.sku)}`;
+  const offerSchema = hasPrice(product.price)
+    ? {
+        "@type": "Offer",
+        url: `${origin}${canonicalPath}`,
+        priceCurrency: product.currencyCode || product.currency || "BYN",
+        price: String(product.price),
+        availability: "https://schema.org/InStock",
+      }
+    : undefined;
+
+  // Build JSON-LD structured data
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    sku: product.sku,
+    brand: {
+      "@type": "Brand",
+      name: product.brand || "Unknown",
+    },
+    description: stripHtml(product.description || ""),
+    image: toAbsoluteUrl(product.thumbnail || product.localImages?.[0] || product.externalImages?.[0] || "", origin),
+    ...(offerSchema ? { offers: offerSchema } : {}),
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Главная",
+        item: origin,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Каталог",
+        item: `${origin}/catalog`,
+      },
+      ...(category
+        ? [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: category.name,
+              item: `${origin}/catalog/${category.slug}`,
+            },
+            {
+              "@type": "ListItem",
+              position: 4,
+              name: product.name,
+              item: `${origin}${canonicalPath}`,
+            },
+          ]
+        : [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: product.name,
+              item: `${origin}${canonicalPath}`,
+            },
+          ]),
+    ],
+  };
+
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-6">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        suppressHydrationWarning
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        suppressHydrationWarning
+      />
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-6">
       <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-black/70">
         <Link href="/" className="hover:text-black">Главная</Link>
         <span>/</span>
@@ -178,5 +320,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       <ViewedProducts currentSku={product.sku} />
     </main>
+    </>
   );
 }

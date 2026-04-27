@@ -823,7 +823,7 @@ function FragmentRow({
         </td>
         <td className="px-4 py-3 align-top font-medium text-slate-900">
           {product.sku ? (
-            <Link href={`/product/${product.sku}`} className="hover:underline">
+            <Link href={`/product/${encodeURIComponent(product.sku)}`} className="hover:underline">
               {product.sku}
             </Link>
           ) : (

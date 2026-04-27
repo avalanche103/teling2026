@@ -12,7 +12,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link
-      href={`/product/${product.sku}`}
+      href={`/product/${encodeURIComponent(product.sku)}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
     >
       <div className="relative h-44 bg-slate-100">
@@ -21,6 +21,7 @@ export function ProductCard({ product }: ProductCardProps) {
             src={product.thumbnail}
             alt={product.name}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
             className="object-cover transition duration-300 group-hover:scale-105"
           />
         ) : (

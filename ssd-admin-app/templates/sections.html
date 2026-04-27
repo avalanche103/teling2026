@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block title %}Разделы - SSD Каталог{% endblock %}
+
+{% block content %}
+<h1>Разделы каталога</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Все разделы ({{ sections|length }})</h5>
+    </div>
+    <div class="card-body">
+        {% if sections %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Родитель</th>
+                        <th>Внешний ID</th>
+                        <th>Товаров</th>
+                        <th>Не выводить в экспорт</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for section in sections %}
+                    <tr class="{% if section.exclude_from_export %}table-warning{% endif %}">
+                        <td>{{ section.id }}</td>
+                        <td style="padding-left: {{ section.level * 20 }}px;">{{ section.name }}</td>
+                        <td>{{ section.parent or '-' }}</td>
+                        <td>{{ section.external_id or '-' }}</td>
+                        <td>
+                            <span class="badge bg-primary">{{ section.product_count }}</span>
+                        </td>
+                        <td>
+                            <input type="checkbox" class="exclude-checkbox" data-id="{{ section.id }}" {% if section.exclude_from_export %}checked{% endif %}>
+                        </td>
+                        <td>
+                            <a href="/products?section_id={{ section.id }}" class="btn btn-sm btn-outline-primary">
+                                Просмотр товаров
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">Разделы не загружены. Запустите импорт данных.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function postJSON(url, data) {
+    return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    }).then(res => res.json());
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.exclude-checkbox').forEach(function(input) {
+        input.addEventListener('change', function() {
+            const sectionId = this.dataset.id;
+            const exclude = this.checked ? 1 : 0;
+            postJSON('/sections/set-exclude', { id: sectionId, exclude: exclude })
+                .then(data => {
+                    if (!data.success) {
+                        alert(data.error || 'Ошибка сохранения');
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Ошибка сети');
+                });
+        });
+    });
+});
+</script>
+{% endblock %}

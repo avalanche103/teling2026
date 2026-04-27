@@ -7,7 +7,9 @@
     "dev:turbo": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "ssd:install": "python -m pip install -r ssd-admin-app/requirements.txt",
+    "ssd:start": "cd ssd-admin-app && python app.py"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

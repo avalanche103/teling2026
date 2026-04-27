@@ -1,0 +1,196 @@
+{% extends "layout.html" %}
+
+{% block title %}Товары - SSD Каталог{% endblock %}
+
+{% block content %}
+<h1>Товары и цена для экспорта</h1>
+
+<div class="alert alert-info">
+    <div><strong>Формула:</strong> скидка 25% и выше → наценка +50%; больше 5% и меньше 25% → +30%; 5% и ниже → +20%.</div>
+    <div>Далее цена переводится в белорусские рубли по курсу <strong>1 ₽ = {{ rub_to_byn_rate }} {{ currency_symbol or 'Br' }}</strong> и округляется так, чтобы НДС 20% считался удобно.</div>
+</div>
+
+{% if saved_product %}
+<div class="alert alert-success py-2">Изменения для товара #{{ saved_product }} сохранены.</div>
+{% endif %}
+
+{% if error_message %}
+<div class="alert alert-danger py-2">{{ error_message }}</div>
+{% endif %}
+
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <form method="get" class="row g-2">
+            <div class="col-md-4">
+                <select name="section_id" class="form-select">
+                    <option value="">Все разделы</option>
+                    {% for section in sections %}
+                    <option value="{{ section.id }}" {% if section.id == current_section %}selected{% endif %}>
+                        {{ section.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-5">
+                <input type="text" name="q" class="form-control" value="{{ current_query or '' }}" placeholder="Поиск по названию или артикулу">
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary">Показать</button>
+            </div>
+            <input type="hidden" name="page" value="1">
+        </form>
+    </div>
+    <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+        <p class="mb-1">Найдено товаров: <strong>{{ pagination.total or 0 }}</strong></p>
+        <small class="text-muted">Экспорт JSON и CSV использует уже отредактированную итоговую цену в {{ currency_symbol or 'Br' }}.</small>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Список товаров</h5>
+    </div>
+    <div class="card-body">
+        {% if products %}
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Товар</th>
+                        <th>Артикул</th>
+                        <th>Цена для экспорта</th>
+                        <th>Наличие</th>
+                        <th>Производитель</th>
+                        <th>Раздел</th>
+                        <th style="min-width: 330px;">Правки перед экспортом</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>
+                            <div class="fw-semibold">{{ product.name[:70] }}{% if product.name|length > 70 %}...{% endif %}</div>
+                            {% if product.name_overridden %}
+                            <div class="small text-muted">Исходное название: {{ product.original_name }}</div>
+                            <span class="badge bg-secondary mt-1">переименован</span>
+                            {% endif %}
+                            {% if product.hide_from_export %}
+                            <span class="badge bg-danger mt-1">не выводить в экспорт</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ product.sku or '-' }}</td>
+                        <td>
+                            {% if product.price is not none %}
+                            <div>
+                                <span class="text-success fw-bold">{{ product.price|format_money }} {{ product.currency or currency_symbol or 'Br' }}</span>
+                                {% if product.price_overridden %}
+                                <span class="badge bg-primary">своя цена</span>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <span class="text-muted">Цена по запросу</span>
+                            {% endif %}
+
+                            {% if product.price_overridden and product.calculated_price is not none %}
+                            <div class="small text-muted">Авторасчет: {{ product.calculated_price|format_money }} {{ product.currency or currency_symbol or 'Br' }}</div>
+                            {% endif %}
+                            {% if product.original_price_rub is not none %}
+                            <div class="small text-muted">Цена SSD: {{ "%.2f"|format(product.original_price_rub) }} ₽</div>
+                            {% endif %}
+                            <div class="small text-muted">Наценка: +{{ product.markup_percent }}%</div>
+
+                            {% if product.distributor_discount is not none %}
+                            <div class="small text-muted">Дист. скидка: {{ "%.0f"|format(product.distributor_discount) }}%</div>
+                            {% endif %}
+
+                            {% if product.price_without_vat is not none and product.vat_amount is not none %}
+                            <div class="small text-muted">Без НДС: {{ product.price_without_vat|format_money }} {{ product.currency or currency_symbol or 'Br' }} · НДС 20%: {{ product.vat_amount|format_money }} {{ product.currency or currency_symbol or 'Br' }}</div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if product.stock is not none and product.stock > 0 %}
+                            <span class="badge bg-success">{{ product.stock }}</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">Нет</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div>{{ product.vendor or '-' }}</div>
+                            {% if product.vendor_overridden %}
+                            <div class="small text-muted">Исходный: {{ product.original_vendor or '-' }}</div>
+                            <span class="badge bg-secondary mt-1">производитель изменен</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ product.section_name or '-' }}</td>
+                        <td>
+                            <form method="post" action="{{ url_for('save_product_override', product_id=product.id) }}" class="row g-2">
+                                <input type="hidden" name="section_id" value="{{ current_section or '' }}">
+                                <input type="hidden" name="page" value="{{ pagination.page }}">
+                                <input type="hidden" name="q" value="{{ current_query or '' }}">
+
+                                <div class="col-12">
+                                    <input type="text" name="custom_name" class="form-control form-control-sm" value="{{ product.custom_name or '' }}" placeholder="Новое название для сайта">
+                                </div>
+                                <div class="col-12">
+                                    <input type="text" name="custom_vendor" class="form-control form-control-sm" value="{{ product.custom_vendor or '' }}" placeholder="Новый производитель для сайта">
+                                </div>
+                                <div class="col-7">
+                                    <input type="text" name="price_override" class="form-control form-control-sm" value="{{ product.price_override|format_money if product.price_override is not none else '' }}" placeholder="Своя итоговая цена, Br">
+                                </div>
+                                <div class="col-5 d-grid">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">Сохранить</button>
+                                </div>
+                                <div class="col-12 form-check mt-1 ms-1">
+                                    <input class="form-check-input" type="checkbox" name="hide_from_export" value="1" id="hide-{{ product.id }}" {% if product.hide_from_export %}checked{% endif %}>
+                                    <label class="form-check-label small" for="hide-{{ product.id }}">
+                                        Не выводить в экспорт
+                                    </label>
+                                </div>
+                                <div class="col-12">
+                                    <small class="text-muted">Пустая цена = использовать автоматический расчет в {{ currency_symbol or 'Br' }}. Галочка исключает товар из JSON и CSV экспорта.</small>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if pagination.total_pages > 1 %}
+        <nav aria-label="Пагинация товаров">
+            <ul class="pagination justify-content-center">
+                {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ pagination.prev_page }}{% if current_section %}&section_id={{ current_section }}{% endif %}{% if current_query %}&q={{ current_query }}{% endif %}">Предыдущая</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Предыдущая</span>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">{{ pagination.page }} из {{ pagination.total_pages }}</span>
+                </li>
+
+                {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ pagination.next_page }}{% if current_section %}&section_id={{ current_section }}{% endif %}{% if current_query %}&q={{ current_query }}{% endif %}">Следующая</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Следующая</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <p class="text-muted">Товары не загружены или по фильтру ничего не найдено.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

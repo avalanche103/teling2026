@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CategoryCard } from "@/components/catalog/CategoryCard";
 import { ProductCard } from "@/components/catalog/ProductCard";
@@ -18,6 +19,88 @@ export const revalidate = 0;
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+function getSiteOrigin(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.SITE_URL?.trim() || "https://teling.by";
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return "https://teling.by";
+  }
+}
+
+function stringifyFirst(value: string | string[] | undefined): string {
+  if (!value) return "";
+  return Array.isArray(value) ? value[0] || "" : value;
+}
+
+function hasNonCanonicalQuery(params: Record<string, string | string[] | undefined>): boolean {
+  const knownKeys = ["q", "page", "brand", "price_min", "price_max"];
+
+  for (const key of knownKeys) {
+    const raw = stringifyFirst(params[key]);
+    if (raw.trim()) return true;
+  }
+
+  for (const key of Object.keys(params)) {
+    if (key.startsWith("cf_")) {
+      const raw = stringifyFirst(params[key]);
+      if (raw.trim()) return true;
+    }
+  }
+
+  return false;
+}
+
+export async function generateMetadata({ params, searchParams }: CategoryPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const query = await searchParams;
+  const category = getCategoryBySlug(slug);
+
+  if (!category) {
+    return {
+      title: "Раздел не найден",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const hasQuery = hasNonCanonicalQuery(query);
+  const canonicalPath = `/catalog/${category.slug}`;
+  
+  // Get product count for better description
+  const { total: productCount } = getSectionProducts(category.id, {
+    page: 1,
+    limit: 1,
+    includeDescendants: true,
+  });
+
+  const description = productCount > 0
+    ? `Купить ${category.name.toLowerCase()} в каталоге Teling.by: ${productCount} товаров, характеристики, цены и наличие оборудования для ЛВС, ВОЛС и видеонаблюдения.`
+    : `${category.name} в каталоге Teling.by: профессиональное оборудование для телекоммуникационных сетей.`;
+
+  return {
+    title: `${category.name} - Каталог`,
+    description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      title: `${category.name} - Каталог Teling.by`,
+      description,
+      url: canonicalPath,
+      type: "website",
+    },
+    robots: hasQuery
+      ? {
+          index: false,
+          follow: true,
+        }
+      : {
+          index: true,
+          follow: true,
+        },
+  };
 }
 
 function parseFilters(
@@ -135,9 +218,94 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   const ancestors = getCategoryAncestors(category.id);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const origin = getSiteOrigin();
+  const canonicalPath = `/catalog/${category.slug}`;
+  const canonicalUrl = `${origin}${canonicalPath}`;
+
+  const breadcrumbsSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Главная",
+        item: origin,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Каталог",
+        item: `${origin}/catalog`,
+      },
+      ...ancestors.map((a, idx) => ({
+        "@type": "ListItem",
+        position: idx + 3,
+        name: a.name,
+        item: `${origin}/catalog/${a.slug}`,
+      })),
+      {
+        "@type": "ListItem",
+        position: ancestors.length + 3,
+        name: category.name,
+        item: canonicalUrl,
+      },
+    ],
+  };
+
+  const productItemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: search
+      ? `Результаты поиска в разделе ${category.name}`
+      : `Товары раздела ${category.name}`,
+    url: canonicalUrl,
+    numberOfItems: products.length,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    itemListElement: products.map((product, idx) => {
+      const productUrl = `${origin}/product/${encodeURIComponent(product.sku)}`;
+      const prev = idx > 0
+        ? `${origin}/product/${encodeURIComponent(products[idx - 1]!.sku)}`
+        : undefined;
+      const next = idx < products.length - 1
+        ? `${origin}/product/${encodeURIComponent(products[idx + 1]!.sku)}`
+        : undefined;
+
+      return {
+        "@type": "ListItem",
+        position: (page - 1) * PAGE_SIZE + idx + 1,
+        ...(prev ? { previousItem: prev } : {}),
+        ...(next ? { nextItem: next } : {}),
+        item: {
+          "@type": "Product",
+          name: product.name,
+          sku: product.sku,
+          url: productUrl,
+          ...(product.thumbnail
+            ? {
+                image: product.thumbnail.startsWith("http")
+                  ? product.thumbnail
+                  : `${origin}${product.thumbnail}`,
+              }
+            : {}),
+        },
+      };
+    }),
+  };
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-6">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
+        suppressHydrationWarning
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productItemListSchema) }}
+        suppressHydrationWarning
+      />
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-6">
       <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-black/70">
         <Link href="/" className="hover:text-black">Главная</Link>
         <span>/</span>
@@ -247,5 +415,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         </div>
       </div>
     </main>
+    </>
   );
 }

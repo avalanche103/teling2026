@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSD Каталог - Демо</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .product { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+        .price { color: green; font-weight: bold; }
+        .stock { color: blue; }
+        .section { background: #f0f0f0; padding: 5px; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>Каталог товаров SSD</h1>
+    <div id="catalog"></div>
+
+    <script>
+        async function loadCatalog() {
+            try {
+                const response = await fetch('products.json');
+                const products = await response.json();
+
+                const catalog = document.getElementById('catalog');
+
+                // Группировка по разделам
+                const bySection = {};
+                products.forEach(p => {
+                    const section = p.section_name || 'Без раздела';
+                    if (!bySection[section]) bySection[section] = [];
+                    bySection[section].push(p);
+                });
+
+                for (const [section, prods] of Object.entries(bySection)) {
+                    const sectionDiv = document.createElement('div');
+                    sectionDiv.className = 'section';
+                    sectionDiv.innerHTML = `<h2>${section}</h2>`;
+
+                    prods.forEach(p => {
+                        const prodDiv = document.createElement('div');
+                        prodDiv.className = 'product';
+                        prodDiv.innerHTML = `
+                            <h3>${p.name}</h3>
+                            <p><strong>Артикул:</strong> ${p.sku || 'N/A'}</p>
+                            <p class="price">Цена: ${p.price ? p.price + ' ' + (p.currency || 'Br') : 'Цена по запросу'}</p>
+                            <p class="stock">Наличие: ${p.stock || 0} шт.</p>
+                            <p><strong>Производитель:</strong> ${p.vendor || 'N/A'}</p>
+                        `;
+                        sectionDiv.appendChild(prodDiv);
+                    });
+
+                    catalog.appendChild(sectionDiv);
+                }
+            } catch (error) {
+                console.error('Error loading catalog:', error);
+                document.getElementById('catalog').innerHTML = '<p>Ошибка загрузки данных</p>';
+            }
+        }
+
+        loadCatalog();
+    </script>
+</body>
+</html>
