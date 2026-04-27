@@ -48,3 +48,14 @@ next-env.d.ts
 
 # local diagnostics
 /typecheck_output.txt
+
+# SSD admin generated artifacts
+/ssd-admin-app/__pycache__/
+/ssd-admin-app/export/
+/ssd-admin-app/*.db
+/ssd-admin-app/import_status.json
+/ssd-admin-app/checkpoint.txt
+
+# temporary local debug outputs
+/temp_output.html
+/catalog.html
