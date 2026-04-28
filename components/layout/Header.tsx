@@ -15,9 +15,9 @@ export function Header() {
         <div className="container mx-auto flex items-center justify-between px-4 py-1.5 text-sm text-slate-200">
           <span>г. Минск, ул. Шафарнянская, 11, офис 33</span>
           <div className="flex items-center gap-4">
-            <a href="tel:+375172705095" className="flex items-center gap-1 transition-colors hover:text-white">
+            <a href="tel:+375296656053" className="flex items-center gap-1 transition-colors hover:text-white">
               <Phone className="w-3.5 h-3.5" />
-              +375 (17) 270-50-95
+              +375 (29) 665-60-53
             </a>
             <span className="text-slate-500">|</span>
             <a href="mailto:info@teling.by" className="transition-colors hover:text-white">
@@ -106,11 +106,11 @@ export function Header() {
               Контакты
             </Link>
             <a
-              href="tel:+375172705095"
+              href="tel:+375296656053"
               className="flex items-center gap-2 py-1 text-black"
             >
               <Phone className="w-4 h-4" />
-              +375 (17) 270-50-95
+              +375 (29) 665-60-53
             </a>
           </nav>
         </div>

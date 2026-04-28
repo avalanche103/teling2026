@@ -31,6 +31,14 @@ export async function readContent(): Promise<ContentBlock[]> {
         key: "contacts",
         title: "Контакты",
         content: "Контактная информация",
+        contacts: {
+          address: "г. Минск, ул. Шафарнянская, 11, офис 33",
+          phones: [
+            { value: "+375(29)665-60-53", href: "tel:+375296656053", badge: "A1", badgeColor: "#e30613" },
+            { value: "+375(29) 247-91-04", href: "tel:+375292479104", badge: "МТС", badgeColor: "#d6001c" },
+          ],
+          email: "info@teling.by",
+        },
         updatedAt: new Date().toISOString(),
       },
     ];

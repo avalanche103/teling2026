@@ -241,5 +241,19 @@ export interface ContentBlock {
   key: "hero" | "about" | "contacts";
   title: string;
   content: string;
+  contacts?: ContactsContent;
   updatedAt: string;
+}
+
+export interface ContactPhone {
+  value: string;
+  href: string;
+  badge?: string;
+  badgeColor?: string;
+}
+
+export interface ContactsContent {
+  address: string;
+  phones: ContactPhone[];
+  email: string;
 }

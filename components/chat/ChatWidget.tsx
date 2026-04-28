@@ -228,7 +228,7 @@ export function ChatWidget() {
       {open && (
         <div className="fixed bottom-20 right-4 z-50 flex w-80 flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl sm:right-6 sm:w-96">
           {/* Header */}
-          <div className="flex items-center justify-between rounded-t-2xl bg-blue-600 px-4 py-3">
+          <div className="flex items-center justify-between rounded-t-2xl bg-slate-900 px-4 py-3">
             <div>
               <p className="text-sm font-semibold text-white">Свяжитесь с нами</p>
               <div className="mt-0.5 flex items-center gap-1.5">
@@ -241,7 +241,7 @@ export function ChatWidget() {
                       : "bg-slate-400"
                   }`}
                 />
-                <span className="text-xs text-blue-100">
+                <span className="text-xs text-slate-200">
                   {operatorOnline === true
                     ? "Оператор онлайн"
                     : operatorOnline === false
@@ -252,7 +252,7 @@ export function ChatWidget() {
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="flex h-7 w-7 items-center justify-center rounded-full text-white hover:bg-blue-500 transition-colors"
+              className="flex h-7 w-7 items-center justify-center rounded-full text-white hover:bg-slate-800 transition-colors"
               aria-label="Закрыть чат"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -359,7 +359,7 @@ export function ChatWidget() {
       {/* Floating button */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-4 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-colors sm:right-6"
+        className="fixed bottom-4 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-slate-900 text-white shadow-lg hover:bg-slate-800 transition-colors sm:right-6"
         aria-label="Открыть чат"
       >
         {open ? (

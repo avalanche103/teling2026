@@ -2,6 +2,19 @@ import Link from "next/link";
 import { CategoryCard } from "@/components/catalog/CategoryCard";
 import { getRootCategories } from "@/lib/data";
 import { getContentBlock } from "@/lib/content";
+import type { ContactsContent } from "@/lib/types";
+
+function getReadableBadgeTextColor(color?: string): string {
+  if (!color || !/^#[0-9a-fA-F]{6}$/.test(color)) {
+    return "#ffffff";
+  }
+
+  const r = Number.parseInt(color.slice(1, 3), 16);
+  const g = Number.parseInt(color.slice(3, 5), 16);
+  const b = Number.parseInt(color.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? "#111827" : "#ffffff";
+}
 
 const COMPANY_DIRECTIONS = [
   "локальные вычислительные сети корпоративного назначения",
@@ -11,16 +24,17 @@ const COMPANY_DIRECTIONS = [
   "мультимедийные системы",
 ];
 
-const CONTACTS = {
+const CONTACTS: ContactsContent = {
   address: "г. Минск, ул. Шафарнянская, 11, офис 33",
   phones: [
-    "+375 (17) 270-50-95",
-    "+375 (17) 270-50-96",
-    "+375 (17) 270-50-97",
-    "+375 (17) 270-50-98",
-    "+375 (17) 270-50-99 (факс)",
+    { value: "+375(29)665-60-53", href: "tel:+375296656053", badge: "A1", badgeColor: "#e30613" },
+    { value: "+375(29) 247-91-04", href: "tel:+375292479104", badge: "МТС", badgeColor: "#d6001c" },
+    { value: "+375 (17) 270-50-95", href: "tel:+375172705095" },
+    { value: "+375 (17) 270-50-96", href: "tel:+375172705096" },
+    { value: "+375 (17) 270-50-97", href: "tel:+375172705097" },
+    { value: "+375 (17) 270-50-98", href: "tel:+375172705098" },
+    { value: "+375 (17) 270-50-99 (факс)", href: "tel:+375172705099" },
   ],
-  workTime: "Пн-Пт 9.00 - 18.00",
   email: "info@teling.by",
 };
 
@@ -43,6 +57,7 @@ export default async function HomePage() {
     getContentBlock("about"),
     getContentBlock("contacts"),
   ]);
+  const contactsData = contactsBlock?.contacts || CONTACTS;
 
   // Organization schema for SEO
   const organizationSchema = {
@@ -58,7 +73,7 @@ export default async function HomePage() {
       addressLocality: "Минск",
       addressCountry: "BY",
     },
-    telephone: "+375 (17) 270-50-95",
+    telephone: contactsData.phones[0]?.value || "+375 (17) 270-50-95",
     email: "info@teling.by",
     priceRange: "$$",
     image: `${origin}/og-image.png`,
@@ -148,9 +163,30 @@ export default async function HomePage() {
 
         <div id="contacts" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-black tracking-tight text-black">{contactsBlock?.title || "Контакты"}</h2>
-          <p className="mt-3 whitespace-pre-wrap text-black/80">
-            {contactsBlock?.content || CONTACTS.address}
-          </p>
+          <p className="mt-3 text-black/80">{contactsData.address}</p>
+          <ul className="mt-4 space-y-2 text-black/85">
+            {contactsData.phones.map((phone) => (
+              <li key={phone.value} className="flex items-center gap-2">
+                <a href={phone.href} className="flex-1 transition-colors hover:text-black">
+                  {phone.value}
+                </a>
+                {phone.badge ? (
+                  <span
+                    className="inline-flex h-5 min-w-7 shrink-0 items-center justify-center rounded px-1.5 text-[10px] font-extrabold uppercase tracking-wide"
+                    style={{
+                      backgroundColor: phone.badgeColor || "#dc2626",
+                      color: getReadableBadgeTextColor(phone.badgeColor || "#dc2626"),
+                    }}
+                  >
+                    {phone.badge}
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+          <a href={`mailto:${contactsData.email}`} className="mt-2 inline-block text-black/85 transition-colors hover:text-black">
+            {contactsData.email}
+          </a>
         </div>
       </section>
     </main>

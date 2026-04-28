@@ -1,8 +1,23 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSession } from "@/lib/auth";
 import { getContentBlock, updateContentBlock } from "@/lib/content";
+import type { ContactsContent } from "@/lib/types";
 
 type RouteParams = Promise<{ key: string }>;
+
+function isValidContactsPayload(value: unknown): value is ContactsContent {
+  if (!value || typeof value !== "object") return false;
+
+  const contacts = value as ContactsContent;
+  if (typeof contacts.address !== "string") return false;
+  if (typeof contacts.email !== "string") return false;
+  if (!Array.isArray(contacts.phones)) return false;
+
+  return contacts.phones.every((phone) => {
+    if (!phone || typeof phone !== "object") return false;
+    return typeof phone.value === "string" && typeof phone.href === "string" && (typeof phone.badge === "undefined" || typeof phone.badge === "string") && (typeof phone.badgeColor === "undefined" || typeof phone.badgeColor === "string");
+  });
+}
 
 export async function GET(
   _request: NextRequest,
@@ -58,7 +73,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { title, content } = body;
+    const { title, content, contacts } = body;
 
     if (typeof title !== "string" || typeof content !== "string") {
       return NextResponse.json(
@@ -67,10 +82,20 @@ export async function PUT(
       );
     }
 
-    const updated = await updateContentBlock(key as "hero" | "about" | "contacts", {
+    if (key === "contacts" && typeof contacts !== "undefined" && !isValidContactsPayload(contacts)) {
+      return NextResponse.json(
+        { error: "Invalid contacts payload" },
+        { status: 400 }
+      );
+    }
+
+    const updates = {
       title,
       content,
-    });
+      ...(key === "contacts" ? { contacts } : {}),
+    };
+
+    const updated = await updateContentBlock(key as "hero" | "about" | "contacts", updates);
 
     return NextResponse.json(updated);
   } catch (error) {
