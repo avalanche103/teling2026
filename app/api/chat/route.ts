@@ -8,9 +8,13 @@ import {
 } from "@/lib/chats";
 import type { ContactField } from "@/lib/chats";
 import type { VisitorInfo } from "@/lib/chats";
+import { isOperatorOnline } from "@/lib/operator-status";
+import { sendMissedChatNotification } from "@/lib/email";
+import { processInactiveChatsEmail } from "@/lib/chat-inactivity";
 
 // POST /api/chat  — visitor sends a message
 export async function POST(req: NextRequest) {
+  await processInactiveChatsEmail();
   const body = await req.json();
   const { visitorId, chatId, text, type, field, visitorInfo } = body as {
     visitorId?: string;
@@ -68,6 +72,12 @@ export async function POST(req: NextRequest) {
       }
     } else {
       chat = createChat(visitorId, text.trim(), mergedVisitorInfo);
+      // Notify by email if operator is offline (missed chat)
+      if (!isOperatorOnline()) {
+        sendMissedChatNotification(chat).catch((err) => {
+          console.error("[email] Ошибка отправки уведомления о пропущенном чате:", err);
+        });
+      }
     }
   }
 
@@ -76,6 +86,7 @@ export async function POST(req: NextRequest) {
 
 // GET /api/chat?chatId=... — visitor polls messages
 export async function GET(req: NextRequest) {
+  await processInactiveChatsEmail();
   const chatId = req.nextUrl.searchParams.get("chatId");
   if (!chatId) {
     return NextResponse.json({ error: "chatId required" }, { status: 400 });

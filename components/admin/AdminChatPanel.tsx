@@ -92,7 +92,7 @@ export function AdminChatPanel() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
   const [sending, setSending] = useState(false);
-    const [blockingId, setBlockingId] = useState<string | null>(null);
+  const [blockingId, setBlockingId] = useState<string | null>(null);
   const prevCountsRef = useRef<Record<string, number>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -326,17 +326,19 @@ export function AdminChatPanel() {
                 </p>
                 <p className="text-xs text-slate-400">ID: {selected.visitorId}</p>
               </div>
-              <button
-                onClick={() => toggleBlock(selected.id, !selected.blocked)}
-                disabled={blockingId === selected.id}
-                className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-40 ${
-                  selected.blocked
-                    ? "bg-green-100 text-green-700 hover:bg-green-200"
-                    : "bg-red-100 text-red-700 hover:bg-red-200"
-                }`}
-              >
-                {selected.blocked ? "Разблокировать" : "Заблокировать"}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => toggleBlock(selected.id, !selected.blocked)}
+                  disabled={blockingId === selected.id}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-40 ${
+                    selected.blocked
+                      ? "bg-green-100 text-green-700 hover:bg-green-200"
+                      : "bg-red-100 text-red-700 hover:bg-red-200"
+                  }`}
+                >
+                  {selected.blocked ? "Разблокировать" : "Заблокировать"}
+                </button>
+              </div>
             </div>
 
             {/* Messages */}

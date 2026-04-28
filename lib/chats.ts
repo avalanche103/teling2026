@@ -39,6 +39,8 @@ export interface Chat {
   createdAt: string;
   updatedAt: string;
   blocked: boolean;
+  lastInactivityEmailAt?: string;
+  lastInactivityEmailMessageId?: string;
   visitorInfo: VisitorInfo;
   messages: ChatMessage[];
 }
@@ -148,6 +150,32 @@ export function blockChat(chatId: string, blocked: boolean): Chat | null {
   const idx = chats.findIndex((c) => c.id === chatId);
   if (idx === -1) return null;
   chats[idx].blocked = blocked;
+  writeChats(chats);
+  return chats[idx];
+}
+
+const INACTIVITY_MS = 30 * 60 * 1000;
+
+export function getChatsNeedingInactivityEmail(nowMs = Date.now()): Chat[] {
+  return readChats().filter((chat) => {
+    const lastMessage = chat.messages[chat.messages.length - 1];
+    if (!lastMessage) return false;
+    const lastMessageMs = Date.parse(lastMessage.createdAt);
+    if (Number.isNaN(lastMessageMs)) return false;
+    if (nowMs - lastMessageMs < INACTIVITY_MS) return false;
+    return chat.lastInactivityEmailMessageId !== lastMessage.id;
+  });
+}
+
+export function markInactivityEmailSent(
+  chatId: string,
+  lastMessageId: string
+): Chat | null {
+  const chats = readChats();
+  const idx = chats.findIndex((c) => c.id === chatId);
+  if (idx === -1) return null;
+  chats[idx].lastInactivityEmailAt = new Date().toISOString();
+  chats[idx].lastInactivityEmailMessageId = lastMessageId;
   writeChats(chats);
   return chats[idx];
 }
