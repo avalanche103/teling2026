@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## SSD Supplier App In Admin Panel
 
-The admin panel now has a section **SSD база** (`/admin/supplier`) that opens the supplier Flask app copied into this repository (`ssd-admin-app/`).
+The project now exposes the supplier Flask app copied into this repository (`ssd-admin-app/`) as a separate internal tool at **/ssd**.
 
 1. Install Python dependencies once:
 
@@ -32,7 +32,7 @@ npm run ssd:install
 npm run ssd:start
 ```
 
-3. Open `/admin/supplier` in this project.
+3. Open `/ssd` in this project.
 
 Export output paths:
 
@@ -42,10 +42,10 @@ Export output paths:
 The SSD interface is available from the same site host via:
 
 ```text
-http://localhost:3000/admin/supplier/proxy
+http://localhost:3000/ssd
 ```
 
-So it now works under `localhost:3000` together with the main site.
+So it now works under `localhost:3000` together with the main site, but on a separate route from the admin dashboard.
 
 By default, the integration uses `http://127.0.0.1:5000`.
 If you use a different host/port, set this in `.env.local`:

@@ -75,7 +75,7 @@ export default async function AdminDashboard() {
             </Link>
 
             <Link
-              href="/admin/supplier"
+              href="/ssd"
               className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
             >
               <div className="flex items-start gap-4">
@@ -87,7 +87,7 @@ export default async function AdminDashboard() {
                     SSD база
                   </h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Встроенный доступ к приложению поставщика для импорта и правок продуктовой базы
+                    Отдельное SSD-приложение для импорта и правок продуктовой базы, доступное по адресу /ssd
                   </p>
                 </div>
               </div>
