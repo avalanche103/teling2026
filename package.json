@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "set NEXT_DIST_DIR=.next-dev&& next dev --webpack",
+    "dev": "concurrently -n web,ssd -c cyan,magenta \"npm:dev:next\" \"npm:dev:ssd\"",
+    "dev:next": "set NEXT_DIST_DIR=.next-dev&& next dev --webpack",
+    "dev:ssd": "npm run ssd:start",
     "dev:turbo": "next dev",
     "build": "next build",
     "start": "next start",
@@ -28,6 +30,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
