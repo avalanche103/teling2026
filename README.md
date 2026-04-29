@@ -16,6 +16,18 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Google Analytics (GA4)
+
+The app supports Google Analytics via `@next/third-parties/google`.
+
+Add your GA4 Measurement ID to `.env.local`:
+
+```bash
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+```
+
+Then restart the dev server (`npm run dev`).
+
 ## SSD Supplier App In Admin Panel
 
 The project now exposes the supplier Flask app copied into this repository (`ssd-admin-app/`) as a separate internal tool at **/ssd**.
