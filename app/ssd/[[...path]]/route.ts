@@ -7,6 +7,27 @@ const ALLOWED_ROLES = ["admin", "employee"] as const;
 
 export const dynamic = "force-dynamic";
 
+function getPublicOrigin(request: NextRequest): string {
+  const forwardedProto = request.headers
+    .get("x-forwarded-proto")
+    ?.split(",")[0]
+    ?.trim()
+    .toLowerCase();
+  const forwardedHost = request.headers
+    .get("x-forwarded-host")
+    ?.split(",")[0]
+    ?.trim();
+  const host = request.headers.get("host")?.split(",")[0]?.trim();
+
+  const proto = forwardedProto || request.nextUrl.protocol.replace(":", "") || "https";
+  const resolvedHost = forwardedHost || host || request.nextUrl.host;
+  return `${proto}://${resolvedHost}`;
+}
+
+function buildPublicUrl(request: NextRequest, pathname: string): URL {
+  return new URL(pathname, getPublicOrigin(request));
+}
+
 function getTargetBase(): URL {
   const raw = process.env.SSD_ADMIN_APP_URL?.trim() || DEFAULT_TARGET;
   return new URL(raw.endsWith("/") ? raw.slice(0, -1) : raw);
@@ -64,11 +85,11 @@ async function ensureAccess(request: NextRequest) {
   const session = await getSession();
 
   if (!session) {
-    return NextResponse.redirect(new URL("/login", request.url), 303);
+    return NextResponse.redirect(buildPublicUrl(request, "/login"), 303);
   }
 
   if (!canAccessRole(session.user.role, [...ALLOWED_ROLES])) {
-    return NextResponse.redirect(new URL(getDefaultAdminPath(session.user.role), request.url), 303);
+    return NextResponse.redirect(buildPublicUrl(request, getDefaultAdminPath(session.user.role)), 303);
   }
 
   return null;
