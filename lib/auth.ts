@@ -3,7 +3,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 const EMPLOYEES_PATH = path.join(process.cwd(), "data", "employees.json");
 const AUTH_SECRET_PATH = path.join(process.cwd(), "data", "auth-secret.txt");
@@ -313,7 +313,18 @@ export async function requireApiSession(allowedRoles?: StaffRole[]) {
   return { ok: true as const, session };
 }
 
-export function createSessionResponse(user: Employee): NextResponse {
+export function isSecureRequest(req: Pick<NextRequest, "headers" | "nextUrl">): boolean {
+  const forwardedProto = req.headers.get("x-forwarded-proto")?.split(",")[0]?.trim().toLowerCase();
+  if (forwardedProto) {
+    return forwardedProto === "https";
+  }
+  return req.nextUrl.protocol === "https:";
+}
+
+export function createSessionResponse(
+  user: Employee,
+  secureCookie = process.env.NODE_ENV === "production",
+): NextResponse {
   const { token, expiresAt } = createSessionToken(user.id);
   const response = NextResponse.json({ user });
   response.cookies.set({
@@ -321,7 +332,7 @@ export function createSessionResponse(user: Employee): NextResponse {
     value: token,
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: secureCookie,
     path: "/",
     expires: expiresAt,
     maxAge: SESSION_MAX_AGE_SECONDS,
@@ -329,14 +340,16 @@ export function createSessionResponse(user: Employee): NextResponse {
   return response;
 }
 
-export function createLogoutResponse(): NextResponse {
+export function createLogoutResponse(
+  secureCookie = process.env.NODE_ENV === "production",
+): NextResponse {
   const response = NextResponse.json({ ok: true });
   response.cookies.set({
     name: SESSION_COOKIE_NAME,
     value: "",
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: secureCookie,
     path: "/",
     expires: new Date(0),
     maxAge: 0,

@@ -1,5 +1,6 @@
-import { createLogoutResponse } from "@/lib/auth";
+import { NextRequest } from "next/server";
+import { createLogoutResponse, isSecureRequest } from "@/lib/auth";
 
-export async function POST() {
-  return createLogoutResponse();
+export async function POST(req: NextRequest) {
+  return createLogoutResponse(isSecureRequest(req));
 }

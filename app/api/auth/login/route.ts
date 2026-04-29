@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateEmployee, createSessionResponse } from "@/lib/auth";
+import { authenticateEmployee, createSessionResponse, isSecureRequest } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   const body = (await req.json().catch(() => ({}))) as {
@@ -16,5 +16,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Неверный логин или пароль" }, { status: 401 });
   }
 
-  return createSessionResponse(user);
+  return createSessionResponse(user, isSecureRequest(req));
 }
