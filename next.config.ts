@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
+  experimental: {},
   images: {
     // Allow external images from supplier host.
     remotePatterns: [
@@ -16,7 +17,7 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
-    unoptimized: false,
+    unoptimized: true,
   },
 };
 
