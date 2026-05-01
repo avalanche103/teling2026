@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open the local URL printed by Next.js in the terminal to see the result.
 
 ## Google Analytics (GA4)
 
@@ -54,10 +54,10 @@ Export output paths:
 The SSD interface is available from the same site host via:
 
 ```text
-http://localhost:3000/ssd
+/ssd
 ```
 
-So it now works under `localhost:3000` together with the main site, but on a separate route from the admin dashboard.
+So it works under the same site host together with the main site, but on a separate route from the admin dashboard.
 
 By default, the integration uses `http://127.0.0.1:5000`.
 If you use a different host/port, set this in `.env.local`:
