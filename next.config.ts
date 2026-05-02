@@ -2,7 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
-  experimental: {},
+  experimental: {
+    webpackBuildWorker: false,
+    workerThreads: true,
+    cpus: 1,
+  },
   images: {
     // Allow external images from supplier host.
     remotePatterns: [
