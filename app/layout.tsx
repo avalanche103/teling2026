@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { Geist_Mono, Inter, Oswald } from "next/font/google";
 import "./globals.css";
 
 function getSiteUrl(): URL {
@@ -11,24 +10,6 @@ function getSiteUrl(): URL {
     return new URL("https://teling.by");
   }
 }
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin", "cyrillic"],
-  display: "swap",
-});
-
-const oswald = Oswald({
-  variable: "--font-oswald",
-  subsets: ["latin", "cyrillic"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin", "cyrillic"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
@@ -66,10 +47,7 @@ export default function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID?.trim();
 
   return (
-    <html
-      lang="ru"
-      className={`${inter.variable} ${oswald.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="ru" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
         {children}
       </body>
