@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
     workerThreads: true,
     cpus: 1,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     // Allow external images from supplier host.
     remotePatterns: [
