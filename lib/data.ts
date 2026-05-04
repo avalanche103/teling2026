@@ -17,6 +17,10 @@ let _products: ProductRaw[] | null = null;
 let _productsBySkuMap: Map<string, ProductRaw> | null = null;
 let _productsBySectionMap: Map<number, ProductRaw[]> | null = null;
 
+function isGitLfsPointer(text: string): boolean {
+  return text.startsWith("version https://git-lfs.github.com/spec/v1");
+}
+
 export function invalidateSectionCaches(): void {
   // Section caches were removed to always read fresh section state from disk.
 }
@@ -35,7 +39,16 @@ function getSectionsRaw(): SectionRaw[] {
 function getProductsRaw(): ProductRaw[] {
   if (!_products) {
     const filePath = path.join(process.cwd(), "data", "products.json");
-    _products = JSON.parse(readFileSync(filePath, "utf-8")) as ProductRaw[];
+    const raw = readFileSync(filePath, "utf-8").trim();
+
+    if (isGitLfsPointer(raw)) {
+      console.warn(
+        "[data] products.json is a Git LFS pointer; using an empty product list until LFS assets are fetched."
+      );
+      _products = [];
+    } else {
+      _products = JSON.parse(raw) as ProductRaw[];
+    }
   }
   return _products;
 }
