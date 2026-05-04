@@ -66,6 +66,25 @@ If you use a different host/port, set this in `.env.local`:
 SSD_ADMIN_APP_URL=http://127.0.0.1:5000
 ```
 
+For production deployment on the current hosting setup, the Next.js app is expected to listen on:
+
+```text
+127.0.0.1:10024
+```
+
+## Production Hosting
+
+The current production startup script supports building directly on the server.
+
+Default flow:
+
+1. Upload the project files to the server.
+2. Start the app with `start-production.sh`.
+3. The script installs dependencies if `node_modules` is missing.
+4. The script runs `next build` on the server before startup.
+
+After the build is ready, the app starts on the hosting-provided `PORT`, or falls back to `10024` if the host does not inject one.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
