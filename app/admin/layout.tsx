@@ -46,7 +46,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                   Контент
                 </Link>
                 <Link
-                  href="/ssd"
+                  href="/admin/supplier"
                   className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
                 >
                   SSD база
