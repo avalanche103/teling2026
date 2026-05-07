@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, Phone } from "lucide-react";
@@ -31,7 +32,15 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
+          <Link href="/" className="flex items-center gap-3 shrink-0">
+            <Image
+              src="/teling-circle.jpg"
+              alt="Логотип ТЕЛИНГ ГРУПП"
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-full object-cover"
+              priority
+            />
             <span className="text-xl font-black tracking-wide text-black">
               ТЕЛИНГ ГРУПП
             </span>
