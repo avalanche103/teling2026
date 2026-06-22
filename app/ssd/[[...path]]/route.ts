@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { canAccessRole, getDefaultAdminPath, getSession } from "@/lib/auth";
 
-const DEFAULT_TARGET = "http://127.0.0.1:5000";
 const PROXY_BASE = "/ssd";
 const ALLOWED_ROLES = ["admin", "employee"] as const;
 
@@ -29,7 +28,9 @@ function buildPublicUrl(request: NextRequest, pathname: string): URL {
 }
 
 function getTargetBase(): URL {
-  const raw = process.env.SSD_ADMIN_APP_URL?.trim() || DEFAULT_TARGET;
+  const configured = process.env.SSD_ADMIN_APP_URL?.trim();
+  const fallbackPort = process.env.NODE_ENV === "production" ? "5000" : "5050";
+  const raw = configured || `http://127.0.0.1:${fallbackPort}`;
   return new URL(raw.endsWith("/") ? raw.slice(0, -1) : raw);
 }
 

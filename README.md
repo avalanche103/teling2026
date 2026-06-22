@@ -59,11 +59,11 @@ The SSD interface is available from the same site host via:
 
 So it works under the same site host together with the main site, but on a separate route from the admin dashboard.
 
-By default, the integration uses `http://127.0.0.1:5000`.
+By default, the integration uses `http://127.0.0.1:5050`. Port `5000` is avoided because on Windows it is often occupied by another local service.
 If you use a different host/port, set this in `.env.local`:
 
 ```bash
-SSD_ADMIN_APP_URL=http://127.0.0.1:5000
+SSD_ADMIN_APP_URL=http://127.0.0.1:5050
 ```
 
 For production deployment on the current hosting setup, the Next.js app is expected to listen on:

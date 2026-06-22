@@ -35,6 +35,42 @@
 
         <div class="card mb-4">
             <div class="card-header">
+                <h5>Курс RUB → BYN</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">Используется при расчете цен для экспорта на сайт: <strong>1 ₽ = {{ rub_to_byn_rate }} {{ currency_symbol or 'Br' }}</strong>.</p>
+                {% if rate_saved %}
+                <div class="alert alert-success py-2">Курс сохранен.</div>
+                {% endif %}
+                {% if rate_error == 'rate_format' %}
+                <div class="alert alert-danger py-2">Курс должен быть положительным числом до 1, например 0.036.</div>
+                {% endif %}
+                <form method="post" action="/settings/exchange-rate" class="row g-2 align-items-end">
+                    <input type="hidden" name="redirect_to" value="index">
+                    <div class="col-sm-6">
+                        <label for="rub_to_byn_rate" class="form-label">1 ₽ =</label>
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="rub_to_byn_rate"
+                                name="rub_to_byn_rate"
+                                value="{{ rub_to_byn_rate }}"
+                                inputmode="decimal"
+                                required
+                            >
+                            <span class="input-group-text">{{ currency_symbol or 'Br' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-auto">
+                        <button type="submit" class="btn btn-outline-primary">Сохранить курс</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
                 <h5>Импорт данных</h5>
             </div>
             <div class="card-body">

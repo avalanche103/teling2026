@@ -65,7 +65,7 @@ export default async function HomePage() {
     "@type": "LocalBusiness",
     name: "Teling.by",
     url: origin,
-    logo: `${origin}/logo.png`,
+    logo: `${origin}/teling-circle.jpg`,
     description: "Компания с более чем 20-летним опытом в области телекоммуникаций. Производим и поставляем оборудование, материалы и комплектующие для ввода в эксплуатацию инженерных систем связи.",
     address: {
       "@type": "PostalAddress",

@@ -5,6 +5,42 @@
 {% block content %}
 <h1>Экспорт данных</h1>
 
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Курс RUB → BYN</h5>
+    </div>
+    <div class="card-body">
+        <p class="mb-2">Перед экспортом проверьте курс перевода цен из рублей РФ в белорусские рубли. Сейчас: <strong>1 ₽ = {{ rub_to_byn_rate }} {{ currency_symbol or 'Br' }}</strong>.</p>
+        {% if rate_saved %}
+        <div class="alert alert-success py-2">Курс сохранен. Новые расчеты и экспорт будут использовать обновленное значение.</div>
+        {% endif %}
+        {% if rate_error == 'rate_format' %}
+        <div class="alert alert-danger py-2">Курс должен быть положительным числом до 1, например 0.036.</div>
+        {% endif %}
+        <form method="post" action="/settings/exchange-rate" class="row g-2 align-items-end">
+            <input type="hidden" name="redirect_to" value="export">
+            <div class="col-sm-6">
+                <label for="rub_to_byn_rate" class="form-label">1 ₽ =</label>
+                <div class="input-group">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="rub_to_byn_rate"
+                        name="rub_to_byn_rate"
+                        value="{{ rub_to_byn_rate }}"
+                        inputmode="decimal"
+                        required
+                    >
+                    <span class="input-group-text">{{ currency_symbol or 'Br' }}</span>
+                </div>
+            </div>
+            <div class="col-sm-auto">
+                <button type="submit" class="btn btn-outline-primary">Сохранить курс</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-6">
         <div class="card">
@@ -19,8 +55,35 @@
                     <li>catalog_tree.json - дерево каталога</li>
                     <li>в товарах добавляются скидка дистрибьютора, НДС и итоговая цена в <code>Br</code></li>
                 </ul>
-                <form method="post" action="/run_export">
+                <form method="post" action="/run_export" class="mb-2">
                     <input type="hidden" name="type" value="json">
+                    <div class="mb-3">
+                        <label for="export_dir" class="form-label">Папка для сохранения JSON</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="export_dir"
+                            name="export_dir"
+                            list="export_dir_presets"
+                            value="{{ export_dir }}"
+                            placeholder="export"
+                            required
+                        >
+                        <datalist id="export_dir_presets">
+                            <option value="export">ssd-admin-app/export</option>
+                            <option value="../data">data сайта (для импорта products.json)</option>
+                        </datalist>
+                        <div class="form-text">
+                            Путь относительно <code>ssd-admin-app</code> или абсолютный внутри проекта.
+                            Последняя папка: <code>{{ export_dir_absolute }}</code>
+                        </div>
+                    </div>
+                    {% if export_dir_error %}
+                    <div class="alert alert-danger py-2">{{ export_dir_error }}</div>
+                    {% endif %}
+                    {% if export_dir_saved %}
+                    <div class="alert alert-success py-2">Экспорт запущен. Файлы будут сохранены в <code>{{ export_dir_saved }}</code>.</div>
+                    {% endif %}
                     <button type="submit" class="btn btn-success">Экспорт JSON</button>
                 </form>
                 <a href="/products" class="btn btn-outline-secondary btn-sm mt-2">Открыть редактирование товаров</a>

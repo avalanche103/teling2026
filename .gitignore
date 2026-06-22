@@ -54,6 +54,7 @@ next-env.d.ts
 /ssd-admin-app/export/
 /ssd-admin-app/*.db
 /ssd-admin-app/import_status.json
+/ssd-admin-app/settings.json
 /ssd-admin-app/checkpoint.txt
 
 # temporary local debug outputs

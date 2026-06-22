@@ -37,6 +37,11 @@ export const metadata: Metadata = {
     description:
       "Каталог оборудования для ЛВС, ВОЛС, видеонаблюдения, кабельного ТВ и мультимедийных систем.",
   },
+  icons: {
+    icon: [{ url: "/favicon.ico", type: "image/x-icon" }],
+    shortcut: ["/favicon.ico"],
+    apple: [{ url: "/teling-circle.jpg", type: "image/jpeg" }],
+  },
 };
 
 export default function RootLayout({

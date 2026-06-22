@@ -1,22 +1,34 @@
 #!/usr/bin/env python3
 """Экспорт SSD каталога для сайта"""
 
+import argparse
 import json
 import sqlite3
 from pathlib import Path
 
 from catalog_utils import (
+    DEFAULT_EXPORT_DIR,
     apply_product_overrides,
     build_export_pricing,
     ensure_product_overrides_table,
     extract_offer_fields,
+    resolve_export_dir,
     safe_json_loads,
 )
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "ssd_catalog.db"
-EXPORT_DIR = BASE_DIR / "export"
-EXPORT_DIR.mkdir(exist_ok=True)
+EXPORT_DIR = DEFAULT_EXPORT_DIR
+
+
+def configure_export_dir(raw_path: str | None = None) -> Path:
+    """Установить папку экспорта для текущего запуска."""
+    global EXPORT_DIR
+    if raw_path:
+        EXPORT_DIR = resolve_export_dir(raw_path)
+    else:
+        EXPORT_DIR.mkdir(parents=True, exist_ok=True)
+    return EXPORT_DIR
 
 
 def get_excluded_section_ids(conn):
@@ -218,11 +230,19 @@ def export_catalog_tree():
 
 
 def main():
-    print("Starting export for site...")
+    parser = argparse.ArgumentParser(description="Экспорт SSD каталога для сайта")
+    parser.add_argument(
+        "--output-dir",
+        help="Папка для JSON-файлов (относительно ssd-admin-app или абсолютный путь внутри проекта)",
+    )
+    args = parser.parse_args()
+
+    export_dir = configure_export_dir(args.output_dir)
+    print(f"Starting export for site into {export_dir}...")
     export_sections()
     export_products()
     export_catalog_tree()
-    print("Export complete. Files in 'export/' directory.")
+    print(f"Export complete. Files in '{export_dir}' directory.")
 
 
 if __name__ == "__main__":

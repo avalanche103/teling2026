@@ -2,6 +2,7 @@
 """Мини-сайт управления SSD каталогом"""
 
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -13,11 +14,17 @@ from flask import Flask, jsonify, redirect, render_template, request, url_for
 
 from catalog_utils import (
     BYN_CURRENCY_SYMBOL,
-    RUB_TO_BYN_RATE,
     apply_product_overrides,
     build_export_pricing,
     ensure_product_overrides_table,
+    export_dir_for_form,
     extract_offer_fields,
+    get_last_export_dir,
+    get_rub_to_byn_rate,
+    parse_rub_to_byn_rate_input,
+    resolve_export_dir,
+    set_last_export_dir,
+    set_rub_to_byn_rate,
 )
 
 app = Flask(__name__)
@@ -155,7 +162,18 @@ def index():
     """Главная страница."""
     stats = get_db_stats()
     status = get_import_status()
-    return render_template('index.html', stats=stats, status=status)
+    rub_to_byn_rate = float(get_rub_to_byn_rate())
+    rate_saved = request.args.get('rate_saved') == '1'
+    rate_error = request.args.get('rate_error')
+    return render_template(
+        'index.html',
+        stats=stats,
+        status=status,
+        rub_to_byn_rate=rub_to_byn_rate,
+        currency_symbol=BYN_CURRENCY_SYMBOL,
+        rate_saved=rate_saved,
+        rate_error=rate_error,
+    )
 
 
 @app.route('/import', methods=['POST'])
@@ -297,7 +315,7 @@ def products():
             saved_product=saved_product,
             error_message=error_message,
             currency_symbol=BYN_CURRENCY_SYMBOL,
-            rub_to_byn_rate=float(RUB_TO_BYN_RATE),
+            rub_to_byn_rate=float(get_rub_to_byn_rate()),
         )
 
     try:
@@ -406,7 +424,7 @@ def products():
         saved_product=saved_product,
         error_message=error_message,
         currency_symbol=BYN_CURRENCY_SYMBOL,
-        rub_to_byn_rate=float(RUB_TO_BYN_RATE),
+        rub_to_byn_rate=float(get_rub_to_byn_rate()),
     )
 
 
@@ -487,19 +505,61 @@ def save_product_override(product_id):
 def export():
     """Страница экспорта."""
     stats = get_db_stats()
-    return render_template('export.html', stats=stats)
+    rub_to_byn_rate = float(get_rub_to_byn_rate())
+    rate_saved = request.args.get('rate_saved') == '1'
+    rate_error = request.args.get('rate_error')
+    export_dir_error = request.args.get('export_dir_error')
+    export_dir_saved = request.args.get('export_dir_saved')
+    return render_template(
+        'export.html',
+        stats=stats,
+        rub_to_byn_rate=rub_to_byn_rate,
+        currency_symbol=BYN_CURRENCY_SYMBOL,
+        rate_saved=rate_saved,
+        rate_error=rate_error,
+        export_dir=export_dir_for_form(),
+        export_dir_absolute=str(get_last_export_dir()),
+        export_dir_error=export_dir_error,
+        export_dir_saved=export_dir_saved,
+    )
+
+
+@app.route('/settings/exchange-rate', methods=['POST'])
+def save_exchange_rate():
+    """Сохранить курс RUB → BYN для расчета цен экспорта."""
+    redirect_to = request.form.get('redirect_to', 'export')
+    rate_raw = (request.form.get('rub_to_byn_rate') or '').strip()
+    rate = parse_rub_to_byn_rate_input(rate_raw)
+
+    if rate is None:
+        return redirect(url_for(redirect_to, rate_error='rate_format'))
+
+    set_rub_to_byn_rate(rate)
+    return redirect(url_for(redirect_to, rate_saved='1'))
 
 
 @app.route('/run_export', methods=['POST'])
 def run_export():
     """Запуск экспорта."""
     export_type = request.form.get('type')
+    export_dir_arg = None
+    export_dir_saved = None
+
+    if export_type == 'json':
+        export_dir_raw = (request.form.get('export_dir') or '').strip()
+        try:
+            export_dir = resolve_export_dir(export_dir_raw or 'export')
+            set_last_export_dir(export_dir)
+            export_dir_arg = str(export_dir)
+            export_dir_saved = export_dir.as_posix()
+        except ValueError as exc:
+            return redirect(url_for('export', export_dir_error=str(exc)))
 
     def _export():
         try:
             set_import_status("running", f"Экспорт {export_type}...", 0)
             if export_type == 'json':
-                cmd = [sys.executable, 'export_for_site.py']
+                cmd = [sys.executable, 'export_for_site.py', '--output-dir', export_dir_arg]
             elif export_type == 'csv':
                 cmd = [sys.executable, 'export_csv.py']
             elif export_type == 'images':
@@ -540,8 +600,12 @@ def run_export():
     thread = threading.Thread(target=_export, daemon=True)
     thread.start()
 
-    return redirect(url_for('export'))
+    redirect_params = {}
+    if export_dir_saved:
+        redirect_params['export_dir_saved'] = export_dir_saved
+    return redirect(url_for('export', **redirect_params))
 
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
+    port = int(os.getenv("SSD_ADMIN_APP_PORT", "5050"))
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=port)

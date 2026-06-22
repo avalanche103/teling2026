@@ -7,6 +7,7 @@ import json
 import os
 import sqlite3
 from decimal import Decimal, InvalidOperation, ROUND_CEILING, ROUND_HALF_UP
+from pathlib import Path
 from typing import Any
 
 PRODUCT_OVERRIDES_SCHEMA = """
@@ -26,10 +27,115 @@ CREATE INDEX IF NOT EXISTS idx_product_overrides_sku
 ON product_overrides(sku)
 """
 
-RUB_TO_BYN_RATE = Decimal(os.getenv("RUB_TO_BYN_RATE", "0.036"))
+BASE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = BASE_DIR.parent
+DB_PATH = BASE_DIR / "ssd_catalog.db"
+SETTINGS_PATH = BASE_DIR / "settings.json"
+DEFAULT_EXPORT_DIR = BASE_DIR / "export"
+DEFAULT_RUB_TO_BYN_RATE = Decimal("0.036")
 VAT_RATE = Decimal("0.20")
 BYN_CURRENCY_SYMBOL = "Br"
 BYN_CURRENCY_CODE = "BYN"
+
+
+def get_default_rub_to_byn_rate() -> Decimal:
+    """Вернуть курс по умолчанию: из env или константа."""
+    env_rate = to_decimal(os.getenv("RUB_TO_BYN_RATE"))
+    if env_rate is not None and env_rate > 0:
+        return env_rate
+    return DEFAULT_RUB_TO_BYN_RATE
+
+
+def read_settings() -> dict[str, Any]:
+    """Прочитать настройки SSD-приложения из JSON."""
+    if not SETTINGS_PATH.exists():
+        return {}
+    try:
+        with open(SETTINGS_PATH, "r", encoding="utf-8") as file:
+            data = json.load(file)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def write_settings(settings: dict[str, Any]) -> None:
+    """Сохранить настройки SSD-приложения в JSON."""
+    SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(SETTINGS_PATH, "w", encoding="utf-8") as file:
+        json.dump(settings, file, ensure_ascii=False, indent=2)
+
+
+def resolve_export_dir(raw_path: str) -> Path:
+    """Разрешить и проверить папку для экспорта внутри проекта сайта."""
+    cleaned = raw_path.strip()
+    if not cleaned:
+        cleaned = "export"
+
+    candidate = Path(cleaned)
+    if not candidate.is_absolute():
+        candidate = (BASE_DIR / candidate).resolve()
+    else:
+        candidate = candidate.resolve()
+
+    project_root = PROJECT_ROOT.resolve()
+    try:
+        candidate.relative_to(project_root)
+    except ValueError as exc:
+        raise ValueError("Папка должна находиться внутри проекта сайта") from exc
+
+    candidate.mkdir(parents=True, exist_ok=True)
+    return candidate
+
+
+def get_last_export_dir() -> Path:
+    """Вернуть последнюю папку экспорта или значение по умолчанию."""
+    stored = read_settings().get("last_export_dir")
+    if isinstance(stored, str) and stored.strip():
+        try:
+            return resolve_export_dir(stored)
+        except ValueError:
+            pass
+    DEFAULT_EXPORT_DIR.mkdir(parents=True, exist_ok=True)
+    return DEFAULT_EXPORT_DIR
+
+
+def set_last_export_dir(path: Path) -> None:
+    """Сохранить последнюю папку экспорта."""
+    settings = read_settings()
+    settings["last_export_dir"] = str(path)
+    write_settings(settings)
+
+
+def export_dir_for_form() -> str:
+    """Показать путь экспорта в форме: относительный к ssd-admin-app, если возможно."""
+    path = get_last_export_dir()
+    try:
+        return path.relative_to(BASE_DIR).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def get_rub_to_byn_rate() -> Decimal:
+    """Получить текущий курс RUB → BYN из JSON или значение по умолчанию."""
+    stored_rate = to_decimal(read_settings().get("rub_to_byn_rate"))
+    if stored_rate is not None and stored_rate > 0:
+        return stored_rate
+    return get_default_rub_to_byn_rate()
+
+
+def set_rub_to_byn_rate(rate: Decimal) -> None:
+    """Сохранить курс RUB → BYN в JSON."""
+    settings = read_settings()
+    settings["rub_to_byn_rate"] = float(rate)
+    write_settings(settings)
+
+
+def parse_rub_to_byn_rate_input(value: str | None) -> Decimal | None:
+    """Разобрать и проверить введенный пользователем курс."""
+    rate = to_decimal(value)
+    if rate is None or rate <= 0 or rate > Decimal("1"):
+        return None
+    return rate
 
 
 def ensure_product_overrides_table(conn: sqlite3.Connection) -> None:
@@ -146,16 +252,18 @@ def build_export_pricing(
     source_price_rub: float | None,
     distributor_discount: float | None,
     price_override: float | None = None,
+    rub_to_byn_rate: Decimal | None = None,
 ) -> dict[str, Any]:
     """Рассчитать экспортную цену в BYN по бизнес-правилам пользователя."""
     source_price = to_decimal(source_price_rub)
     override_price = to_decimal(price_override)
+    rate = rub_to_byn_rate if rub_to_byn_rate is not None else get_rub_to_byn_rate()
     markup_percent = get_markup_percent(distributor_discount)
     markup_multiplier = (Decimal("100") + Decimal(str(markup_percent))) / Decimal("100")
 
     calculated_price = None
     if source_price is not None:
-        calculated_raw = source_price * markup_multiplier * RUB_TO_BYN_RATE
+        calculated_raw = source_price * markup_multiplier * rate
         calculated_price = round_price_for_vat(calculated_raw)
 
     effective_price = override_price if override_price is not None else calculated_price
@@ -176,7 +284,7 @@ def build_export_pricing(
         "price_without_vat": normalize_display_price(price_without_vat),
         "vat_amount": normalize_display_price(vat_amount),
         "markup_percent": markup_percent,
-        "rub_to_byn_rate": decimal_to_float(RUB_TO_BYN_RATE),
+        "rub_to_byn_rate": decimal_to_float(rate),
         "currency": BYN_CURRENCY_SYMBOL,
         "currency_code": BYN_CURRENCY_CODE,
         "price_overridden": override_price is not None,
