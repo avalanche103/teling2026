@@ -10,6 +10,27 @@ import type {
 import { formatPrice } from "@/lib/format";
 import { ImportHistory } from "./ImportHistory";
 
+async function readApiJson<T>(res: Response): Promise<T> {
+  const contentType = res.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    const snippet = (await res.text()).trim().slice(0, 120);
+    if (res.status === 413 || snippet.includes("413")) {
+      throw new Error(
+        "Файл слишком большой для nginx. Нужен client_max_body_size 200m для /api/.",
+      );
+    }
+    if (res.status === 502 || res.status === 504) {
+      throw new Error(
+        "Сервер упал при разборе большого JSON (мало RAM). Загрузите файл по SCP в data/products.import.upload.json и нажмите «Анализ файла на сервере».",
+      );
+    }
+    throw new Error(
+      `Сервер вернул HTML вместо JSON (HTTP ${res.status}). Проверьте вход в админку и настройки nginx.`,
+    );
+  }
+  return (await res.json()) as T;
+}
+
 export function ProductsImportManager() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<ProductImportPreview | null>(null);
@@ -25,6 +46,26 @@ export function ProductsImportManager() {
     () => Object.values(newSelections).filter(Boolean).length,
     [newSelections],
   );
+
+  const applyPreview = (nextPreview: ProductImportPreview) => {
+    setPreview(nextPreview);
+    setNewSelections(
+      Object.fromEntries(nextPreview.newProducts.map((item) => [item.importKey, true])),
+    );
+    setConflictActions(
+      Object.fromEntries(
+        nextPreview.conflicts.map((item) => [item.importKey, "skip" satisfies ProductImportConflictAction]),
+      ),
+    );
+    setMissingActions(
+      Object.fromEntries(
+        nextPreview.missingProducts.map((item) => [
+          item.currentKey,
+          "keep" satisfies ProductImportMissingAction,
+        ]),
+      ),
+    );
+  };
 
   const analyzeImport = async () => {
     if (!file) {
@@ -43,23 +84,36 @@ export function ProductsImportManager() {
         method: "POST",
         body: formData,
       });
-      const json = await res.json();
+      const json = await readApiJson<ProductImportPreview & { error?: string }>(res);
       if (!res.ok) {
         setError(json.error ?? "Не удалось проанализировать импорт");
         return;
       }
 
-      const nextPreview = json as ProductImportPreview;
-      setPreview(nextPreview);
-      setNewSelections(
-        Object.fromEntries(nextPreview.newProducts.map((item) => [item.importKey, true])),
-      );
-      setConflictActions(
-        Object.fromEntries(nextPreview.conflicts.map((item) => [item.importKey, "skip" satisfies ProductImportConflictAction])),
-      );
-      setMissingActions(
-        Object.fromEntries(nextPreview.missingProducts.map((item) => [item.currentKey, "keep" satisfies ProductImportMissingAction])),
-      );
+      applyPreview(json as ProductImportPreview);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Ошибка сети");
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const analyzeServerFile = async () => {
+    setAnalyzing(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      const res = await fetch("/api/admin/products/import/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ source: "server" }),
+      });
+      const json = await readApiJson<ProductImportPreview & { error?: string }>(res);
+      if (!res.ok) {
+        setError(json.error ?? "Не удалось проанализировать файл на сервере");
+        return;
+      }
+      applyPreview(json as ProductImportPreview);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Ошибка сети");
     } finally {
@@ -88,7 +142,13 @@ export function ProductsImportManager() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const json = await res.json();
+      const json = await readApiJson<{
+        error?: string;
+        addedCount?: number;
+        updatedCount?: number;
+        hiddenCount?: number;
+        deletedCount?: number;
+      }>(res);
       if (!res.ok) {
         setError(json.error ?? "Не удалось применить импорт");
         return;
@@ -114,8 +174,30 @@ export function ProductsImportManager() {
       <div>
         <h2 className="text-lg font-bold text-slate-900">Импорт товаров из JSON</h2>
         <p className="mt-1 text-sm text-slate-500">
-          Загрузите новый `products.json`, получите предпросмотр изменений и подтвердите, как обработать новые, конфликтные и отсутствующие товары.
+          Большой каталог (~100 MB) лучше загружать по SCP на сервер — браузерная загрузка на VPS с 1 ГБ RAM часто
+          роняет процесс (HTTP 502).
         </p>
+      </div>
+
+      <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <div className="font-semibold">Рекомендуемый способ для боевого сервера</div>
+        <ol className="mt-2 list-decimal space-y-1 pl-5">
+          <li>
+            С ПК:{" "}
+            <code className="rounded bg-amber-100 px-1">
+              scp data\products.json user@134.17.16.134:/opt/teling/data/products.import.upload.json
+            </code>
+          </li>
+          <li>Нажмите кнопку «Анализ файла на сервере» ниже</li>
+        </ol>
+        <button
+          type="button"
+          onClick={analyzeServerFile}
+          disabled={analyzing}
+          className="mt-3 rounded-lg bg-amber-700 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-800 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {analyzing ? "Анализ…" : "Анализ файла на сервере"}
+        </button>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -126,11 +208,12 @@ export function ProductsImportManager() {
           className="max-w-sm text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-slate-200"
         />
         <button
+          type="button"
           onClick={analyzeImport}
           disabled={!file || analyzing}
           className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {analyzing ? "Анализ…" : "Проверить импорт"}
+          {analyzing ? "Анализ…" : "Проверить импорт (браузер)"}
         </button>
       </div>
 

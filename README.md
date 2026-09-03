@@ -85,6 +85,35 @@ Default flow:
 
 After the build is ready, the app starts on the hosting-provided `PORT`, or falls back to `10024` if the host does not inject one.
 
+## MetPay / ArtPay webhook
+
+The site proxies ArtPay payment notifications to the MetPay backend:
+
+```text
+POST https://teling.by/api/webhooks/artpay
+  -> Next.js route app/api/webhooks/artpay/route.ts
+  -> http://127.0.0.1:8000/api/webhooks/artpay
+```
+
+On production, `start-production.sh` also starts MetPay from `../MetPay` if that folder exists on the server.
+Override the path with:
+
+```bash
+METPAY_DIR=/path/to/MetPay
+```
+
+Override the backend URL for the Next.js proxy with:
+
+```bash
+METPAY_BACKEND_URL=http://127.0.0.1:8000
+```
+
+In ArtPay, set the result / notification URL to:
+
+```text
+https://teling.by/api/webhooks/artpay
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

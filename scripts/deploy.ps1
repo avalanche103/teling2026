@@ -11,7 +11,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+$MetPayRoot = if ($env:METPAY_ROOT) { Resolve-Path $env:METPAY_ROOT } else { Resolve-Path "H:\MetPay" }
 $DefaultRemotePath = "/opt/teling"
+$DefaultMetPayRemotePath = "/opt/teling/metpay"
 $SshTarget = "${User}@${HostName}"
 $DefaultKeyPath = Join-Path $env:USERPROFILE ".ssh\id_ed25519_teling"
 
@@ -187,22 +189,41 @@ function Resolve-RemotePath {
 function Get-RemoteDeployCommand {
     param([string]$Target)
     $escaped = $Target.Replace("'", "'\''")
-    $parts = @(
+    $metpayEscaped = $DefaultMetPayRemotePath.Replace("'", "'\''")
+    $restartScript = @(
         'set -e',
+        ('mkdir -p ''{0}''' -f $metpayEscaped),
+        ('cd ''{0}''' -f $metpayEscaped),
+        'tar -xzf /tmp/metpay-deploy.tar.gz',
+        'sed -i ''s/\r$//'' backend/start-production.sh 2>/dev/null || true',
+        'chmod +x backend/start-production.sh',
         ('mkdir -p ''{0}''' -f $escaped),
         ('cd ''{0}''' -f $escaped),
         'tar -xzf /tmp/teling2026-deploy.tar.gz',
         'sed -i ''s/\r$//'' start-production.sh scripts/*.cjs 2>/dev/null || true',
         'chmod +x start-production.sh',
         'ss -ltnp 2>/dev/null | grep '':10024'' | sed -n ''s/.*pid=\([0-9]*\).*/\1/p'' | xargs -r kill 2>/dev/null || true',
-        'ss -ltnp 2>/dev/null | grep '':5000'' | sed -n ''s/.*pid=\([0-9]*\).*/\1/p'' | xargs -r kill 2>/dev/null || true',
+        'ss -ltnp 2>/dev/null | grep '':8000'' | sed -n ''s/.*pid=\([0-9]*\).*/\1/p'' | xargs -r kill 2>/dev/null || true',
+        'ss -ltnp 2>/dev/null | grep '':5050'' | sed -n ''s/.*pid=\([0-9]*\).*/\1/p'' | xargs -r kill 2>/dev/null || true',
         'sleep 2',
-        'ss -ltnp 2>/dev/null | grep -q '':5000'' || (cd /opt/teling/ssd-admin-app && SSD_ADMIN_APP_PORT=5000 nohup .venv/bin/python app.py >> flask.log 2>&1 </dev/null &)',
-        '(nohup bash start-production.sh > deploy.log 2>&1 </dev/null &)',
+        'ss -ltnp 2>/dev/null | grep -q '':5050'' || (cd /opt/teling/ssd-admin-app && SSD_ADMIN_APP_PORT=5050 nohup .venv/bin/python app.py >> flask.log 2>&1 </dev/null &)',
+        'export METPAY_DIR=/opt/teling/metpay',
+        'nohup bash start-production.sh > deploy.log 2>&1 </dev/null &',
         'sleep 2',
-        'tail -n 20 deploy.log || true'
-    )
-    return ($parts -join '; ')
+        'tail -n 20 deploy.log || true',
+        'ss -ltnp 2>/dev/null | grep -E ''8000|10024'' || true'
+    ) -join "`n"
+    return @"
+cat > /tmp/teling-restart.sh << 'RESTART_EOF'
+$restartScript
+RESTART_EOF
+sed -i 's/\r$//' /tmp/teling-restart.sh
+chmod +x /tmp/teling-restart.sh
+nohup bash /tmp/teling-restart.sh > /tmp/teling-restart.log 2>&1 </dev/null &
+echo restart_scheduled
+sleep 3
+tail -n 15 /tmp/teling-restart.log || true
+"@
 }
 
 if ($InspectOnly) {
@@ -216,8 +237,13 @@ if ($DiscoverOnly) {
     exit 0
 }
 
-$target = Resolve-RemotePath
+$target = if ($RemotePath) { $RemotePath } else { "/opt/teling" }
 $archive = Join-Path $env:TEMP ("teling2026-deploy-{0}.tar.gz" -f (Get-Date -Format "yyyyMMdd-HHmmss"))
+$metpayArchive = Join-Path $env:TEMP ("metpay-deploy-{0}.tar.gz" -f (Get-Date -Format "yyyyMMdd-HHmmss"))
+
+if (-not $RemotePath) {
+    $target = Resolve-RemotePath
+}
 
 if (-not $SkipBuild) {
     Write-Host "[*] Local production build..."
@@ -241,15 +267,34 @@ Push-Location $ProjectRoot
     .
 Pop-Location
 
-Write-Host "[*] Uploading archive to $SshTarget ..."
+Write-Host "[*] Packing MetPay from $MetPayRoot ..."
+Push-Location $MetPayRoot
+& tar -czf $metpayArchive `
+    --exclude=.git `
+    --exclude=backend/.venv `
+    --exclude=backend/__pycache__ `
+    --exclude=backend/.pytest_cache `
+    --exclude=backend/.ruff_cache `
+    --exclude=backend/*.egg-info `
+    --exclude=backend/test_metpay.db `
+    .
+Pop-Location
+
+Write-Host "[*] Uploading archives to $SshTarget ..."
 & scp @(Get-TransportOpts -Tool scp) $archive "${SshTarget}:/tmp/teling2026-deploy.tar.gz"
 if ($LASTEXITCODE -ne 0) {
-    throw "SCP upload failed"
+    throw "SCP upload failed for teling2026"
+}
+& scp @(Get-TransportOpts -Tool scp) $metpayArchive "${SshTarget}:/tmp/metpay-deploy.tar.gz"
+if ($LASTEXITCODE -ne 0) {
+    throw "SCP upload failed for MetPay"
 }
 
 Write-Host "[*] Extracting and restarting on server..."
-$remoteCmd = Get-RemoteDeployCommand -Target $target
+$remoteCmd = (Get-RemoteDeployCommand -Target $target) -replace "`r`n", "`n" -replace "`r", ""
 Invoke-SshCommand -Command $remoteCmd
 
 Remove-Item $archive -Force -ErrorAction SilentlyContinue
+Remove-Item $metpayArchive -Force -ErrorAction SilentlyContinue
 Write-Host "[*] Deploy finished: https://teling.by"
+Write-Host "[*] ArtPay webhook: https://teling.by/api/webhooks/artpay"

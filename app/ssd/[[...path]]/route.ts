@@ -29,8 +29,7 @@ function buildPublicUrl(request: NextRequest, pathname: string): URL {
 
 function getTargetBase(): URL {
   const configured = process.env.SSD_ADMIN_APP_URL?.trim();
-  const fallbackPort = process.env.NODE_ENV === "production" ? "5000" : "5050";
-  const raw = configured || `http://127.0.0.1:${fallbackPort}`;
+  const raw = configured || "http://127.0.0.1:5050";
   return new URL(raw.endsWith("/") ? raw.slice(0, -1) : raw);
 }
 

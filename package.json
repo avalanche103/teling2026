@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -n web,ssd -c cyan,magenta \"npm:dev:next\" \"npm:dev:ssd\"",
-    "dev:next": "set NEXT_DIST_DIR=.next-dev&& next dev --webpack",
+    "dev:next": "set NEXT_DIST_DIR=.next-dev&& next dev --webpack -p 6001",
     "dev:ssd": "npm run ssd:start",
     "dev:turbo": "next dev",
     "build": "next build --webpack",
