@@ -276,18 +276,11 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         position: (page - 1) * PAGE_SIZE + idx + 1,
         ...(prev ? { previousItem: prev } : {}),
         ...(next ? { nextItem: next } : {}),
+        // Use Thing, not Product: bare Product without offers/review fails GSC Shopping.
         item: {
-          "@type": "Product",
+          "@type": "Thing",
           name: product.name,
-          sku: product.sku,
           url: productUrl,
-          ...(product.thumbnail
-            ? {
-                image: product.thumbnail.startsWith("http")
-                  ? product.thumbnail
-                  : `${origin}${product.thumbnail}`,
-              }
-            : {}),
         },
       };
     }),
