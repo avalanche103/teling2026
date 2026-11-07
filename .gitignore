@@ -67,3 +67,8 @@ next-env.d.ts
 /.next.deploy.tar.gz
 /full_redeploy.py
 /ssh_block_monitor.py
+
+# local VPS backups
+_backups/
+scripts/_vps_*.py
+
