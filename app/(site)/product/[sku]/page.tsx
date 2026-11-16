@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/catalog/ProductCard";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductCharacteristics } from "@/components/product/ProductCharacteristics";
 import { ViewedProducts } from "@/components/product/ViewedProducts";
+import { ProductAddToRequest } from "@/components/request/ProductAddToRequest";
 import { getCategoryById, getProductBySku, getProductSummaryBySku } from "@/lib/data";
 import { formatPrice, formatPriceValue, hasPrice, normalizeCurrency } from "@/lib/format";
 
@@ -235,6 +236,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
           </div>
 
+          <ProductAddToRequest sku={product.sku} minQty={product.minQty} />
+
           {product.timeDelivery && (
             <p className="text-sm text-black/75">Срок поставки: {product.timeDelivery}</p>
           )}
@@ -284,7 +287,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           >
             <h2 className="mb-3 text-lg font-bold text-black">Описание</h2>
             <div
-              className="prose prose-slate min-h-0 max-w-none flex-1 overflow-y-auto pr-1 prose-headings:text-black prose-p:text-black prose-li:text-black [&_p]:text-justify [&_p]:indent-6 [&_p]:leading-7 [&_p]:mb-4 [&_p:last-child]:mb-0"
+              className="product-description prose prose-slate min-h-0 max-w-none flex-1 overflow-y-auto pr-1 text-[15px] leading-7 text-black prose-headings:text-black prose-p:text-black prose-li:text-black prose-strong:text-black [&_p]:text-justify [&_p]:indent-6 [&_p]:leading-7 [&_p]:mb-4 [&_p:last-child]:mb-0 [&_div]:mb-3 [&_div:last-child]:mb-0 [&_td]:align-top [&_table]:w-full"
               // Trusted supplier HTML from imported JSON source.
               dangerouslySetInnerHTML={{ __html: product.description }}
             />

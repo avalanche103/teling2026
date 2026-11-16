@@ -34,12 +34,16 @@ export interface ProductDocument {
   url: string;
 }
 
+export type ProductSupplier = "ssd" | "microinform";
+
 export interface ProductRaw {
   id: number;
   name: string;
   original_name: string;
   custom_name: string | null;
   sku: string;
+  /** Hidden supplier tag for admin/sync only — never shown on the public site. */
+  supplier?: ProductSupplier;
   visible?: boolean;
   section_id: number;
   section_name: string;
@@ -84,6 +88,8 @@ export interface Category {
   parentId: number | null;
   level: number;
   imageUrl: string | null;
+  /** Used when the primary section image is missing/broken. */
+  fallbackImageUrl?: string | null;
   sort: number;
   children: Category[];
 }

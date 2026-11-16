@@ -16,7 +16,15 @@ from catalog_utils import (
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "ssd_catalog.db"
 EXPORT_DIR = BASE_DIR / "export"
-EXPORT_DIR.mkdir(exist_ok=True)
+
+
+def set_export_dir(path: Path) -> Path:
+    """Установить папку для CSV-экспорта."""
+    global EXPORT_DIR
+    export_dir = Path(path)
+    export_dir.mkdir(parents=True, exist_ok=True)
+    EXPORT_DIR = export_dir
+    return EXPORT_DIR
 
 
 def export_products_csv():
@@ -120,10 +128,20 @@ def export_sections_csv():
 
 
 def main():
-    print("Starting CSV export...")
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Экспорт SSD каталога в CSV")
+    parser.add_argument(
+        "--output-dir",
+        help="Папка для CSV-файлов (по умолчанию ssd-admin-app/export)",
+    )
+    args = parser.parse_args()
+
+    export_dir = set_export_dir(Path(args.output_dir) if args.output_dir else EXPORT_DIR)
+    print(f"Starting CSV export into {export_dir}...")
     export_sections_csv()
     export_products_csv()
-    print("CSV export complete.")
+    print(f"CSV export complete. Files in '{export_dir}' directory.")
 
 
 if __name__ == "__main__":

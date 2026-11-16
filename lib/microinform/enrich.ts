@@ -1,0 +1,629 @@
+import {
+  createWriteStream,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  statSync,
+  unlinkSync,
+} from "fs";
+import { pipeline } from "stream/promises";
+import path from "path";
+import { Readable } from "stream";
+import * as cheerio from "cheerio";
+import type { ProductCharGroup, ProductDocument, ProductRaw } from "@/lib/types";
+import { PUBLIC_IMAGES_DIR } from "./paths";
+import { readMicroinformProducts, writeMicroinformProducts } from "./store";
+
+const UA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+const MAX_IMAGES = 8;
+
+function absoluteUrl(base: string, href: string): string | null {
+  try {
+    return new URL(href, base).toString();
+  } catch {
+    return null;
+  }
+}
+
+function absolutizeHtml(pageUrl: string, html: string): string {
+  const $ = cheerio.load(`<div id="teling-root">${html}</div>`, false);
+  $("#teling-root [src]").each((_, el) => {
+    const src = $(el).attr("src");
+    if (!src) return;
+    const abs = absoluteUrl(pageUrl, src);
+    if (abs) $(el).attr("src", abs);
+  });
+  $("#teling-root [href]").each((_, el) => {
+    const href = $(el).attr("href");
+    if (!href || href.startsWith("#")) return;
+    const abs = absoluteUrl(pageUrl, href);
+    if (abs) $(el).attr("href", abs);
+  });
+  return ($("#teling-root").html() || "").trim();
+}
+
+function scrubInlineStyle(style: string): string {
+  const keep: string[] = [];
+  for (const part of style.split(";")) {
+    const decl = part.trim();
+    if (!decl) continue;
+    const prop = decl.split(":")[0]?.trim().toLowerCase() || "";
+    // Drop vendor typography/color so site Inter/Oswald rules are not overridden.
+    if (
+      prop.startsWith("font") ||
+      prop === "color" ||
+      prop === "line-height" ||
+      prop === "letter-spacing" ||
+      prop === "text-transform" ||
+      prop === "background" ||
+      prop === "background-color"
+    ) {
+      continue;
+    }
+    keep.push(decl);
+  }
+  return keep.join("; ");
+}
+
+function sanitizeHtml(pageUrl: string, html: string): string {
+  const wrapped = absolutizeHtml(pageUrl, html);
+  const $ = cheerio.load(`<div id="teling-root">${wrapped}</div>`, false);
+  $("#teling-root script, #teling-root style, #teling-root iframe, #teling-root object, #teling-root embed").remove();
+  // Unwrap <font> — it only carries size/face from manufacturer pages.
+  $("#teling-root font").each((_, el) => {
+    $(el).replaceWith($(el).html() || "");
+  });
+  $("#teling-root *").each((_, el) => {
+    const attribs = ("attribs" in el ? (el.attribs as Record<string, string>) : {}) || {};
+    for (const name of Object.keys(attribs)) {
+      if (
+        name.startsWith("on") ||
+        name === "srcdoc" ||
+        name === "face" ||
+        name === "size" ||
+        name === "color"
+      ) {
+        $(el).removeAttr(name);
+        continue;
+      }
+      if (name === "style") {
+        const cleaned = scrubInlineStyle(attribs.style || "");
+        if (cleaned) $(el).attr("style", cleaned);
+        else $(el).removeAttr("style");
+      }
+    }
+  });
+  return ($("#teling-root").html() || "").trim();
+}
+
+function guessDocType(name: string, href: string): string {
+  const blob = `${name} ${href}`.toLowerCase();
+  if (blob.includes("sert") || blob.includes("cert") || blob.includes("сертиф") || blob.includes("еаэс")) {
+    return "Сертификат";
+  }
+  if (blob.includes("qig") || blob.includes("install") || blob.includes("руковод") || blob.includes("manual")) {
+    return "Инструкция";
+  }
+  if (blob.includes("data_sh") || blob.includes("datasheet") || blob.includes("ds_") || blob.includes("описан")) {
+    return "Datasheet";
+  }
+  if (href.toLowerCase().endsWith(".pdf")) return "PDF";
+  return "Документ";
+}
+
+function isLikelyProductImage(url: string): boolean {
+  const u = url.toLowerCase();
+  if (u.includes("logo") || u.includes("icon") || u.includes("favicon") || u.includes("award")) return false;
+  if (u.includes("/min/") || u.includes("mini_") || u.includes("/min_")) return false;
+  if (u.includes("/i/") && !u.includes("prod")) return false;
+  // Diagrams / install collages from support sections are usually not the hero shot.
+  if (/\/support\/.*ant\d/i.test(u)) return false;
+  return /\.(jpe?g|png|webp|gif)(\?|$)/i.test(u);
+}
+
+/** Higher score = better as the main storefront photo. */
+function scoreProductImage(url: string): number {
+  const u = url.toLowerCase();
+  let score = 0;
+
+  // D-Link angled packshot (/up/prod/600/) must beat flat Front studio shots.
+  // Origo often mirrors a flat _1 into /600/ — demote those numbered copies.
+  if (u.includes("/up/prod/600/")) {
+    if (/\/up\/prod\/600\/[^/?#]+_\d+\.(jpe?g|png|webp|gif)/i.test(u)) score += 40;
+    else score += 220;
+  } else if (u.includes("/up/prod_fotos/")) score += 100;
+  else if (u.includes("/up/prod/")) score += 70;
+  else if (u.includes("/prod_fotos/")) score += 80;
+
+  // Gallery angles are useful, but Front (even under /600/) is not the preferred hero.
+  if (/_front\b|front\d*\.|\/front|\bfront_/i.test(u)) {
+    score -= u.includes("/up/prod/600/") ? 60 : 5;
+  } else if (/_side|_left|_right/i.test(u) && u.includes("/up/prod/600/")) {
+    score += 25;
+  }
+  // Origo numbered gallery: _2 is the angled packshot; _1 is flat ports/front.
+  if (/\/(?:up\/)?prod_fotos\/[^/?#]+_2\.(jpe?g|png|webp|gif)/i.test(u)) score += 90;
+  else if (/\/(?:up\/)?prod_fotos\/[^/?#]+_1\.(jpe?g|png|webp|gif)/i.test(u)) score += 30;
+  else if (/_1\.(jpe?g|png|webp|gif)/i.test(u) || /_1_/i.test(u)) score += 20;
+  if (/_side|_back|_bottom|_top|_rear/i.test(u)) score += 10;
+  if (u.includes("/support/")) score -= 50;
+  if (u.includes("diagram") || u.includes("schema") || u.includes("install")) score -= 40;
+  if (u.includes("banner") || u.includes("promo")) score -= 30;
+  if (u.includes("min_") || u.includes("thumb") || u.includes("small")) score -= 40;
+
+  return score;
+}
+
+/** Catalog packshots from /up/prod/600/ are often 6–15KB JPEG. */
+function minImageBytes(url: string): number {
+  if (/\/up\/prod\/600\//i.test(url)) return 3_500;
+  return 12_000;
+}
+
+function rankProductImages(urls: string[]): string[] {
+  const unique = [...new Set(urls)];
+  return unique
+    .map((url, index) => ({ url, index, score: scoreProductImage(url) }))
+    .filter((item) => item.score >= 50) // keep studio/product shots; drop support clutter
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .map((item) => item.url)
+    .slice(0, MAX_IMAGES);
+}
+
+function clearLocalSkuImages(sku: string): void {
+  if (!existsSync(PUBLIC_IMAGES_DIR)) return;
+  const prefix = `${sku}_`;
+  for (const name of readdirSync(PUBLIC_IMAGES_DIR)) {
+    if (name.startsWith(prefix)) {
+      try {
+        unlinkSync(path.join(PUBLIC_IMAGES_DIR, name));
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+}
+
+function firstPictureNeedsRefresh(pictures: string[] | undefined): boolean {
+  const first = pictures?.[0] || "";
+  if (!first) return true;
+  if (/\/support\//i.test(first)) return true;
+  if (/\/up\/prod\/600\//i.test(first)) return false;
+  const score = scoreProductImage(first);
+  return score < 80;
+}
+
+function pickDescription($: ReturnType<typeof cheerio.load>, pageUrl: string): string {
+  const candidates: string[] = [];
+
+  const push = (html: string | null | undefined) => {
+    if (!html) return;
+    const cleaned = sanitizeHtml(pageUrl, html);
+    const text = cheerio.load(cleaned).text().replace(/\s+/g, " ").trim();
+    if (text.length >= 40 || cleaned.length >= 80) candidates.push(cleaned);
+  };
+
+  // 1) Explicit description heading → nearest content block
+  $("h3, h4, .title-block, .title_block").each((_, el) => {
+    const title = $(el).text().replace(/\s+/g, " ").trim().toLowerCase();
+    if (title !== "описание") return;
+    const next = $(el).next();
+    push(next.hasClass("sub-content-block") || next.hasClass("sub_content_block") ? next.html() : next.html());
+    push($(el).parent().find(".sub-content-block, .sub_content_block").first().html());
+    push($(el).siblings(".sub-content-block, .sub_content_block").first().html());
+  });
+
+  // 2) Known D-Link / Origo containers (content blocks only, not the whole section with H4)
+  for (const sel of [
+    "#section1 .sub-content-block",
+    "#section1 .sub_content_block",
+    "section#section1 .sub-content-block",
+    "section#section1 .sub_content_block",
+    ".sub-content-block.open",
+    ".product-attributes #section1 .sub-content-block",
+    ".product_attributes #section1 .sub_content_block",
+  ]) {
+    push($(sel).first().html());
+  }
+
+  // 3) Fallback: #section1 without its title heading
+  const section = $("#section1").first().clone();
+  section.find("h3, h4, .title-block, .title_block").first().remove();
+  push(section.html());
+
+  // Prefer the longest textual candidate
+  candidates.sort((a, b) => {
+    const ta = cheerio.load(a).text().trim().length;
+    const tb = cheerio.load(b).text().trim().length;
+    return tb - ta;
+  });
+  return candidates[0] || "";
+}
+
+function cleanCharText(value: string): string {
+  return value
+    .replace(/\u00a0/g, " ")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\s*\n\s*/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function isJunkCharName(name: string): boolean {
+  if (!name || name.length < 2) return true;
+  if (/^\d+$/.test(name)) return true;
+  if (/^mcs$/i.test(name)) return true;
+  if (name.length > 120) return true;
+  return false;
+}
+
+function pickCharacteristics($: ReturnType<typeof cheerio.load>): ProductCharGroup[] {
+  const root =
+    $("#section2 .sub-content-block, #section2 .sub_content_block").first().length > 0
+      ? $("#section2 .sub-content-block, #section2 .sub_content_block").first()
+      : $("#section2").first();
+  if (!root.length) return [];
+
+  const groups: ProductCharGroup[] = [];
+  let current: ProductCharGroup = { name: "Характеристики", items: [] };
+
+  root
+    .find("tr")
+    .each((_, el) => {
+      const $row = $(el);
+      const cells = $row.find("td, th");
+      if (!cells.length) return;
+
+      const first = cells.first();
+      const colspan = Number(first.attr("colspan") || 1);
+      if (colspan >= 2 || cells.length === 1) {
+        const groupName = cleanCharText(first.text()).replace(/\s+/g, " ");
+        if (!groupName) return;
+        if (current.items.length) groups.push(current);
+        current = { name: groupName.slice(0, 80), items: [] };
+        return;
+      }
+
+      if (cells.length < 2) return;
+      const name = cleanCharText($(cells[0]).text()).replace(/\s+/g, " ");
+      const value = cleanCharText($(cells[1]).text())
+        .replace(/\n/g, " • ")
+        .replace(/(?:•\s*){2,}/g, "• ")
+        .replace(/\s+•/g, " •")
+        .trim();
+      if (isJunkCharName(name) || !value || value.length < 1) return;
+      // Skip dense MCS rate matrices.
+      if (name.length <= 3 && /\d/.test(name) && value.split(/\s+/).length > 8) return;
+      if (current.items.length >= 40) return;
+      current.items.push({ name: name.slice(0, 100), value: value.slice(0, 500) });
+    });
+
+  if (current.items.length) groups.push(current);
+  return groups.filter((g) => g.items.length > 0).slice(0, 12);
+}
+
+function mergeCharGroups(
+  existing: ProductCharGroup[] | undefined,
+  incoming: ProductCharGroup[],
+): ProductCharGroup[] {
+  const result: ProductCharGroup[] = [];
+  const seen = new Set<string>();
+
+  const pushGroup = (group: ProductCharGroup) => {
+    const key = group.name.trim().toLowerCase();
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    result.push(group);
+  };
+
+  // Keep our synthetic filter chars (e.g. Управление/PoE) first when present.
+  for (const group of existing || []) {
+    if (group.name === "Характеристики" && group.items.some((i) => i.name === "Управление" || i.name === "PoE")) {
+      pushGroup(group);
+    }
+  }
+  for (const group of incoming) pushGroup(group);
+  for (const group of existing || []) pushGroup(group);
+  return result;
+}
+
+export function extractFromHtml(pageUrl: string, html: string): {
+  description: string;
+  imageUrls: string[];
+  documents: ProductDocument[];
+  charGroups: ProductCharGroup[];
+} {
+  const $ = cheerio.load(html);
+  const description = pickDescription($, pageUrl);
+  const charGroups = pickCharacteristics($);
+
+  const collected: string[] = [];
+  const pushImage = (href: string | undefined) => {
+    if (!href) return;
+    const abs = absoluteUrl(pageUrl, href);
+    if (!abs || !isLikelyProductImage(abs)) return;
+    if (!collected.includes(abs)) collected.push(abs);
+  };
+
+  // Prefer lightbox/full-size links from the product photo strip first.
+  $("a[href*='prod_fotos'], a[href*='/prod/']").each((_, el) => {
+    pushImage($(el).attr("href"));
+  });
+  $("a[href]").each((_, el) => {
+    const href = $(el).attr("href");
+    if (href && /\.(jpe?g|png|webp|gif)(\?|$)/i.test(href)) pushImage(href);
+  });
+  $("img[src*='prod_fotos'], img[src*='/prod/']").each((_, el) => {
+    pushImage($(el).attr("src"));
+  });
+  $("img[src]").each((_, el) => {
+    pushImage($(el).attr("src"));
+  });
+
+  const imageUrls = rankProductImages(collected);
+
+  const documents: ProductDocument[] = [];
+  const pushDoc = (href: string | undefined, name: string) => {
+    if (!href) return;
+    const abs = absoluteUrl(pageUrl, href);
+    if (!abs) return;
+    if (!/\.pdf(\?|$)/i.test(abs)) return;
+    if (/D-Link_new_devices\.pdf|Nuclias_Connect\.pdf|Compatible_hardware/i.test(abs)) return;
+    const cleanName = name.replace(/\s+/g, " ").replace(/<!--.*?-->/g, "").trim() || "Документ";
+    if (documents.some((d) => d.url === abs)) return;
+    documents.push({ type: guessDocType(cleanName, abs), name: cleanName, url: abs });
+  };
+
+  $("a[href]").each((_, el) => {
+    const href = $(el).attr("href") || "";
+    const text = $(el).text();
+    if (/\.pdf(\?|$)/i.test(href)) pushDoc(href, text);
+  });
+
+  return {
+    description,
+    imageUrls: imageUrls.slice(0, MAX_IMAGES),
+    documents: documents.slice(0, 30),
+    charGroups,
+  };
+}
+
+async function fetchText(url: string): Promise<string> {
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent": UA,
+      Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language": "ru-RU,ru;q=0.9,en;q=0.8",
+    },
+    redirect: "follow",
+    signal: AbortSignal.timeout(30000),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.text();
+}
+
+async function downloadImage(url: string, destPath: string): Promise<boolean> {
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": UA },
+      redirect: "follow",
+      signal: AbortSignal.timeout(30000),
+    });
+    if (!res.ok || !res.body) return false;
+    await pipeline(Readable.fromWeb(res.body as never), createWriteStream(destPath));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function extensionFromUrl(url: string): string {
+  try {
+    const pathname = new URL(url).pathname;
+    const ext = path.extname(pathname).toLowerCase();
+    if (ext && ext.length <= 10) return ext;
+  } catch {
+    /* ignore */
+  }
+  return ".jpg";
+}
+
+export async function enrichProduct(product: ProductRaw): Promise<{
+  product: ProductRaw;
+  ok: boolean;
+  error?: string;
+  imagesDownloaded: number;
+  descriptionChars: number;
+  charCount: number;
+}> {
+  const pageUrl = product.metadata?.url?.trim();
+  if (!pageUrl || !/^https?:\/\//i.test(pageUrl)) {
+    return {
+      product,
+      ok: false,
+      error: "no-url",
+      imagesDownloaded: 0,
+      descriptionChars: 0,
+      charCount: 0,
+    };
+  }
+
+  try {
+    const html = await fetchText(pageUrl);
+    const extracted = extractFromHtml(pageUrl, html);
+
+    if (!existsSync(PUBLIC_IMAGES_DIR)) {
+      mkdirSync(PUBLIC_IMAGES_DIR, { recursive: true });
+    }
+
+    // Always rebuild local image sequence so _1 is the manufacturer hero shot.
+    clearLocalSkuImages(product.sku);
+
+    let imagesDownloaded = 0;
+    const localFallbackUrls: string[] = [];
+    for (const imageUrl of extracted.imageUrls) {
+      const ext = extensionFromUrl(imageUrl);
+      const filename = `${product.sku}_${localFallbackUrls.length + 1}${ext}`;
+      const dest = path.join(PUBLIC_IMAGES_DIR, filename);
+      const ok = await downloadImage(imageUrl, dest);
+      if (!ok) continue;
+      try {
+        const size = statSync(dest).size;
+        if (size < minImageBytes(imageUrl)) {
+          unlinkSync(dest);
+          continue;
+        }
+      } catch {
+        continue;
+      }
+      imagesDownloaded += 1;
+      localFallbackUrls.push(imageUrl);
+    }
+
+    const nextDescription =
+      extracted.description.trim() ||
+      product.metadata.description ||
+      "";
+    const nextChars = mergeCharGroups(product.metadata.chars, extracted.charGroups);
+
+    const next: ProductRaw = {
+      ...product,
+      metadata: {
+        ...product.metadata,
+        description: nextDescription,
+        pictures: localFallbackUrls.length ? localFallbackUrls : product.metadata.pictures || [],
+        documents: extracted.documents.length ? extracted.documents : product.metadata.documents || [],
+        chars: nextChars,
+      },
+    };
+
+    return {
+      product: next,
+      ok: true,
+      imagesDownloaded,
+      descriptionChars: nextDescription.length,
+      charCount: nextChars.reduce((sum, g) => sum + g.items.length, 0),
+    };
+  } catch (error) {
+    return {
+      product,
+      ok: false,
+      error: error instanceof Error ? error.message : "enrich-failed",
+      imagesDownloaded: 0,
+      descriptionChars: 0,
+      charCount: 0,
+    };
+  }
+}
+
+export interface EnrichBatchResult {
+  processed: number;
+  succeeded: number;
+  failed: number;
+  withDescription: number;
+  withChars: number;
+  imagesDownloaded: number;
+  errors: Array<{ sku: string; articul: string; error: string }>;
+}
+
+export async function enrichMicroinformProducts(options?: {
+  onlyMissing?: boolean;
+  limit?: number;
+  delayMs?: number;
+  vendors?: string[];
+  force?: boolean;
+  onProgress?: (info: {
+    processed: number;
+    succeeded: number;
+    failed: number;
+    currentArticul: string;
+  }) => void;
+}): Promise<EnrichBatchResult> {
+  const onlyMissing = options?.force ? false : options?.onlyMissing !== false;
+  const limit = options?.limit ?? 50;
+  const delayMs = options?.delayMs ?? 250;
+  const vendorSet = options?.vendors?.length
+    ? new Set(options.vendors.map((v) => v.toLowerCase()))
+    : null;
+
+  const products = readMicroinformProducts();
+  const errors: EnrichBatchResult["errors"] = [];
+  let processed = 0;
+  let succeeded = 0;
+  let failed = 0;
+  let withDescription = 0;
+  let withChars = 0;
+  let imagesDownloaded = 0;
+
+  for (let i = 0; i < products.length; i++) {
+    if (processed >= limit) break;
+    const product = products[i];
+    const vendor = (product.vendor || product.metadata?.brand || "").toLowerCase();
+    if (vendorSet && !vendorSet.has(vendor)) continue;
+
+    const hasDesc = Boolean(product.metadata?.description?.trim());
+    const hasPics = (product.metadata?.pictures?.length || 0) > 0;
+    const hasUrl = Boolean(product.metadata?.url);
+    if (!hasUrl) continue;
+    const descText = hasDesc
+      ? cheerio.load(product.metadata.description).text().replace(/\s+/g, " ").trim()
+      : "";
+    const descLooksBroken = descText.startsWith("Описание ");
+    const heroNeedsRefresh = firstPictureNeedsRefresh(product.metadata?.pictures);
+    const hasRichChars = (product.metadata?.chars || []).some(
+      (g) => g.name !== "Характеристики" || g.items.length > 5,
+    );
+    if (
+      onlyMissing &&
+      hasDesc &&
+      hasPics &&
+      hasRichChars &&
+      !descLooksBroken &&
+      !heroNeedsRefresh
+    ) {
+      continue;
+    }
+
+    processed += 1;
+    const result = await enrichProduct(product);
+    products[i] = result.product;
+    imagesDownloaded += result.imagesDownloaded;
+    if (result.descriptionChars > 0) withDescription += 1;
+    if (result.charCount > 0) withChars += 1;
+    if (result.ok) succeeded += 1;
+    else {
+      failed += 1;
+      errors.push({
+        sku: product.sku,
+        articul: product.metadata?.articul || "",
+        error: result.error || "failed",
+      });
+    }
+
+    options?.onProgress?.({
+      processed,
+      succeeded,
+      failed,
+      currentArticul: product.metadata?.articul || product.sku,
+    });
+
+    // Checkpoint every 10 items so a long run is not lost.
+    if (processed % 10 === 0) {
+      writeMicroinformProducts(products);
+    }
+
+    if (delayMs > 0) await new Promise((r) => setTimeout(r, delayMs));
+  }
+
+  writeMicroinformProducts(products);
+  return {
+    processed,
+    succeeded,
+    failed,
+    withDescription,
+    withChars,
+    imagesDownloaded,
+    errors: errors.slice(0, 50),
+  };
+}

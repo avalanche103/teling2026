@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { AdminChatBadge } from "@/components/admin/AdminChatBadge";
+import { AdminRequestsBadge } from "@/components/admin/AdminRequestsBadge";
 import { LogoutButton } from "@/components/admin/LogoutButton";
 import { requireSession } from "@/lib/auth";
 
@@ -51,8 +52,21 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                 >
                   SSD база
                 </Link>
+                <Link
+                  href="/admin/microinform"
+                  className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+                >
+                  Микроинформ
+                </Link>
               </>
             )}
+            <Link
+              href="/admin/requests"
+              className="flex items-center rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+            >
+              Запросы
+              <AdminRequestsBadge />
+            </Link>
             <Link
               href="/admin/chat"
               className="flex items-center rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"

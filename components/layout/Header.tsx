@@ -3,11 +3,39 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Phone } from "lucide-react";
+import { ClipboardList, Menu, Phone, X } from "lucide-react";
 import { SearchAutocomplete } from "@/components/layout/SearchAutocomplete";
+import { useRequestCart } from "@/components/request/RequestCartProvider";
+
+function CountBadge({
+  count,
+  variant = "inline",
+}: {
+  count: number;
+  variant?: "inline" | "corner";
+}) {
+  if (count <= 0) return null;
+  const label = count > 99 ? "99+" : String(count);
+
+  if (variant === "corner") {
+    return (
+      <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-900 px-1 text-[11px] font-bold leading-none text-white">
+        {label}
+      </span>
+    );
+  }
+
+  return (
+    <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-900 px-1.5 text-[11px] font-bold leading-none text-white">
+      {label}
+    </span>
+  );
+}
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { lineCount, ready } = useRequestCart();
+  const count = ready ? lineCount : 0;
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-black shadow-sm backdrop-blur">
@@ -66,20 +94,39 @@ export function Header() {
             >
               Контакты
             </Link>
+            <Link
+              href="/request"
+              className="inline-flex items-center transition-colors hover:text-black/70"
+              aria-label={count > 0 ? `Запрос, ${count}` : "Запрос"}
+            >
+              <ClipboardList className="mr-1.5 h-4 w-4" />
+              Запрос
+              <CountBadge count={count} variant="inline" />
+            </Link>
           </nav>
 
-          {/* Mobile menu toggle */}
-          <button
-            className="text-black md:hidden"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Меню"
-          >
-            {menuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
+          {/* Mobile: request icon + burger — badge on icon corner (compact, always visible) */}
+          <div className="flex items-center gap-1 md:hidden">
+            <Link
+              href="/request"
+              className="relative rounded-lg p-2 text-black"
+              aria-label={count > 0 ? `Запрос, ${count}` : "Запрос"}
+            >
+              <ClipboardList className="h-6 w-6" />
+              <CountBadge count={count} variant="corner" />
+            </Link>
+            <button
+              className="rounded-lg p-2 text-black"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Меню"
+            >
+              {menuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -113,6 +160,15 @@ export function Header() {
               className="py-1 hover:text-black/70"
             >
               Контакты
+            </Link>
+            <Link
+              href="/request"
+              onClick={() => setMenuOpen(false)}
+              className="inline-flex items-center py-1 hover:text-black/70"
+            >
+              <ClipboardList className="mr-2 h-4 w-4" />
+              Запрос
+              <CountBadge count={count} variant="inline" />
             </Link>
             <a
               href="tel:+375296656053"

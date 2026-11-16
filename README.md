@@ -46,9 +46,9 @@ npm run ssd:start
 
 3. Open `/ssd` in this project.
 
-Export output paths:
+Export output:
 
-- JSON/CSV files: `ssd-admin-app/export/`
+- JSON/CSV: скачиваются в браузер как ZIP (локально на ваш ПК, с выбором пути); CLI — в `ssd-admin-app/export/`
 - Downloaded product images: `public/images/`
 
 The SSD interface is available from the same site host via:

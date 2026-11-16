@@ -47,6 +47,37 @@ export function ProductsImportManager() {
     [newSelections],
   );
 
+  const setAllNewSelections = (checked: boolean) => {
+    if (!preview) return;
+    setNewSelections(
+      Object.fromEntries(preview.newProducts.map((item) => [item.importKey, checked])),
+    );
+  };
+
+  const setAllConflictActions = (action: ProductImportConflictAction) => {
+    if (!preview) return;
+    setConflictActions(
+      Object.fromEntries(
+        preview.conflicts.map((item) => {
+          if (action === "use-sku" && !item.currentBySku) {
+            return [item.importKey, "skip" satisfies ProductImportConflictAction];
+          }
+          if (action === "use-id" && !item.currentById) {
+            return [item.importKey, "skip" satisfies ProductImportConflictAction];
+          }
+          return [item.importKey, action];
+        }),
+      ),
+    );
+  };
+
+  const setAllMissingActions = (action: ProductImportMissingAction) => {
+    if (!preview) return;
+    setMissingActions(
+      Object.fromEntries(preview.missingProducts.map((item) => [item.currentKey, action])),
+    );
+  };
+
   const applyPreview = (nextPreview: ProductImportPreview) => {
     setPreview(nextPreview);
     setNewSelections(
@@ -246,7 +277,18 @@ export function ProductsImportManager() {
             <div>Отсутствующих товаров к обработке: {preview.missingProducts.length}</div>
           </div>
 
-          <PreviewBlock title="Новые товары" count={preview.newProducts.length}>
+          <PreviewBlock
+            title="Новые товары"
+            count={preview.newProducts.length}
+            actions={
+              preview.newProducts.length > 0 ? (
+                <BulkActions>
+                  <BulkButton onClick={() => setAllNewSelections(true)}>Добавить всех</BulkButton>
+                  <BulkButton onClick={() => setAllNewSelections(false)}>Убрать всех</BulkButton>
+                </BulkActions>
+              ) : null
+            }
+          >
             {preview.newProducts.length === 0 ? (
               <EmptyState text="Новых товаров не найдено" />
             ) : (
@@ -284,7 +326,23 @@ export function ProductsImportManager() {
             )}
           </PreviewBlock>
 
-          <PreviewBlock title="Конфликтные товары" count={preview.conflicts.length}>
+          <PreviewBlock
+            title="Конфликтные товары"
+            count={preview.conflicts.length}
+            actions={
+              preview.conflicts.length > 0 ? (
+                <BulkActions>
+                  <BulkButton onClick={() => setAllConflictActions("skip")}>Пропустить всех</BulkButton>
+                  <BulkButton onClick={() => setAllConflictActions("use-sku")}>
+                    Обновить всех по SKU
+                  </BulkButton>
+                  <BulkButton onClick={() => setAllConflictActions("use-id")}>
+                    Обновить всех по ID
+                  </BulkButton>
+                </BulkActions>
+              ) : null
+            }
+          >
             {preview.conflicts.length === 0 ? (
               <EmptyState text="Конфликтов не найдено" />
             ) : (
@@ -348,7 +406,19 @@ export function ProductsImportManager() {
             )}
           </PreviewBlock>
 
-          <PreviewBlock title="Товары, которых нет в новом JSON" count={preview.missingProducts.length}>
+          <PreviewBlock
+            title="Товары, которых нет в новом JSON"
+            count={preview.missingProducts.length}
+            actions={
+              preview.missingProducts.length > 0 ? (
+                <BulkActions>
+                  <BulkButton onClick={() => setAllMissingActions("keep")}>Оставить всех</BulkButton>
+                  <BulkButton onClick={() => setAllMissingActions("hide")}>Скрыть всех</BulkButton>
+                  <BulkButton onClick={() => setAllMissingActions("delete")}>Удалить всех</BulkButton>
+                </BulkActions>
+              ) : null
+            }
+          >
             {preview.missingProducts.length === 0 ? (
               <EmptyState text="Все текущие товары присутствуют в новом JSON" />
             ) : (
@@ -429,20 +499,47 @@ function StatCard({ label, value }: { label: string; value: number }) {
 function PreviewBlock({
   title,
   count,
+  actions,
   children,
 }: {
   title: string;
   count: number;
+  actions?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3">
-        <h3 className="text-sm font-bold text-slate-900">{title}</h3>
-        <span className="text-xs text-slate-500">{count}</span>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-bold text-slate-900">{title}</h3>
+          <span className="text-xs text-slate-500">{count}</span>
+        </div>
+        {actions}
       </div>
       <div className="max-h-[28rem] overflow-auto">{children}</div>
     </div>
+  );
+}
+
+function BulkActions({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-wrap items-center gap-2">{children}</div>;
+}
+
+function BulkButton({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+    >
+      {children}
+    </button>
   );
 }
 

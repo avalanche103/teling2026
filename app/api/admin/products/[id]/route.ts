@@ -1,19 +1,19 @@
 import { NextResponse } from "next/server";
 import path from "path";
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync } from "fs";
 import type { ProductDocument, ProductRaw, SectionRaw } from "@/lib/types";
 import { invalidateProductCaches } from "@/lib/data";
 import { requireApiSession } from "@/lib/auth";
+import {
+  deleteProductById,
+  readAllProductsForAdmin,
+  writeProductUpdate,
+} from "@/lib/microinform/admin-products";
 
-const PRODUCTS_PATH = path.join(process.cwd(), "data", "products.json");
 const SECTIONS_PATH = path.join(process.cwd(), "data", "sections.json");
 
 function readProducts(): ProductRaw[] {
-  return JSON.parse(readFileSync(PRODUCTS_PATH, "utf-8")) as ProductRaw[];
-}
-
-function writeProducts(products: ProductRaw[]): void {
-  writeFileSync(PRODUCTS_PATH, JSON.stringify(products, null, 2), "utf-8");
+  return readAllProductsForAdmin();
 }
 
 function readSections(): SectionRaw[] {
@@ -122,8 +122,7 @@ export async function PUT(request: Request, ctx: RouteContext) {
       },
     };
 
-    products[idx] = updated;
-    writeProducts(products);
+    writeProductUpdate(updated);
     invalidateProductCaches();
 
     return NextResponse.json({ success: true, product: updated });
@@ -142,14 +141,9 @@ export async function DELETE(_request: Request, ctx: RouteContext) {
       return NextResponse.json({ error: "Неверный id" }, { status: 400 });
     }
 
-    const products = readProducts();
-    const idx = products.findIndex((product) => product.id === id);
-    if (idx === -1) {
+    if (!deleteProductById(id)) {
       return NextResponse.json({ error: "Товар не найден" }, { status: 404 });
     }
-
-    products.splice(idx, 1);
-    writeProducts(products);
     invalidateProductCaches();
 
     return NextResponse.json({ success: true });

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "faa686eb-f55c-463a-94d4-89633ba5f650",
+    "number": 437,
+    "status": "draft",
+    "createdAt": "2026-11-16T20:47:27.670Z",
+    "updatedAt": "2026-11-16T21:29:58.649Z",
+    "submittedAt": null,
+    "organization": "",
+    "phone": "",
+    "email": "",
+    "items": [
+      {
+        "sku": "130304-01087",
+        "name": "Кросс ШКОС -ВП-3U/4 -96 -SC ~96 -SC/SM  ~96 -SC/UPC ССД",
+        "qty": 2,
+        "price": 1014,
+        "currency": "Br"
+      },
+      {
+        "sku": "130303-01208",
+        "name": "Кросс ШКОС-М -2U/4 -32 -FC/ST ~32 -FC/D/SM  ~32 -FC/UPC",
+        "qty": 265,
+        "price": 414,
+        "currency": "Br"
+      },
+      {
+        "sku": "130203-00140",
+        "name": "Аттенюатор LC/UPC sm F-M типа, 10дБ",
+        "qty": 1,
+        "price": 30,
+        "currency": "Br"
+      },
+      {
+        "sku": "910000-00140",
+        "name": "Origo OS1105, коммутатор c 5 портами 10/100 Мбит/с в компактном корпусе для настольной установки.",
+        "qty": 1,
+        "price": 24,
+        "currency": "Br"
+      }
+    ],
+    "seenAt": null
+  }
+]

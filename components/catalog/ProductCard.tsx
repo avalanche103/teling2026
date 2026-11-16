@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ProductSummary } from "@/lib/types";
 import { formatPrice, hasPrice } from "@/lib/format";
+import { AddToRequestButton } from "@/components/request/AddToRequestButton";
 
 interface ProductCardProps {
   product: ProductSummary;
@@ -9,13 +10,11 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const showVatLabel = hasPrice(product.price);
+  const href = `/product/${encodeURIComponent(product.sku)}`;
 
   return (
-    <Link
-      href={`/product/${encodeURIComponent(product.sku)}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-    >
-      <div className="relative h-44 bg-slate-100">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+      <Link href={href} className="relative block h-44 bg-slate-100">
         {product.thumbnail ? (
           <Image
             src={product.thumbnail}
@@ -29,16 +28,18 @@ export function ProductCard({ product }: ProductCardProps) {
             Нет фото
           </div>
         )}
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
         <p className="text-xs font-medium uppercase tracking-wide text-black/70">
           Артикул: {product.sku}
         </p>
 
-        <h3 className="line-clamp-3 text-sm font-semibold text-black">
-          {product.name}
-        </h3>
+        <Link href={href}>
+          <h3 className="line-clamp-3 text-sm font-semibold text-black hover:underline">
+            {product.name}
+          </h3>
+        </Link>
 
         <p className="mt-auto text-sm text-black/80">{product.brand}</p>
 
@@ -48,7 +49,9 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
           {showVatLabel && <span className="ml-2 text-xs text-black/60">с НДС</span>}
         </div>
+
+        <AddToRequestButton sku={product.sku} qty={1} compact label="В запрос" />
       </div>
-    </Link>
+    </article>
   );
 }

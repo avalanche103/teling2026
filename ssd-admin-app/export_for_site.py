@@ -21,14 +21,20 @@ DB_PATH = BASE_DIR / "ssd_catalog.db"
 EXPORT_DIR = DEFAULT_EXPORT_DIR
 
 
-def configure_export_dir(raw_path: str | None = None) -> Path:
-    """Установить папку экспорта для текущего запуска."""
+def set_export_dir(path: Path) -> Path:
+    """Установить любую папку экспорта (в т.ч. временную) для текущего запуска."""
     global EXPORT_DIR
-    if raw_path:
-        EXPORT_DIR = resolve_export_dir(raw_path)
-    else:
-        EXPORT_DIR.mkdir(parents=True, exist_ok=True)
+    export_dir = Path(path)
+    export_dir.mkdir(parents=True, exist_ok=True)
+    EXPORT_DIR = export_dir
     return EXPORT_DIR
+
+
+def configure_export_dir(raw_path: str | None = None) -> Path:
+    """Установить папку экспорта для CLI: внутри проекта или export/ по умолчанию."""
+    if raw_path:
+        return set_export_dir(resolve_export_dir(raw_path))
+    return set_export_dir(DEFAULT_EXPORT_DIR)
 
 
 def get_excluded_section_ids(conn):

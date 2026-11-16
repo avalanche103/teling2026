@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import type { Chat } from "@/lib/chats";
+import type { ProductRequest } from "@/lib/requests";
 
 const NOTIFY_TO = process.env.CHAT_NOTIFY_EMAIL ?? "info@teling.by";
 
@@ -187,6 +188,75 @@ ID диалога: ${chat.id}
     from: process.env.SMTP_FROM ?? `"Teling Chat" <${process.env.SMTP_USER}>`,
     to: NOTIFY_TO,
     subject: `⚠️ Пропущенный чат — ${started}`,
+    text,
+    html,
+  });
+}
+
+/**
+ * Уведомление о новом запросе с сайта (упрощённая корзина).
+ */
+export async function sendProductRequestEmail(request: ProductRequest): Promise<void> {
+  const transport = createTransport();
+  if (!transport) {
+    console.warn("[email] SMTP не настроен — письмо о запросе не отправлено.");
+    return;
+  }
+
+  const when = formatDate(request.submittedAt || request.updatedAt || request.createdAt);
+  const itemsText = request.items
+    .map(
+      (item) =>
+        `- ${item.sku} | ${item.name} | ${item.qty} шт. | ${item.price} ${item.currency}`
+    )
+    .join("\n");
+
+  const itemsHtmlRows = request.items
+    .map(
+      (item) =>
+        `<tr>
+          <td style="padding:6px 8px;border:1px solid #ddd">${item.sku}</td>
+          <td style="padding:6px 8px;border:1px solid #ddd">${item.name}</td>
+          <td style="padding:6px 8px;border:1px solid #ddd;text-align:right">${item.qty}</td>
+          <td style="padding:6px 8px;border:1px solid #ddd;text-align:right">${item.price} ${item.currency}</td>
+        </tr>`
+    )
+    .join("");
+
+  const text = `Новый запрос № ${request.number}: ${when}
+
+Организация: ${request.organization}
+Телефон: ${request.phone}
+Email: ${request.email}
+
+--- Позиции ---
+${itemsText}
+
+---
+Запрос № ${request.number}
+`;
+
+  const html = `<h2>Новый запрос № ${request.number} — ${when}</h2>
+<p><b>Организация:</b> ${request.organization}<br/>
+<b>Телефон:</b> ${request.phone}<br/>
+<b>Email:</b> ${request.email}</p>
+<table style="border-collapse:collapse;width:100%;max-width:720px;font-size:14px">
+  <thead>
+    <tr style="background:#f5f5f5">
+      <th style="padding:6px 8px;border:1px solid #ddd;text-align:left">SKU</th>
+      <th style="padding:6px 8px;border:1px solid #ddd;text-align:left">Название</th>
+      <th style="padding:6px 8px;border:1px solid #ddd;text-align:right">Кол-во</th>
+      <th style="padding:6px 8px;border:1px solid #ddd;text-align:right">Цена</th>
+    </tr>
+  </thead>
+  <tbody>${itemsHtmlRows}</tbody>
+</table>
+<p style="color:#888;font-size:12px">Запрос № ${request.number}</p>`;
+
+  await transport.sendMail({
+    from: process.env.SMTP_FROM ?? `"Teling" <${process.env.SMTP_USER}>`,
+    to: NOTIFY_TO,
+    subject: `Запрос № ${request.number} — ${request.organization} — ${when}`,
     text,
     html,
   });

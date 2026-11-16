@@ -3318,5 +3318,50 @@
       "parent_id": 283,
       "picture": "https://ssd.ru/upload/resta.ssd/6b7/c9iyjcrwvqtj97u1p7vp98290bgnvf6y/07.webp"
     }
+  },
+  {
+    "id": 632,
+    "name": "Беспроводное оборудование",
+    "parent": 293,
+    "external_id": "besprovodnoe-oborudovanie",
+    "metadata": {
+      "id": 632,
+      "name": "Беспроводное оборудование",
+      "sort": 500,
+      "code": "besprovodnoe-oborudovanie",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 633,
+    "name": "Коммутаторы",
+    "parent": 293,
+    "external_id": "kommutatory",
+    "metadata": {
+      "id": 633,
+      "name": "Коммутаторы",
+      "sort": 500,
+      "code": "kommutatory",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Управление",
+        "char:Скорость",
+        "char:PoE",
+        "char:Исполнение",
+        "char:Порты"
+      ]
+    }
   }
 ]

@@ -164,3 +164,21 @@
     @apply text-base md:text-lg font-medium;
   }
 }
+
+/* Vendor HTML (D-Link/Origo) often uses <h4>/<font>/inline Arial — keep catalog body Inter. */
+.product-description,
+.product-description :where(h1, h2, h3, h4, h5, h6, p, div, td, th, li, span, font, a, strong, b, em, i) {
+  font-family: var(--font-inter) !important;
+}
+.product-description :where(h1, h2, h3, h4, h5, h6) {
+  font-size: 15px !important;
+  line-height: 1.75 !important;
+  letter-spacing: normal !important;
+  font-weight: 600 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.75rem !important;
+}
+.product-description :where(p, div, td, li, font) {
+  font-size: 15px !important;
+  line-height: 1.75 !important;
+}

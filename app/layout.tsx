@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { ConsentAwareAnalytics } from "@/components/analytics/ConsentAwareAnalytics";
 import "./generated-globals.css";
 
 function getSiteUrl(): URL {
@@ -55,8 +55,8 @@ export default function RootLayout({
     <html lang="ru" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
         {children}
+        {gaId ? <ConsentAwareAnalytics gaId={gaId} /> : null}
       </body>
-      {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
     </html>
   );
 }

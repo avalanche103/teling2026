@@ -1,0 +1,233 @@
+{
+  "D-LINK (сетевое оборудование)": {
+    "action": "skip"
+  },
+  "D-Link USB устройства": {
+    "action": "skip"
+  },
+  "D-Link Беспроводное оборудование": {
+    "action": "create",
+    "name": "Беспроводное оборудование",
+    "externalId": "besprovodnoe-oborudovanie",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price"
+    ]
+  },
+  "Антенны": {
+    "action": "skip"
+  },
+  "D-Link Блоки питания": {
+    "action": "skip"
+  },
+  "D-Link Интернет камеры": {
+    "action": "skip"
+  },
+  "D-Link КВМ-переключатели и кабели": {
+    "action": "skip"
+  },
+  "D-Link Коммутаторы Fast Ethernet 10/100Мбит/c": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "D-Link Коммутаторы Gigabit Ethernet 1000Мбит/c": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "D-Link Коммутаторы Gigabit Ethernet 10Gбит/c": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "D-Link Коммутаторы Мультигигабитные": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "D-Link Коммутаторы Промышленные": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "D-Link Медиаконвертеры": {
+    "action": "existing",
+    "sectionId": 518
+  },
+  "D-Link Модули и кабели для оборудования": {
+    "action": "existing",
+    "sectionId": 517
+  },
+  "D-Link Оборудование xDSL": {
+    "action": "skip"
+  },
+  "D-Link Программное обеспечение": {
+    "action": "skip"
+  },
+  "D-Link Сетевые адаптеры": {
+    "action": "skip"
+  },
+  "D-Link Устройства VoIP": {
+    "action": "skip"
+  },
+  "ORIGO": {
+    "action": "skip"
+  },
+  "(1) Коммутаторы Origo неуправлемые": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "(2) Коммутаторы Origo настраиваемые": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "(3) Коммутаторы Origo управляемые": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "(4) Коммутаторы Origo промышленные неуправляемые": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "(5) Коммутаторы Origo промышленные управляемые": {
+    "action": "create",
+    "name": "Коммутаторы",
+    "externalId": "kommutatory",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price",
+      "char:Управление",
+      "char:Скорость",
+      "char:PoE",
+      "char:Исполнение",
+      "char:Порты"
+    ]
+  },
+  "(6) Модули и кабели": {
+    "action": "existing",
+    "sectionId": 517
+  },
+  "(7) Медиаконвертеры": {
+    "action": "existing",
+    "sectionId": 518
+  },
+  "(8) Сетевые адаптеры": {
+    "action": "skip"
+  },
+  "IP-телефоны Origo": {
+    "action": "skip"
+  },
+  "KVM-переключатели Origo": {
+    "action": "skip"
+  },
+  "Беспроводное оборудование ORIGO": {
+    "action": "create",
+    "name": "Беспроводное оборудование",
+    "externalId": "besprovodnoe-oborudovanie",
+    "parentId": 293,
+    "selectedFilters": [
+      "brand",
+      "price"
+    ]
+  },
+  "Док-станции и USB концентраторы Origo": {
+    "action": "skip"
+  }
+}

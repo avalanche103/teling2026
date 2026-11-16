@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AdminChatBadge } from "@/components/admin/AdminChatBadge";
+import { AdminRequestsBadge } from "@/components/admin/AdminRequestsBadge";
 import { requireSession } from "@/lib/auth";
 
 export default async function AdminDashboard() {
@@ -92,8 +93,49 @@ export default async function AdminDashboard() {
                 </div>
               </div>
             </Link>
+
+            <Link
+              href="/admin/microinform"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700 text-2xl">
+                  📡
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-slate-900 group-hover:text-indigo-700">
+                    Микроинформ
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Прайс партнёра, выбор вендоров, маппинг разделов и публикация товаров на сайт
+                  </p>
+                </div>
+              </div>
+            </Link>
           </>
         )}
+
+        <Link
+          href="/admin/requests"
+          className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
+        >
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-orange-700 text-2xl">
+              📋
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold text-slate-900 group-hover:text-orange-700">
+                  Запросы
+                </h2>
+                <AdminRequestsBadge />
+              </div>
+              <p className="mt-1 text-sm text-slate-500">
+                Запросы с сайта — контакты организации и подобранные позиции из каталога
+              </p>
+            </div>
+          </div>
+        </Link>
 
         <Link
           href="/admin/chat"

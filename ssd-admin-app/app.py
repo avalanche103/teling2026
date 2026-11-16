@@ -3,27 +3,27 @@
 
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
 import sys
+import tempfile
 import threading
 import time
+import zipfile
+from datetime import datetime
 from pathlib import Path
 
-from flask import Flask, jsonify, redirect, render_template, request, url_for
+from flask import Flask, after_this_request, jsonify, redirect, render_template, request, send_file, url_for
 
 from catalog_utils import (
     BYN_CURRENCY_SYMBOL,
     apply_product_overrides,
     build_export_pricing,
     ensure_product_overrides_table,
-    export_dir_for_form,
     extract_offer_fields,
-    get_last_export_dir,
     get_rub_to_byn_rate,
     parse_rub_to_byn_rate_input,
-    resolve_export_dir,
-    set_last_export_dir,
     set_rub_to_byn_rate,
 )
 
@@ -508,8 +508,6 @@ def export():
     rub_to_byn_rate = float(get_rub_to_byn_rate())
     rate_saved = request.args.get('rate_saved') == '1'
     rate_error = request.args.get('rate_error')
-    export_dir_error = request.args.get('export_dir_error')
-    export_dir_saved = request.args.get('export_dir_saved')
     return render_template(
         'export.html',
         stats=stats,
@@ -517,10 +515,6 @@ def export():
         currency_symbol=BYN_CURRENCY_SYMBOL,
         rate_saved=rate_saved,
         rate_error=rate_error,
-        export_dir=export_dir_for_form(),
-        export_dir_absolute=str(get_last_export_dir()),
-        export_dir_error=export_dir_error,
-        export_dir_saved=export_dir_saved,
     )
 
 
@@ -538,37 +532,89 @@ def save_exchange_rate():
     return redirect(url_for(redirect_to, rate_saved='1'))
 
 
+def _build_export_zip(export_type: str) -> tuple[Path, Path, str]:
+    """Собрать JSON/CSV во временную папку и упаковать в zip. Возвращает (tmpdir, zip_path, filename)."""
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    filename = f"ssd-catalog-{export_type}-{stamp}.zip"
+    tmpdir = Path(tempfile.mkdtemp(prefix=f"ssd-export-{export_type}-"))
+    files_dir = tmpdir / "files"
+    files_dir.mkdir(parents=True, exist_ok=True)
+    zip_path = tmpdir / filename
+
+    try:
+        if export_type == "json":
+            from export_for_site import (
+                export_catalog_tree,
+                export_products,
+                export_sections,
+                set_export_dir,
+            )
+
+            set_export_dir(files_dir)
+            export_sections()
+            export_products()
+            export_catalog_tree()
+        elif export_type == "csv":
+            from export_csv import export_products_csv, export_sections_csv, set_export_dir
+
+            set_export_dir(files_dir)
+            export_sections_csv()
+            export_products_csv()
+        else:
+            raise ValueError(f"Неизвестный тип экспорта: {export_type}")
+
+        with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            for path in sorted(files_dir.iterdir()):
+                if path.is_file():
+                    archive.write(path, arcname=path.name)
+    except Exception:
+        shutil.rmtree(tmpdir, ignore_errors=True)
+        raise
+
+    return tmpdir, zip_path, filename
+
+
+@app.route('/download_export', methods=['POST'])
+def download_export():
+    """Собрать JSON/CSV и отдать zip для локального сохранения в браузере."""
+    export_type = (request.form.get('type') or '').strip()
+    if export_type not in ('json', 'csv'):
+        return jsonify({"error": "Поддерживаются только json и csv"}), 400
+
+    try:
+        tmpdir, zip_path, filename = _build_export_zip(export_type)
+    except Exception as exc:
+        return jsonify({"error": f"Ошибка экспорта: {exc}"}), 500
+
+    @after_this_request
+    def _cleanup(response):
+        shutil.rmtree(tmpdir, ignore_errors=True)
+        return response
+
+    return send_file(
+        zip_path,
+        mimetype="application/zip",
+        as_attachment=True,
+        download_name=filename,
+    )
+
+
 @app.route('/run_export', methods=['POST'])
 def run_export():
-    """Запуск экспорта."""
+    """Запуск фонового экспорта (только скачивание изображений на сервер)."""
     export_type = request.form.get('type')
-    export_dir_arg = None
-    export_dir_saved = None
 
-    if export_type == 'json':
-        export_dir_raw = (request.form.get('export_dir') or '').strip()
-        try:
-            export_dir = resolve_export_dir(export_dir_raw or 'export')
-            set_last_export_dir(export_dir)
-            export_dir_arg = str(export_dir)
-            export_dir_saved = export_dir.as_posix()
-        except ValueError as exc:
-            return redirect(url_for('export', export_dir_error=str(exc)))
+    if export_type in ('json', 'csv'):
+        return redirect(url_for('export'))
+
+    if export_type != 'images':
+        return redirect(url_for('export'))
 
     def _export():
         try:
-            set_import_status("running", f"Экспорт {export_type}...", 0)
-            if export_type == 'json':
-                cmd = [sys.executable, 'export_for_site.py', '--output-dir', export_dir_arg]
-            elif export_type == 'csv':
-                cmd = [sys.executable, 'export_csv.py']
-            elif export_type == 'images':
-                cmd = [sys.executable, 'download_images.py']
-            else:
-                raise ValueError(f"Неизвестный тип экспорта: {export_type}")
-
+            set_import_status("running", "Скачивание изображений...", 0)
             process = subprocess.Popen(
-                cmd,
+                [sys.executable, 'download_images.py'],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -579,31 +625,22 @@ def run_export():
                 line = raw_line.strip()
                 if not line:
                     continue
-
-                # Reduce noise from image export: only keep meaningful progress/summary lines.
-                if export_type == 'images':
-                    if line.startswith("Progress:") or line.startswith("Image download complete"):
-                        set_import_status("running", line, 0)
-                    elif line.startswith("Total images:") or line.startswith("Downloaded:") or line.startswith("Already existing:") or line.startswith("Failed:"):
-                        set_import_status("running", line, 0)
-                else:
+                if line.startswith("Progress:") or line.startswith("Image download complete"):
+                    set_import_status("running", line, 0)
+                elif line.startswith("Total images:") or line.startswith("Downloaded:") or line.startswith("Already existing:") or line.startswith("Failed:"):
                     set_import_status("running", line, 0)
 
             rc = process.wait()
             if rc != 0:
                 raise RuntimeError(f"Код выхода: {rc}")
 
-            set_import_status("completed", f"Экспорт {export_type} завершен", 100)
+            set_import_status("completed", "Скачивание изображений завершено", 100)
         except Exception as e:
             set_import_status("error", f"Ошибка экспорта: {str(e)}", 0)
 
     thread = threading.Thread(target=_export, daemon=True)
     thread.start()
-
-    redirect_params = {}
-    if export_dir_saved:
-        redirect_params['export_dir_saved'] = export_dir_saved
-    return redirect(url_for('export', **redirect_params))
+    return redirect(url_for('export'))
 
 
 if __name__ == '__main__':

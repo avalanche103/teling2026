@@ -41,6 +41,8 @@
     </div>
 </div>
 
+<div id="export-status" class="alert d-none mb-4" role="status"></div>
+
 <div class="row">
     <div class="col-md-6">
         <div class="card">
@@ -48,45 +50,18 @@
                 <h5>Экспорт для сайта</h5>
             </div>
             <div class="card-body">
-                <p>Экспортирует данные в JSON формат для использования на сайте.</p>
+                <p>Собирает JSON и скачивает ZIP на ваш компьютер — и с локальной копии, и с боя.</p>
                 <ul>
                     <li>sections.json - разделы</li>
                     <li>products.json - товары с учетом сохраненных правок и итоговой цены в BYN</li>
                     <li>catalog_tree.json - дерево каталога</li>
                     <li>в товарах добавляются скидка дистрибьютора, НДС и итоговая цена в <code>Br</code></li>
                 </ul>
-                <form method="post" action="/run_export" class="mb-2">
-                    <input type="hidden" name="type" value="json">
-                    <div class="mb-3">
-                        <label for="export_dir" class="form-label">Папка для сохранения JSON</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="export_dir"
-                            name="export_dir"
-                            list="export_dir_presets"
-                            value="{{ export_dir }}"
-                            placeholder="export"
-                            required
-                        >
-                        <datalist id="export_dir_presets">
-                            <option value="export">ssd-admin-app/export</option>
-                            <option value="../data">data сайта (для импорта products.json)</option>
-                        </datalist>
-                        <div class="form-text">
-                            Путь относительно <code>ssd-admin-app</code> или абсолютный внутри проекта.
-                            Последняя папка: <code>{{ export_dir_absolute }}</code>
-                        </div>
-                    </div>
-                    {% if export_dir_error %}
-                    <div class="alert alert-danger py-2">{{ export_dir_error }}</div>
-                    {% endif %}
-                    {% if export_dir_saved %}
-                    <div class="alert alert-success py-2">Экспорт запущен. Файлы будут сохранены в <code>{{ export_dir_saved }}</code>.</div>
-                    {% endif %}
-                    <button type="submit" class="btn btn-success">Экспорт JSON</button>
-                </form>
-                <a href="/products" class="btn btn-outline-secondary btn-sm mt-2">Открыть редактирование товаров</a>
+                <p class="form-text mb-3">При нажатии откроется диалог выбора пути сохранения. Может занять 1–2 минуты.</p>
+                <button type="button" class="btn btn-success" id="export-json-btn" data-export-type="json">
+                    Экспорт JSON
+                </button>
+                <a href="/products" class="btn btn-outline-secondary btn-sm mt-2 d-block d-sm-inline-block">Открыть редактирование товаров</a>
             </div>
         </div>
     </div>
@@ -97,15 +72,15 @@
                 <h5>Экспорт в CSV</h5>
             </div>
             <div class="card-body">
-                <p>Экспортирует данные в CSV формат для Excel и таблиц.</p>
+                <p>Собирает CSV и скачивает ZIP на ваш компьютер.</p>
                 <ul>
                     <li>sections.csv - разделы</li>
                     <li>products.csv - товары с итоговым названием, ценой в BYN, НДС и скидкой</li>
                 </ul>
-                <form method="post" action="/run_export">
-                    <input type="hidden" name="type" value="csv">
-                    <button type="submit" class="btn btn-info">Экспорт CSV</button>
-                </form>
+                <p class="form-text mb-3">При нажатии откроется диалог выбора пути сохранения.</p>
+                <button type="button" class="btn btn-info" id="export-csv-btn" data-export-type="csv">
+                    Экспорт CSV
+                </button>
             </div>
         </div>
     </div>
@@ -118,7 +93,7 @@
                 <h5>Скачивание изображений</h5>
             </div>
             <div class="card-body">
-                <p>Скачивает все изображения товаров сразу в папку public/images/ основного сайта.</p>
+                <p>Скачивает все изображения товаров сразу в папку public/images/ основного сайта на сервере, где запущено приложение.</p>
                 <p class="text-warning">Внимание: может занять много времени!</p>
                 <form method="post" action="/run_export">
                     <input type="hidden" name="type" value="images">
@@ -156,4 +131,145 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  const statusEl = document.getElementById("export-status");
+  const buttons = [
+    document.getElementById("export-json-btn"),
+    document.getElementById("export-csv-btn"),
+  ].filter(Boolean);
+
+  function setStatus(message, kind) {
+    if (!statusEl) return;
+    statusEl.classList.remove("d-none", "alert-info", "alert-success", "alert-danger");
+    statusEl.classList.add(kind === "error" ? "alert-danger" : kind === "ok" ? "alert-success" : "alert-info");
+    statusEl.textContent = message;
+  }
+
+  function clearStatus() {
+    if (!statusEl) return;
+    statusEl.classList.add("d-none");
+    statusEl.textContent = "";
+  }
+
+  function supportsSavePicker() {
+    return "showSaveFilePicker" in window && window.self === window.top;
+  }
+
+  async function pickSaveHandle(suggestedName) {
+    if (!supportsSavePicker()) return null;
+    try {
+      return await window.showSaveFilePicker({
+        suggestedName,
+        types: [
+          {
+            description: "ZIP-архив",
+            accept: { "application/zip": [".zip"] },
+          },
+        ],
+      });
+    } catch (err) {
+      if (err && err.name === "AbortError") {
+        return undefined;
+      }
+      return null;
+    }
+  }
+
+  function triggerAnchorDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function () {
+      URL.revokeObjectURL(url);
+    }, 1000);
+  }
+
+  async function saveBlob(blob, filename, handle) {
+    if (handle) {
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      return "picker";
+    }
+    triggerAnchorDownload(blob, filename);
+    return "download";
+  }
+
+  async function runLocalExport(type, button) {
+    const filename =
+      "ssd-catalog-" +
+      type +
+      "-" +
+      new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14) +
+      ".zip";
+
+    const handleOrCancel = await pickSaveHandle(filename);
+    if (handleOrCancel === undefined) {
+      clearStatus();
+      return;
+    }
+
+    buttons.forEach(function (btn) {
+      btn.disabled = true;
+    });
+    setStatus("Готовим экспорт " + type.toUpperCase() + ", подождите…", "info");
+
+    try {
+      const formData = new FormData();
+      formData.set("type", type);
+
+      const response = await fetch("/download_export", {
+        method: "POST",
+        body: formData,
+      });
+
+      const contentType = response.headers.get("content-type") || "";
+      if (!response.ok) {
+        let message = "Не удалось выполнить экспорт (HTTP " + response.status + ")";
+        if (contentType.includes("application/json")) {
+          const payload = await response.json();
+          if (payload && payload.error) message = payload.error;
+        }
+        throw new Error(message);
+      }
+
+      const blob = await response.blob();
+      const disposition = response.headers.get("content-disposition") || "";
+      const match = /filename=\"?([^\";]+)\"?/i.exec(disposition);
+      const downloadName = match ? match[1] : filename;
+
+      const mode = await saveBlob(blob, downloadName, handleOrCancel);
+      setStatus(
+        mode === "picker"
+          ? "Экспорт сохранён по выбранному пути."
+          : "Экспорт скачан. Если браузер не спросил путь — файл в папке «Загрузки».",
+        "ok"
+      );
+    } catch (err) {
+      setStatus(err instanceof Error ? err.message : "Ошибка экспорта", "error");
+    } finally {
+      buttons.forEach(function (btn) {
+        btn.disabled = false;
+      });
+    }
+  }
+
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      const type = button.getAttribute("data-export-type");
+      if (!type) return;
+      runLocalExport(type, button);
+    });
+  });
+})();
+</script>
 {% endblock %}

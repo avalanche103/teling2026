@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         .map((sku) => sku.trim())
         .filter((sku) => sku.length > 0)
     )
-  ).slice(0, 16);
+  ).slice(0, 100);
 
   const items = uniqueSkus
     .map((sku) => getProductSummaryBySku(sku))

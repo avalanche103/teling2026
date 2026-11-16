@@ -4,6 +4,11 @@ import { readFileSync, writeFileSync } from "fs";
 import type { AdminProductListItem, ProductDocument, ProductRaw, SectionRaw } from "@/lib/types";
 import { invalidateProductCaches } from "@/lib/data";
 import { requireApiSession } from "@/lib/auth";
+import {
+  readAllProductsForAdmin,
+  skuExistsAnywhere,
+  writeVisibilityUpdates,
+} from "@/lib/microinform/admin-products";
 
 const SECTIONS_PATH = path.join(process.cwd(), "data", "sections.json");
 
@@ -17,10 +22,10 @@ export const revalidate = 0;
 const DATA_PATH = path.join(process.cwd(), "data", "products.json");
 
 function readProducts(): ProductRaw[] {
-  return JSON.parse(readFileSync(DATA_PATH, "utf-8")) as ProductRaw[];
+  return readAllProductsForAdmin();
 }
 
-function writeProducts(products: ProductRaw[]): void {
+function writeSsdProducts(products: ProductRaw[]): void {
   writeFileSync(DATA_PATH, JSON.stringify(products, null, 2), "utf-8");
 }
 
@@ -159,19 +164,9 @@ export async function PATCH(request: Request) {
         return NextResponse.json({ error: "Нет товаров для изменения" }, { status: 400 });
       }
 
-      let updatedCount = 0;
-      const nextProducts = products.map((product) => {
-        if (!matchedIds.has(product.id)) return product;
-        if (isVisible(product) === body.bulk!.visible) return product;
-
-        updatedCount += 1;
-        return {
-          ...product,
-          visible: body.bulk!.visible,
-        };
-      });
-
-      writeProducts(nextProducts);
+      const updatesById = new Map<number, boolean>();
+      for (const id of matchedIds) updatesById.set(id, body.bulk.visible);
+      const updatedCount = writeVisibilityUpdates(updatesById);
       invalidateProductCaches();
       return NextResponse.json({ success: true, updatedCount });
     }
@@ -190,22 +185,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Некорректный формат изменений" }, { status: 400 });
     }
 
-    const products = readProducts();
-    let updatedCount = 0;
-
-    const nextProducts = products.map((product) => {
-      const nextVisible = updatesById.get(product.id);
-      if (nextVisible === undefined) return product;
-      if (product.visible === nextVisible) return product;
-
-      updatedCount += 1;
-      return {
-        ...product,
-        visible: nextVisible,
-      };
-    });
-
-    writeProducts(nextProducts);
+    const updatedCount = writeVisibilityUpdates(updatesById);
     invalidateProductCaches();
 
     return NextResponse.json({ success: true, updatedCount });
@@ -250,9 +230,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Цена без НДС должна быть неотрицательным числом" }, { status: 400 });
     }
 
-    const products = readProducts();
-
-    if (products.some((p) => p.sku === skuTrimmed)) {
+    if (skuExistsAnywhere(skuTrimmed)) {
       return NextResponse.json({ error: `SKU "${skuTrimmed}" уже используется` }, { status: 409 });
     }
 
@@ -262,7 +240,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Раздел не найден" }, { status: 400 });
     }
 
-    const maxId = products.reduce((max, p) => Math.max(max, p.id), 0);
+    // Manual creates stay in the SSD products file (ids below Microinform range).
+    const ssdProducts = JSON.parse(readFileSync(DATA_PATH, "utf-8")) as ProductRaw[];
+    const maxId = ssdProducts.reduce((max, p) => Math.max(max, p.id), 0);
     const newId = maxId + 1;
 
     const price = body.price;
@@ -311,8 +291,8 @@ export async function POST(request: Request) {
       },
     };
 
-    products.push(newProduct);
-    writeProducts(products);
+    ssdProducts.push(newProduct);
+    writeSsdProducts(ssdProducts);
     invalidateProductCaches();
 
     return NextResponse.json({ success: true, product: newProduct }, { status: 201 });

@@ -46,6 +46,9 @@ next-env.d.ts
 /data/products.import.tmp.json
 /data/products.import.upload.json
 /data/auth-secret.txt
+/data/microinform/price-cache.xls
+/data/microinform/price-parsed.json
+/_tmp/
 
 # local diagnostics
 /typecheck_output.txt
@@ -71,4 +74,8 @@ next-env.d.ts
 # local VPS backups
 _backups/
 scripts/_vps_*.py
+scripts/_fix_nginx_404.py
+scripts/_install_ssh_key.py
+scripts/_remote_*.py
+scripts/_remote_*.sh
 

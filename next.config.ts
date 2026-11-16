@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
+  serverExternalPackages: ["xlsx", "codepage", "iconv-lite"],
   experimental: {
     webpackBuildWorker: false,
     workerThreads: true,

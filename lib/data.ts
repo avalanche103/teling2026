@@ -16,19 +16,24 @@ import type {
 let _products: ProductRaw[] | null = null;
 let _productsBySkuMap: Map<string, ProductRaw> | null = null;
 let _productsBySectionMap: Map<number, ProductRaw[]> | null = null;
+let _categoryTree: Category[] | null = null;
+let _sectionPopularImageMap: Map<number, { score: number; url: string }> | null = null;
 
 function isGitLfsPointer(text: string): boolean {
   return text.startsWith("version https://git-lfs.github.com/spec/v1");
 }
 
 export function invalidateSectionCaches(): void {
-  // Section caches were removed to always read fresh section state from disk.
+  _categoryTree = null;
+  _sectionPopularImageMap = null;
 }
 
 export function invalidateProductCaches(): void {
   _products = null;
   _productsBySkuMap = null;
   _productsBySectionMap = null;
+  _categoryTree = null;
+  _sectionPopularImageMap = null;
 }
 
 function getSectionsRaw(): SectionRaw[] {
@@ -36,19 +41,31 @@ function getSectionsRaw(): SectionRaw[] {
   return JSON.parse(readFileSync(filePath, "utf-8")) as SectionRaw[];
 }
 
+function readJsonProductsFile(filePath: string, label: string): ProductRaw[] {
+  if (!existsSync(filePath)) return [];
+  const raw = readFileSync(filePath, "utf-8").trim();
+  if (!raw) return [];
+  if (isGitLfsPointer(raw)) {
+    console.warn(
+      `[data] ${label} is a Git LFS pointer; using an empty product list until LFS assets are fetched.`,
+    );
+    return [];
+  }
+  return JSON.parse(raw) as ProductRaw[];
+}
+
 function getProductsRaw(): ProductRaw[] {
   if (!_products) {
-    const filePath = path.join(process.cwd(), "data", "products.json");
-    const raw = readFileSync(filePath, "utf-8").trim();
-
-    if (isGitLfsPointer(raw)) {
-      console.warn(
-        "[data] products.json is a Git LFS pointer; using an empty product list until LFS assets are fetched."
-      );
-      _products = [];
-    } else {
-      _products = JSON.parse(raw) as ProductRaw[];
-    }
+    const ssdPath = path.join(process.cwd(), "data", "products.json");
+    const microinformPath = path.join(process.cwd(), "data", "products.microinform.json");
+    const ssd = readJsonProductsFile(ssdPath, "products.json");
+    const microinform = readJsonProductsFile(microinformPath, "products.microinform.json").map(
+      (product) => ({
+        ...product,
+        supplier: product.supplier || ("microinform" as const),
+      }),
+    );
+    _products = [...ssd, ...microinform];
   }
   return _products;
 }
@@ -183,16 +200,112 @@ function getProductsBySectionMap(): Map<number, ProductRaw[]> {
 
 // ---- Category tree ----
 
+/** Fast thumb lookup: prefer metadata pictures, else only check local `_1.*` once. */
+function getProductThumbnailUrlFast(product: ProductRaw): string | null {
+  const externalImages = (product.metadata?.pictures || []).filter(
+    (url): url is string => typeof url === "string" && url.trim().length > 0,
+  );
+  if (externalImages[0]) return externalImages[0];
+
+  const sku = typeof product.sku === "string" ? product.sku.trim() : "";
+  if (!sku) return null;
+
+  for (const ext of ["jpg", "webp", "jpeg", "png"]) {
+    const filename = `${sku}_1.${ext}`;
+    const abs = path.join(/* turbopackIgnore: true */ PUBLIC_IMAGES_DIR, filename);
+    if (existsSync(abs)) {
+      return `/images/${encodeURIComponent(filename)}`;
+    }
+  }
+  return null;
+}
+
+function scoreProductPopularity(product: ProductRaw, thumbnail: string | null): number {
+  if (!thumbnail) return Number.NEGATIVE_INFINITY;
+  let score = 1000;
+  if (product.price > 0) score += 200;
+  const delivery = (product.metadata?.timeDelivery || "").toLowerCase();
+  if (delivery.includes("1-2")) score += 150;
+  if (delivery.includes("запросу")) score -= 80;
+  if (product.price > 0) {
+    score += Math.max(0, 120 - Math.min(product.price, 120));
+  }
+  const picCount = product.metadata?.pictures?.length || 0;
+  score += Math.min(picCount, 5) * 10;
+  return score;
+}
+
+/** One pass over products → best image per direct section_id. */
+function getSectionPopularImageMap(): Map<number, { score: number; url: string }> {
+  if (_sectionPopularImageMap) return _sectionPopularImageMap;
+
+  const bestBySection = new Map<number, { score: number; url: string }>();
+  for (const product of getVisibleProductsRaw()) {
+    const thumb = getProductThumbnailUrlFast(product);
+    if (!thumb) continue;
+    const score = scoreProductPopularity(product, thumb);
+    const prev = bestBySection.get(product.section_id);
+    if (!prev || score > prev.score) {
+      bestBySection.set(product.section_id, { score, url: thumb });
+    }
+  }
+
+  _sectionPopularImageMap = bestBySection;
+  return _sectionPopularImageMap;
+}
+
+function getPopularImageForSectionIds(sectionIds: number[]): string | null {
+  const map = getSectionPopularImageMap();
+  let best: { score: number; url: string } | null = null;
+  for (const id of sectionIds) {
+    const candidate = map.get(id);
+    if (!candidate) continue;
+    if (!best || candidate.score > best.score) best = candidate;
+  }
+  return best?.url ?? null;
+}
+
+function applyCategoryImages(roots: Category[]): void {
+  // Ensure the popular-image map is built once before walking the tree.
+  getSectionPopularImageMap();
+
+  const visit = (cats: Category[]) => {
+    for (const cat of cats) {
+      const sectionIds = getAllDescendantIds(cat);
+      const popularImage = getPopularImageForSectionIds(sectionIds);
+      const sectionImage =
+        typeof cat.imageUrl === "string" && cat.imageUrl.trim() ? cat.imageUrl.trim() : null;
+
+      if (!sectionImage) {
+        cat.imageUrl = popularImage;
+        cat.fallbackImageUrl = null;
+      } else {
+        cat.imageUrl = sectionImage;
+        cat.fallbackImageUrl =
+          popularImage && popularImage !== sectionImage ? popularImage : null;
+      }
+
+      if (cat.children.length) visit(cat.children);
+    }
+  };
+  visit(roots);
+}
+
 function buildCategoryTree(sections: SectionRaw[]): Category[] {
   const map = new Map<number, Category>();
   for (const s of sections) {
+    const picture =
+      typeof s.metadata?.picture === "string" && s.metadata.picture.trim()
+        ? s.metadata.picture.trim()
+        : null;
     map.set(s.id, {
       id: s.id,
       name: s.name,
       slug: s.external_id,
       parentId: s.parent,
       level: s.metadata?.level ?? 1,
-      imageUrl: s.metadata?.picture ?? null,
+      imageUrl: picture,
+      fallbackImageUrl: null,
       sort: s.metadata?.sort ?? 0,
       children: [],
     });
@@ -217,11 +330,15 @@ function buildCategoryTree(sections: SectionRaw[]): Category[] {
     for (const c of cats) sortCats(c.children);
   };
   sortCats(roots);
+  applyCategoryImages(roots);
   return roots;
 }
 
 export function getCategoryTree(): Category[] {
-  return buildCategoryTree(getSectionsRaw());
+  if (!_categoryTree) {
+    _categoryTree = buildCategoryTree(getSectionsRaw());
+  }
+  return _categoryTree;
 }
 
 export function getRootCategories(): Category[] {
