@@ -15,11 +15,18 @@ export async function POST(request: Request) {
     const body = (await request.json().catch(() => ({}))) as {
       onlyMissing?: boolean;
       limit?: number;
+      productIds?: number[];
+      vendors?: string[];
     };
+    const productIds = Array.isArray(body.productIds)
+      ? body.productIds.filter((id): id is number => typeof id === "number" && Number.isFinite(id))
+      : undefined;
     const result = await enrichMicroinformProducts({
       onlyMissing: body.onlyMissing !== false,
       limit: typeof body.limit === "number" ? Math.min(Math.max(body.limit, 1), 100) : 30,
       delayMs: 200,
+      productIds: productIds?.length ? productIds : undefined,
+      vendors: Array.isArray(body.vendors) ? body.vendors.filter((v) => typeof v === "string") : undefined,
     });
     invalidateProductCaches();
     return NextResponse.json({

@@ -63,6 +63,18 @@
 ### Как запустить
 - `python export_for_site.py`
 
+### После экспорта / импорта на сайт
+1. Скопировать/залить **`products.json`** в `data/` сайта.
+2. **Не перезаписывать** `data/sections.json` целиком ZIP/export-файлом — там же живут разделы Microinform (632–644). Вместо этого смержить разделы:
+   - `python merge_sections.py` из `ssd-admin-app/`
+   - или `python export_for_site.py --apply-sections-to-site`
+   - merge делает upsert SSD-разделов, сохраняет local-only / Microinform и `metadata.selected_filters`
+3. Локальные правки разделов (имя/родитель) — `section_overrides.json`; применяются при `merge_sections.py` и `export_for_site.py`, чтобы битые данные SSD API (например id 329 «муфты») не возвращались.
+4. Проверка дрейфа: `python audit_catalog_drift.py` (exit code ≠ 0 при missing/orphan).
+5. Скачать картинки: `npm run ssd:download-images` (или кнопка «изображения» в SSD admin → `/run_export` type=images).
+6. JSON URL **не** переписываются: сайт сам предпочтёт `/images/<SKU>_1.*`, если файл есть.
+7. На прод: `.\scripts\sync-images.ps1` (deploy.tar картинки не включает).
+
 ### Структура файлов
 - `sections.json`: массив объектов с `id`, `name`, `parent`, `external_id`, `metadata`
 - `products.json`: массив объектов с итоговым `name`, исходным `original_name`, итоговой ценой `price` в `Br`, расчетной `calculated_price`, ручной `price_override`, `price_without_vat`, `vat_amount`, `markup_percent`, `distributor_discount`, `stock`, `vendor`, `metadata`, `raw_json`
@@ -83,15 +95,35 @@
 ## Скачивание изображений
 Скрипт: `download_images.py`
 
+### Зачем
+Сайт **не переписывает** URL в `data/products.json`. В JSON остаются ссылки `https://ssd.ru/...` как fallback.
+Если в `public/images/` есть файл `<SKU>_1.webp|jpg|...`, карточки, листинг и «Вы смотрели» берут **локальный** путь `/images/...` (local-first в `lib/data.ts`).
+
 ### Что делает
-- скачивает все изображения товаров сразу в папку `public/images/` основного проекта
-- использует URLs из `raw_json.pictures`
-- сохраняет файлы в формате `<артикул>_<номер>.<расширение>`, например `110302-00011_1.webp`
+- скачивает изображения товаров в `public/images/` основного проекта
+- читает URL из `raw_json.pictures` (или `metadata.pictures`)
+- сохраняет файлы как `<артикул>_<номер>.<расширение>`, например `110302-00011_1.webp`
+- уже существующие файлы пропускает; качает параллельно (`--workers`)
 
-### Как запустить
-- `python download_images.py`
+### Когда запускать
+После импорта/экспорта каталога SSD (когда обновился `export/products.json` или `data/products.json`):
 
-> Внимание: может занять время, зависит от количества изображений
+```bash
+# из корня проекта
+npm run ssd:download-images:smoke    # 20 товаров, проверка
+npm run ssd:download-images:thumbs   # только _1.* (~7.5k) — карточки / «Вы смотрели»
+npm run ssd:download-images          # полный прогон всех кадров галереи
+npm run ssd:sync-images              # залить public/images на VPS
+
+# или напрямую
+cd ssd-admin-app
+python download_images.py --limit 20 --workers 16
+python download_images.py --first-only --workers 24
+python download_images.py --workers 20
+python download_images.py --from-site   # взять data/products.json
+```
+
+> Внимание: полный прогон (~23k URL) долгий из‑за ssd.ru. Для карточек достаточно `--first-only`. `public/images/` в git не коммитится и в deploy tar не входит — на прод: `npm run ssd:sync-images`.
 
 ## Что сейчас
 - скрипт работает, получил `207` разделов и `500` товаров (одна страница).

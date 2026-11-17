@@ -1,16 +1,31 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { CategoryCard } from "@/components/catalog/CategoryCard";
 import { ProductCard } from "@/components/catalog/ProductCard";
+import { ProductListRow } from "@/components/catalog/ProductListRow";
+import { ProductLayoutToggle } from "@/components/catalog/ProductLayoutToggle";
 import { CategoryFilters } from "@/components/catalog/CategoryFilters";
+import { CategorySearchForm } from "@/components/catalog/CategorySearchForm";
+import { ActiveFilterChips } from "@/components/catalog/ActiveFilterChips";
+import { CatalogSortSelect } from "@/components/catalog/CatalogSortSelect";
+import { CatalogPagination } from "@/components/catalog/CatalogPagination";
 import {
   getCategoryAncestors,
   getCategoryBySlug,
   getSectionFacets,
   getSectionSelectedFilters,
   getSectionProducts,
+  getSectionProductCount,
 } from "@/lib/data";
+import {
+  buildCatalogHref,
+  hasActiveFilters,
+  parseActiveFilters,
+  parseLayout,
+  parseSort,
+} from "@/lib/catalog-query";
 import type { ActiveFilters, SectionFacets } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +51,7 @@ function stringifyFirst(value: string | string[] | undefined): string {
 }
 
 function hasNonCanonicalQuery(params: Record<string, string | string[] | undefined>): boolean {
-  const knownKeys = ["q", "page", "brand", "price_min", "price_max"];
+  const knownKeys = ["q", "page", "brand", "price_min", "price_max", "sort", "view", "layout"];
 
   for (const key of knownKeys) {
     const raw = stringifyFirst(params[key]);
@@ -67,13 +82,7 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
 
   const hasQuery = hasNonCanonicalQuery(query);
   const canonicalPath = `/catalog/${category.slug}`;
-  
-  // Get product count for better description
-  const { total: productCount } = getSectionProducts(category.id, {
-    page: 1,
-    limit: 1,
-    includeDescendants: true,
-  });
+  const productCount = getSectionProductCount(category.id);
 
   const description = productCount > 0
     ? `Купить ${category.name.toLowerCase()} в каталоге Teling.by: ${productCount} товаров, характеристики, цены и наличие оборудования для ЛВС, ВОЛС и видеонаблюдения.`
@@ -101,46 +110,6 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
           follow: true,
         },
   };
-}
-
-function parseFilters(
-  query: Record<string, string | string[] | undefined>
-): ActiveFilters {
-  const toArray = (v: string | string[] | undefined): string[] =>
-    !v ? [] : Array.isArray(v) ? v : [v];
-
-  const brands = toArray(query.brand);
-  const priceMinStr = toArray(query.price_min)[0];
-  const priceMaxStr = toArray(query.price_max)[0];
-  const priceMin = priceMinStr ? Number(priceMinStr) : null;
-  const priceMax = priceMaxStr ? Number(priceMaxStr) : null;
-
-  const charFilters: Record<string, string[]> = {};
-  for (const [key, val] of Object.entries(query)) {
-    if (!key.startsWith("cf_") || !val) continue;
-    charFilters[key.slice(3)] = Array.isArray(val) ? val : [val];
-  }
-
-  return { brands, priceMin, priceMax, charFilters };
-}
-
-function buildPageUrl(
-  slug: string,
-  page: number,
-  search: string,
-  active: ActiveFilters
-): string {
-  const p = new URLSearchParams();
-  if (search) p.set("q", search);
-  if (page > 1) p.set("page", String(page));
-  for (const b of active.brands) p.append("brand", b);
-  if (active.priceMin !== null) p.set("price_min", String(active.priceMin));
-  if (active.priceMax !== null) p.set("price_max", String(active.priceMax));
-  for (const [charName, vals] of Object.entries(active.charFilters)) {
-    for (const v of vals) p.append(`cf_${charName}`, v);
-  }
-  const qs = p.toString();
-  return `/catalog/${slug}${qs ? "?" + qs : ""}`;
 }
 
 function applySelectedFacetKeys(
@@ -187,40 +156,74 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   const page = Math.max(1, Number(query.page || 1));
   const search = (typeof query.q === "string" ? query.q : "").trim();
+  const sort = parseSort(query.sort);
+  const layout = parseLayout(query.layout);
+  const viewAll = stringifyFirst(query.view) === "all";
 
-  const activeFilters = parseFilters(query);
+  const activeFilters = parseActiveFilters(query);
   const selectedFilterKeys = getSectionSelectedFilters(category.id);
-  const facets = applySelectedFacetKeys(
-    getSectionFacets(category.id),
-    selectedFilterKeys
-  );
   const effectiveFilters = applySelectedFilterKeysToActive(
     activeFilters,
     selectedFilterKeys
   );
-  const hasFacets =
-    facets.brands.length > 1 ||
-    facets.chars.length > 0 ||
-    facets.priceMax > facets.priceMin;
 
-  const { products, total } = getSectionProducts(category.id, {
-    page,
-    limit: PAGE_SIZE,
-    search,
-    includeDescendants: true,
-    brands: effectiveFilters.brands.length ? effectiveFilters.brands : undefined,
-    priceMin: effectiveFilters.priceMin ?? undefined,
-    priceMax: effectiveFilters.priceMax ?? undefined,
-    charFilters: Object.keys(effectiveFilters.charFilters).length
-      ? effectiveFilters.charFilters
-      : undefined,
-  });
+  const forceListing =
+    viewAll ||
+    Boolean(search) ||
+    hasActiveFilters(effectiveFilters) ||
+    sort !== "relevance" ||
+    page > 1;
+  const isHub = category.children.length > 0 && !forceListing;
+  const sectionTotal = getSectionProductCount(category.id);
+
+  const facets = isHub
+    ? null
+    : applySelectedFacetKeys(
+        getSectionFacets(category.id, {
+          search,
+          active: effectiveFilters,
+        }),
+        selectedFilterKeys
+      );
+
+  const hasFacets = Boolean(
+    facets &&
+      (facets.brands.length > 1 ||
+        facets.chars.length > 0 ||
+        facets.priceMax > facets.priceMin)
+  );
+
+  const { products, total } = isHub
+    ? { products: [], total: 0 }
+    : getSectionProducts(category.id, {
+        page,
+        limit: PAGE_SIZE,
+        search,
+        includeDescendants: true,
+        brands: effectiveFilters.brands.length ? effectiveFilters.brands : undefined,
+        priceMin: effectiveFilters.priceMin ?? undefined,
+        priceMax: effectiveFilters.priceMax ?? undefined,
+        charFilters: Object.keys(effectiveFilters.charFilters).length
+          ? effectiveFilters.charFilters
+          : undefined,
+        sort,
+      });
 
   const ancestors = getCategoryAncestors(category.id);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const origin = getSiteOrigin();
   const canonicalPath = `/catalog/${category.slug}`;
   const canonicalUrl = `${origin}${canonicalPath}`;
+
+  const hrefForPage = (nextPage: number) =>
+    buildCatalogHref(`/catalog/${slug}`, {
+      q: search,
+      page: nextPage,
+      sort,
+      layout,
+      view: viewAll || (category.children.length > 0 && forceListing) ? "all" : undefined,
+      filters: effectiveFilters,
+    });
 
   const breadcrumbsSchema = {
     "@context": "https://schema.org",
@@ -276,7 +279,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         position: (page - 1) * PAGE_SIZE + idx + 1,
         ...(prev ? { previousItem: prev } : {}),
         ...(next ? { nextItem: next } : {}),
-        // Use Thing, not Product: bare Product without offers/review fails GSC Shopping.
         item: {
           "@type": "Thing",
           name: product.name,
@@ -293,121 +295,152 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
         suppressHydrationWarning
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productItemListSchema) }}
-        suppressHydrationWarning
-      />
+      {!isHub && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productItemListSchema) }}
+          suppressHydrationWarning
+        />
+      )}
       <main className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-6">
-      <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-black/70">
-        <Link href="/" className="hover:text-black">Главная</Link>
-        <span>/</span>
-        <Link href="/catalog" className="hover:text-black">Каталог</Link>
-        {ancestors.map((a) => (
-          <span key={a.id} className="contents">
-            <span>/</span>
-            <Link href={`/catalog/${a.slug}`} className="hover:text-black">
-              {a.name}
-            </Link>
-          </span>
-        ))}
-        <span>/</span>
-        <span className="font-semibold text-black">{category.name}</span>
-      </div>
-
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-black/70">Раздел</p>
-          <h1 className="text-3xl font-black tracking-tight text-black">{category.name}</h1>
+        <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-black/70">
+          <Link href="/" className="hover:text-black">Главная</Link>
+          <span>/</span>
+          <Link href="/catalog" className="hover:text-black">Каталог</Link>
+          {ancestors.map((a) => (
+            <span key={a.id} className="contents">
+              <span>/</span>
+              <Link href={`/catalog/${a.slug}`} className="hover:text-black">
+                {a.name}
+              </Link>
+            </span>
+          ))}
+          <span>/</span>
+          <span className="font-semibold text-black">{category.name}</span>
         </div>
 
-        <form className="w-full sm:w-96" action="" method="get">
-          <input
-            name="q"
-            defaultValue={search}
-            placeholder="Поиск в категории"
-            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none ring-slate-400 transition focus:ring-2"
-          />
-        </form>
-      </div>
-
-      {category.children.length > 0 && !search && (
-        <section className="mb-8">
-          <h2 className="mb-3 text-lg font-bold text-black">Подкатегории</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {category.children.map((child) => (
-              <CategoryCard key={child.id} category={child} />
-            ))}
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-black/70">Раздел</p>
+            <h1 className="text-2xl font-black tracking-tight text-black sm:text-3xl">
+              {category.name}
+            </h1>
+            <p className="mt-1 text-sm text-black/55">
+              {sectionTotal.toLocaleString("ru-RU")} позиций в разделе
+            </p>
           </div>
-        </section>
-      )}
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-        {hasFacets && (
-          <CategoryFilters
-            facets={facets}
-            active={effectiveFilters}
-            searchQuery={search}
-          />
+          {!isHub && (
+            <CategorySearchForm
+              search={search}
+              active={effectiveFilters}
+              sort={sort}
+              layout={layout}
+              viewAll={viewAll || category.children.length > 0}
+            />
+          )}
+        </div>
+
+        {category.children.length > 0 && (
+          <section className="mb-8">
+            <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+              <h2 className="text-lg font-bold text-black">Подкатегории</h2>
+              {isHub && sectionTotal > 0 && (
+                <Link
+                  href={buildCatalogHref(`/catalog/${slug}`, { view: "all" })}
+                  className="text-sm font-semibold text-black hover:text-black/70"
+                >
+                  Смотреть все {sectionTotal.toLocaleString("ru-RU")} товаров →
+                </Link>
+              )}
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {category.children.map((child) => (
+                <CategoryCard
+                  key={child.id}
+                  category={child}
+                  productCount={getSectionProductCount(child.id)}
+                />
+              ))}
+            </div>
+          </section>
         )}
 
-        <div className="min-w-0 flex-1">
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between gap-4">
-              <h2 className="text-lg font-bold text-black">
-                Товары{" "}
-                {search ? (
-                  <span className="font-normal text-black/60">
-                    (по запросу: {search})
-                  </span>
-                ) : null}
-              </h2>
-              <span className="shrink-0 text-sm text-black/50">
-                {total} позиций
-              </span>
-            </div>
-
-            {products.length === 0 ? (
-              <p className="rounded-xl border border-slate-200 bg-white p-4 text-black/75">
-                В этом разделе пока нет товаров.
-              </p>
-            ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-                {products.map((product) => (
-                  <ProductCard key={product.sku} product={product} />
-                ))}
-              </div>
+        {isHub ? null : (
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+            {hasFacets && facets && (
+              <CategoryFilters
+                facets={facets}
+                active={effectiveFilters}
+                searchQuery={search}
+                sort={sort}
+                layout={layout}
+                viewAll={viewAll || category.children.length > 0}
+              />
             )}
 
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between pt-3 text-sm">
-                <p className="text-black/60">
-                  Страница {page} / {totalPages}
-                </p>
-                <div className="flex items-center gap-2">
-                  {page > 1 && (
-                    <Link
-                      href={buildPageUrl(slug, page - 1, search, effectiveFilters)}
-                      className="rounded-lg border border-slate-200 px-3 py-1.5 hover:bg-slate-100"
-                    >
-                      ← Назад
-                    </Link>
-                  )}
-                  {page < totalPages && (
-                    <Link
-                      href={buildPageUrl(slug, page + 1, search, effectiveFilters)}
-                      className="rounded-lg border border-slate-200 px-3 py-1.5 hover:bg-slate-100"
-                    >
-                      Вперед →
-                    </Link>
-                  )}
+            <div className="min-w-0 flex-1">
+              <section className="space-y-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <h2 className="text-lg font-bold text-black">
+                    Товары{" "}
+                    {search ? (
+                      <span className="font-normal text-black/60">
+                        (по запросу: {search})
+                      </span>
+                    ) : null}
+                  </h2>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="shrink-0 text-sm text-black/50">
+                      {total.toLocaleString("ru-RU")} позиций
+                    </span>
+                    <Suspense fallback={null}>
+                      <ProductLayoutToggle value={layout} />
+                    </Suspense>
+                    <Suspense fallback={null}>
+                      <CatalogSortSelect value={sort} />
+                    </Suspense>
+                  </div>
                 </div>
-              </div>
-            )}
-          </section>
-        </div>
-      </div>
-    </main>
+
+                <ActiveFilterChips
+                  active={effectiveFilters}
+                  searchQuery={search}
+                  sort={sort}
+                  layout={layout}
+                  viewAll={viewAll || category.children.length > 0}
+                />
+
+                {products.length === 0 ? (
+                  <p className="rounded-xl border border-slate-200 bg-white p-4 text-black/75">
+                    {search || hasActiveFilters(effectiveFilters)
+                      ? "Ничего не найдено. Снимите часть фильтров или измените запрос."
+                      : "В этом разделе пока нет товаров."}
+                  </p>
+                ) : layout === "list" ? (
+                  <div className="flex flex-col gap-3">
+                    {products.map((product) => (
+                      <ProductListRow key={product.sku} product={product} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {products.map((product) => (
+                      <ProductCard key={product.sku} product={product} />
+                    ))}
+                  </div>
+                )}
+
+                <CatalogPagination
+                  page={page}
+                  totalPages={totalPages}
+                  hrefForPage={hrefForPage}
+                />
+              </section>
+            </div>
+          </div>
+        )}
+      </main>
     </>
   );
 }

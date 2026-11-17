@@ -3,7 +3,8 @@
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import { SlidersHorizontal, X, ChevronDown, ChevronUp } from "lucide-react";
-import type { SectionFacets, ActiveFilters } from "@/lib/types";
+import type { SectionFacets, ActiveFilters, ProductSort } from "@/lib/types";
+import { buildCatalogHref, type CatalogLayout } from "@/lib/catalog-query";
 
 export type { ActiveFilters };
 
@@ -12,26 +13,19 @@ interface Props {
   active: ActiveFilters;
   /** Current text search query — preserved when filter changes */
   searchQuery: string;
+  sort?: ProductSort;
+  layout?: CatalogLayout;
+  viewAll?: boolean;
 }
 
-function buildUrl(
-  pathname: string,
-  active: ActiveFilters,
-  searchQuery: string
-): string {
-  const p = new URLSearchParams();
-  if (searchQuery) p.set("q", searchQuery);
-  for (const b of active.brands) p.append("brand", b);
-  if (active.priceMin !== null) p.set("price_min", String(active.priceMin));
-  if (active.priceMax !== null) p.set("price_max", String(active.priceMax));
-  for (const [charName, vals] of Object.entries(active.charFilters)) {
-    for (const v of vals) p.append(`cf_${charName}`, v);
-  }
-  const qs = p.toString();
-  return `${pathname}${qs ? "?" + qs : ""}`;
-}
-
-export function CategoryFilters({ facets, active, searchQuery }: Props) {
+export function CategoryFilters({
+  facets,
+  active,
+  searchQuery,
+  sort = "relevance",
+  layout = "grid",
+  viewAll = false,
+}: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -47,7 +41,15 @@ export function CategoryFilters({ facets, active, searchQuery }: Props) {
   );
 
   const navigate = (next: ActiveFilters) =>
-    router.push(buildUrl(pathname, next, searchQuery));
+    router.push(
+      buildCatalogHref(pathname, {
+        q: searchQuery,
+        sort,
+        layout,
+        view: viewAll ? "all" : undefined,
+        filters: next,
+      })
+    );
 
   const toggleBrand = (brand: string) => {
     const brands = active.brands.includes(brand)
@@ -90,7 +92,7 @@ export function CategoryFilters({ facets, active, searchQuery }: Props) {
 
   const activeCount =
     active.brands.length +
-    Object.keys(active.charFilters).length +
+    Object.values(active.charFilters).reduce((n, vals) => n + vals.length, 0) +
     (active.priceMin !== null || active.priceMax !== null ? 1 : 0);
 
   const panel = (
@@ -105,7 +107,6 @@ export function CategoryFilters({ facets, active, searchQuery }: Props) {
         </button>
       )}
 
-      {/* Price */}
       {facets.priceMax > facets.priceMin && facets.priceMax > 0 && (
         <div className="pb-4">
           <div className="mb-2.5 text-sm font-semibold">Цена, Br</div>
@@ -137,7 +138,6 @@ export function CategoryFilters({ facets, active, searchQuery }: Props) {
         </div>
       )}
 
-      {/* Brands */}
       {facets.brands.length > 1 && (
         <FacetGroup
           title="Производитель"
@@ -152,7 +152,6 @@ export function CategoryFilters({ facets, active, searchQuery }: Props) {
         />
       )}
 
-      {/* Dynamic char facets */}
       {facets.chars.map((facet) => (
         <FacetGroup
           key={facet.name}
@@ -172,7 +171,6 @@ export function CategoryFilters({ facets, active, searchQuery }: Props) {
 
   return (
     <>
-      {/* Mobile toggle */}
       <div className="mb-5 lg:hidden">
         <button
           onClick={() => setMobileOpen((o) => !o)}
@@ -194,9 +192,8 @@ export function CategoryFilters({ facets, active, searchQuery }: Props) {
         )}
       </div>
 
-      {/* Desktop sidebar */}
       <aside className="hidden w-56 shrink-0 lg:block">
-        <div className="sticky top-24 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <span className="text-sm font-semibold">Фильтры</span>
             {activeCount > 0 && (
@@ -214,8 +211,6 @@ export function CategoryFilters({ facets, active, searchQuery }: Props) {
     </>
   );
 }
-
-// ---- FacetGroup ----
 
 interface FacetGroupProps {
   title: string;
@@ -241,11 +236,11 @@ function FacetGroup({ title, open, onToggle, items }: FacetGroupProps) {
         onClick={onToggle}
         className="flex w-full items-center justify-between text-left text-sm font-semibold"
       >
-        <span>{title}</span>
+        <span className="pr-2">{title}</span>
         {open ? (
-          <ChevronUp className="h-3.5 w-3.5 text-black/40" />
+          <ChevronUp className="h-3.5 w-3.5 shrink-0 text-black/40" />
         ) : (
-          <ChevronDown className="h-3.5 w-3.5 text-black/40" />
+          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-black/40" />
         )}
       </button>
 

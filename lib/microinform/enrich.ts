@@ -15,7 +15,11 @@ import { normalizeMicroinformArticul } from "./articul";
 import { getManufacturerIndex, lookupManufacturerEntry } from "./manufacturer";
 import { PUBLIC_IMAGES_DIR } from "./paths";
 import { readMicroinformProducts, writeMicroinformProducts } from "./store";
-import { isSwitchProduct, refineSwitchCharGroups } from "./switch-chars";
+import {
+  refineActiveNetworkChars,
+  resolveActiveNetworkGroup,
+} from "./chars";
+import { processMicroinformPackshot } from "./knockout-bg";
 
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
@@ -52,7 +56,7 @@ function scrubInlineStyle(style: string): string {
     const decl = part.trim();
     if (!decl) continue;
     const prop = decl.split(":")[0]?.trim().toLowerCase() || "";
-    // Drop vendor typography/color so site Inter/Oswald rules are not overridden.
+    // Drop vendor typography/color so site Onest rules are not overridden.
     if (
       prop.startsWith("font") ||
       prop === "color" ||
@@ -539,11 +543,12 @@ export async function enrichProduct(product: ProductRaw): Promise<{
     clearLocalSkuImages(product.sku);
 
     let imagesDownloaded = 0;
-    const localFallbackUrls: string[] = [];
+    const localPictureUrls: string[] = [];
     for (const imageUrl of extracted.imageUrls) {
       const ext = extensionFromUrl(imageUrl);
-      const filename = `${product.sku}_${localFallbackUrls.length + 1}${ext}`;
-      const dest = path.join(PUBLIC_IMAGES_DIR, filename);
+      const seq = localPictureUrls.length + 1;
+      const rawFilename = `${product.sku}_${seq}${ext}`;
+      const dest = path.join(PUBLIC_IMAGES_DIR, rawFilename);
       const ok = await downloadImage(imageUrl, dest);
       if (!ok) continue;
       try {
@@ -555,8 +560,17 @@ export async function enrichProduct(product: ProductRaw): Promise<{
       } catch {
         continue;
       }
+
+      let localUrl = `/images/${encodeURIComponent(rawFilename)}`;
+      try {
+        const webpPath = await processMicroinformPackshot(dest);
+        localUrl = `/images/${encodeURIComponent(path.basename(webpPath))}`;
+      } catch {
+        // Keep opaque download if knockout fails.
+      }
+
       imagesDownloaded += 1;
-      localFallbackUrls.push(imageUrl);
+      localPictureUrls.push(localUrl);
     }
 
     const nextDescription =
@@ -564,13 +578,15 @@ export async function enrichProduct(product: ProductRaw): Promise<{
       product.metadata.description ||
       "";
     let nextChars = mergeCharGroups(product.metadata.chars, extracted.charGroups);
-    if (isSwitchProduct(product)) {
+    const activeGroup = resolveActiveNetworkGroup(product);
+    if (activeGroup) {
       const priceSection =
         typeof product.metadata?.price_section === "string"
           ? product.metadata.price_section
           : "";
-      nextChars = refineSwitchCharGroups(
-        priceSection || product.section_name || "Коммутаторы",
+      nextChars = refineActiveNetworkChars(
+        activeGroup,
+        priceSection || product.section_name || "",
         product.name,
         articul,
         nextChars,
@@ -582,7 +598,7 @@ export async function enrichProduct(product: ProductRaw): Promise<{
       metadata: {
         ...product.metadata,
         description: nextDescription,
-        pictures: localFallbackUrls.length ? localFallbackUrls : product.metadata.pictures || [],
+        pictures: localPictureUrls.length ? localPictureUrls : product.metadata.pictures || [],
         documents: extracted.documents.length ? extracted.documents : product.metadata.documents || [],
         chars: nextChars,
       },
@@ -622,6 +638,7 @@ export async function enrichMicroinformProducts(options?: {
   limit?: number;
   delayMs?: number;
   vendors?: string[];
+  productIds?: number[];
   force?: boolean;
   onProgress?: (info: {
     processed: number;
@@ -636,6 +653,9 @@ export async function enrichMicroinformProducts(options?: {
   const vendorSet = options?.vendors?.length
     ? new Set(options.vendors.map((v) => v.toLowerCase()))
     : null;
+  const idSet = options?.productIds?.length
+    ? new Set(options.productIds.filter((id) => Number.isFinite(id)))
+    : null;
 
   const products = readMicroinformProducts();
   const errors: EnrichBatchResult["errors"] = [];
@@ -649,6 +669,7 @@ export async function enrichMicroinformProducts(options?: {
   for (let i = 0; i < products.length; i++) {
     if (processed >= limit) break;
     const product = products[i];
+    if (idSet && !idSet.has(product.id)) continue;
     const vendor = (product.vendor || product.metadata?.brand || "").toLowerCase();
     if (vendorSet && !vendorSet.has(vendor)) continue;
 

@@ -82,7 +82,7 @@ export function ViewedProducts({ currentSku }: ViewedProductsProps) {
   return (
     <section className="mt-10">
       <h2 className="mb-4 text-xl font-black text-black">Вы смотрели</h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visibleItems.map((product) => (
           <Link
             key={`viewed-${product.sku}`}

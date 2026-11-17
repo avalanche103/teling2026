@@ -72,10 +72,19 @@ function resolveOrCreateSection(
   const existingBySlug = sections.find((s) => s.external_id === action.externalId);
   if (existingBySlug) return { section: existingBySlug, created: false, sections };
 
+  // Always allocate above every known section id so we never collide with SSD leaves.
   const maxId = sections.reduce((m, s) => Math.max(m, s.id), 0);
   const newId = maxId + 1;
+  if (sections.some((s) => s.id === newId)) {
+    throw new Error(`Refusing to create Microinform section with colliding id ${newId}`);
+  }
   const parent = sections.find((s) => s.id === action.parentId);
-  const level = (parent?.metadata?.level ?? 1) + 1;
+  if (!parent) {
+    throw new Error(
+      `Refusing to create Microinform section "${action.name}": parent ${action.parentId} not found`,
+    );
+  }
+  const level = (parent.metadata?.level ?? 1) + 1;
   const created: SectionRaw = {
     id: newId,
     name: action.name,
@@ -91,6 +100,7 @@ function resolveOrCreateSection(
       parent_id: action.parentId,
       picture: "",
       selected_filters: action.selectedFilters || [],
+      source: "microinform",
     },
   };
   return { section: created, created: true, sections: [...sections, created] };
@@ -192,9 +202,21 @@ export function analyzePriceBook(
 
 export interface ApplyResult {
   upserted: number;
+  created: number;
+  updated: number;
+  hiddenAbsent: number;
+  pendingNew: number;
   createdSections: string[];
+  /** @deprecated Prefer hiddenAbsent — kept for older admin clients. */
   removedOrHidden: number;
   totalMicroinform: number;
+}
+
+function productArticulKey(product: ProductRaw): string {
+  return normalizeMicroinformArticul(
+    product.vendor || product.metadata?.brand || "",
+    product.metadata?.articul || "",
+  ).toUpperCase();
 }
 
 export function applyPriceBook(
@@ -235,7 +257,7 @@ export function applyPriceBook(
   const previousByArticul = new Map<string, ProductRaw>();
   for (const p of previous) {
     if (!p.metadata?.articul) continue;
-    const key = normalizeMicroinformArticul(p.vendor || p.metadata.brand || "", p.metadata.articul).toUpperCase();
+    const key = productArticulKey(p);
     const existing = previousByArticul.get(key);
     if (!existing) {
       previousByArticul.set(key, p);
@@ -251,13 +273,16 @@ export function applyPriceBook(
 
   const nextProducts: ProductRaw[] = [];
   const keepArticuls = new Set<string>();
+  let created = 0;
+  let updated = 0;
 
   for (const row of selectedRows) {
     const titleSection = titleToSection.get(row.sectionTitle);
     const section = resolveRowSection(row, titleSection, sections);
     if (!section) continue;
     const normalized = normalizeMicroinformArticul(row.vendor, row.articul);
-    const prev = previousByArticul.get(normalized.toUpperCase()) || null;
+    const key = normalized.toUpperCase();
+    const prev = previousByArticul.get(key) || null;
     const product = buildMicroinformProduct({
       row,
       section,
@@ -267,23 +292,46 @@ export function applyPriceBook(
       previous: prev,
     });
     nextProducts.push(product);
-    keepArticuls.add(normalized.toUpperCase());
+    keepArticuls.add(key);
+    if (prev) updated += 1;
+    else created += 1;
   }
 
-  // Keep previously imported Microinform products that are no longer in selected
-  // scope but were from other mapped groups? Plan: hide missing from this apply scope.
-  // Simpler: replace file with only currently selected mapped products.
+  // Keep products missing from this apply: hide, mark absent, preserve enrichment.
+  const absentStamp = (() => {
+    const d = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  })();
+  let hiddenAbsent = 0;
+  for (const prev of previous) {
+    const key = productArticulKey(prev);
+    if (!key || keepArticuls.has(key)) continue;
+    hiddenAbsent += 1;
+    nextProducts.push({
+      ...prev,
+      visible: false,
+      metadata: {
+        ...prev.metadata,
+        absent_from_price: true,
+        updated: absentStamp,
+      },
+    });
+  }
+
+  const pendingNew = nextProducts.filter((p) => p.metadata?.import_status === "new").length;
+
   writeMicroinformProducts(nextProducts);
   writeState(state);
 
   return {
-    upserted: nextProducts.length,
+    upserted: created + updated,
+    created,
+    updated,
+    hiddenAbsent,
+    pendingNew,
     createdSections,
-    removedOrHidden: previous.length - previous.filter((p) =>
-      keepArticuls.has(
-        normalizeMicroinformArticul(p.vendor || p.metadata?.brand || "", p.metadata?.articul || "").toUpperCase(),
-      ),
-    ).length,
+    removedOrHidden: hiddenAbsent,
     totalMicroinform: nextProducts.length,
   };
 }

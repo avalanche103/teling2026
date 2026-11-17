@@ -1,16 +1,30 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { CategoryCard } from "@/components/catalog/CategoryCard";
 import { ProductCard } from "@/components/catalog/ProductCard";
-import { getRootCategories, searchProducts } from "@/lib/data";
+import { ProductListRow } from "@/components/catalog/ProductListRow";
+import { ProductLayoutToggle } from "@/components/catalog/ProductLayoutToggle";
+import { CatalogPagination } from "@/components/catalog/CatalogPagination";
+import { CatalogSortSelect } from "@/components/catalog/CatalogSortSelect";
+import { ActiveFilterChips } from "@/components/catalog/ActiveFilterChips";
+import {
+  getRootCategories,
+  getSectionProductCount,
+  searchProductsPaged,
+} from "@/lib/data";
+import {
+  buildCatalogHref,
+  parseActiveFilters,
+  parseLayout,
+  parseSort,
+} from "@/lib/catalog-query";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 interface CatalogIndexPageProps {
-  searchParams: Promise<{
-    q?: string;
-  }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 function getSiteOrigin(): string {
@@ -22,9 +36,11 @@ function getSiteOrigin(): string {
   }
 }
 
+const PAGE_SIZE = 24;
+
 export async function generateMetadata({ searchParams }: CatalogIndexPageProps): Promise<Metadata> {
   const params = await searchParams;
-  const hasQuery = Boolean((params.q || "").trim());
+  const hasQuery = Boolean((typeof params.q === "string" ? params.q : "").trim());
 
   return {
     title: hasQuery ? `Поиск по каталогу: ${params.q}` : "Каталог продукции",
@@ -48,10 +64,29 @@ export async function generateMetadata({ searchParams }: CatalogIndexPageProps):
 
 export default async function CatalogIndexPage({ searchParams }: CatalogIndexPageProps) {
   const params = await searchParams;
-  const q = (params.q || "").trim();
+  const q = (typeof params.q === "string" ? params.q : "").trim();
+  const page = Math.max(1, Number(params.page || 1));
+  const sort = parseSort(params.sort);
+  const layout = parseLayout(params.layout);
+  const filters = parseActiveFilters(params);
   const categories = getRootCategories();
-  const results = q ? searchProducts(q, 60) : [];
   const origin = getSiteOrigin();
+
+  const searchResult = q
+    ? searchProductsPaged(q, {
+        page,
+        limit: PAGE_SIZE,
+        sort,
+        brands: filters.brands.length ? filters.brands : undefined,
+        priceMin: filters.priceMin ?? undefined,
+        priceMax: filters.priceMax ?? undefined,
+      })
+    : null;
+
+  const results = searchResult?.products ?? [];
+  const total = searchResult?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const sectionHints = searchResult?.sectionHints ?? [];
 
   const itemListSchema = q
     ? {
@@ -63,19 +98,9 @@ export default async function CatalogIndexPage({ searchParams }: CatalogIndexPag
         itemListOrder: "https://schema.org/ItemListOrderAscending",
         itemListElement: results.map((product, idx) => {
           const productUrl = `${origin}/product/${encodeURIComponent(product.sku)}`;
-          const prev = idx > 0
-            ? `${origin}/product/${encodeURIComponent(results[idx - 1]!.sku)}`
-            : undefined;
-          const next = idx < results.length - 1
-            ? `${origin}/product/${encodeURIComponent(results[idx + 1]!.sku)}`
-            : undefined;
-
           return {
             "@type": "ListItem",
-            position: idx + 1,
-            ...(prev ? { previousItem: prev } : {}),
-            ...(next ? { nextItem: next } : {}),
-            // Use Thing, not Product: bare Product without offers/review fails GSC Shopping.
+            position: (page - 1) * PAGE_SIZE + idx + 1,
             item: {
               "@type": "Thing",
               name: product.name,
@@ -93,14 +118,9 @@ export default async function CatalogIndexPage({ searchParams }: CatalogIndexPag
         itemListOrder: "https://schema.org/ItemListOrderAscending",
         itemListElement: categories.map((category, idx) => {
           const categoryUrl = `${origin}/catalog/${category.slug}`;
-          const prev = idx > 0 ? `${origin}/catalog/${categories[idx - 1]!.slug}` : undefined;
-          const next = idx < categories.length - 1 ? `${origin}/catalog/${categories[idx + 1]!.slug}` : undefined;
-
           return {
             "@type": "ListItem",
             position: idx + 1,
-            ...(prev ? { previousItem: prev } : {}),
-            ...(next ? { nextItem: next } : {}),
             item: {
               "@type": "Thing",
               name: category.name,
@@ -118,44 +138,101 @@ export default async function CatalogIndexPage({ searchParams }: CatalogIndexPag
         suppressHydrationWarning
       />
       <main className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-6">
-        <div className="mb-8 flex flex-col gap-3">
+        <div className="mb-8 flex flex-col gap-2">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-black/70">
             Каталог продукции
           </p>
           <h1 className="text-3xl font-black tracking-tight text-black">
-            Категории и товары
+            {q ? `Поиск: ${q}` : "Основные разделы"}
           </h1>
         </div>
 
         {q ? (
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-black">
-              Результаты поиска: {q}
-            </h2>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-black/60">
+                Найдено {total.toLocaleString("ru-RU")} позиций
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <Suspense fallback={null}>
+                  <ProductLayoutToggle value={layout} />
+                </Suspense>
+                <Suspense fallback={null}>
+                  <CatalogSortSelect value={sort} />
+                </Suspense>
+              </div>
+            </div>
+
+            <ActiveFilterChips
+              active={filters}
+              searchQuery={q}
+              sort={sort}
+              layout={layout}
+            />
+
+            {sectionHints.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                <span className="text-sm text-black/50">Искать в разделе:</span>
+                {sectionHints.map((hint) => (
+                  <Link
+                    key={hint.slug}
+                    href={`/catalog/${hint.slug}?q=${encodeURIComponent(q)}`}
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm hover:border-slate-400"
+                  >
+                    {hint.name}
+                    <span className="ml-1 text-black/40">({hint.count})</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+
             {results.length === 0 ? (
               <p className="rounded-2xl border border-slate-200 bg-white p-4 text-black/80">
                 Ничего не найдено. Попробуйте другой артикул или название.
               </p>
+            ) : layout === "list" ? (
+              <div className="flex flex-col gap-3">
+                {results.map((product) => (
+                  <ProductListRow key={product.sku} product={product} />
+                ))}
+              </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {results.map((product) => (
                   <ProductCard key={product.sku} product={product} />
                 ))}
               </div>
             )}
 
-            <div className="pt-4">
+            <CatalogPagination
+              page={page}
+              totalPages={totalPages}
+              hrefForPage={(nextPage) =>
+                buildCatalogHref("/catalog", {
+                  q,
+                  page: nextPage,
+                  sort,
+                  layout,
+                  filters,
+                })
+              }
+            />
+
+            <div className="pt-2">
               <Link href="/catalog" className="text-sm font-semibold text-black hover:text-black/80">
-                Сбросить поиск
+                К разделам каталога
               </Link>
             </div>
           </section>
         ) : (
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-black">Основные разделы</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {categories.map((category) => (
-                <CategoryCard key={category.id} category={category} />
+                <CategoryCard
+                  key={category.id}
+                  category={category}
+                  productCount={getSectionProductCount(category.id)}
+                />
               ))}
             </div>
           </section>

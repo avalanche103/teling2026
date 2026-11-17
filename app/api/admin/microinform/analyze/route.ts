@@ -26,6 +26,7 @@ export async function GET() {
     name: s.name,
     parent: s.parent,
     external_id: s.external_id,
+    selected_filters: s.metadata?.selected_filters || [],
   }));
 
   return NextResponse.json({

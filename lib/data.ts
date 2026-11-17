@@ -9,7 +9,16 @@ import type {
   SectionFacets,
   CharFacet,
   FacetItem,
+  ProductSort,
+  CatalogNavNode,
+  ActiveFilters,
+  ProductCharGroup,
 } from "./types";
+import {
+  isColorCharName,
+  normalizeCharValue,
+  normalizeColorValue,
+} from "./normalize-color";
 
 // ---- Module-level lazy caches ----
 
@@ -18,6 +27,7 @@ let _productsBySkuMap: Map<string, ProductRaw> | null = null;
 let _productsBySectionMap: Map<number, ProductRaw[]> | null = null;
 let _categoryTree: Category[] | null = null;
 let _sectionPopularImageMap: Map<number, { score: number; url: string }> | null = null;
+let _sectionProductCountMap: Map<number, number> | null = null;
 
 function isGitLfsPointer(text: string): boolean {
   return text.startsWith("version https://git-lfs.github.com/spec/v1");
@@ -26,6 +36,7 @@ function isGitLfsPointer(text: string): boolean {
 export function invalidateSectionCaches(): void {
   _categoryTree = null;
   _sectionPopularImageMap = null;
+  _sectionProductCountMap = null;
 }
 
 export function invalidateProductCaches(): void {
@@ -34,6 +45,7 @@ export function invalidateProductCaches(): void {
   _productsBySectionMap = null;
   _categoryTree = null;
   _sectionPopularImageMap = null;
+  _sectionProductCountMap = null;
 }
 
 function getSectionsRaw(): SectionRaw[] {
@@ -200,24 +212,23 @@ function getProductsBySectionMap(): Map<number, ProductRaw[]> {
 
 // ---- Category tree ----
 
-/** Fast thumb lookup: prefer metadata pictures, else only check local `_1.*` once. */
+/** Fast thumb lookup: local `_1.*` first, then metadata pictures (ssd.ru fallback). */
 function getProductThumbnailUrlFast(product: ProductRaw): string | null {
+  const sku = typeof product.sku === "string" ? product.sku.trim() : "";
+  if (sku) {
+    for (const ext of ["webp", "jpg", "jpeg", "png"]) {
+      const filename = `${sku}_1.${ext}`;
+      const abs = path.join(/* turbopackIgnore: true */ PUBLIC_IMAGES_DIR, filename);
+      if (existsSync(abs)) {
+        return `/images/${encodeURIComponent(filename)}`;
+      }
+    }
+  }
+
   const externalImages = (product.metadata?.pictures || []).filter(
     (url): url is string => typeof url === "string" && url.trim().length > 0,
   );
-  if (externalImages[0]) return externalImages[0];
-
-  const sku = typeof product.sku === "string" ? product.sku.trim() : "";
-  if (!sku) return null;
-
-  for (const ext of ["jpg", "webp", "jpeg", "png"]) {
-    const filename = `${sku}_1.${ext}`;
-    const abs = path.join(/* turbopackIgnore: true */ PUBLIC_IMAGES_DIR, filename);
-    if (existsSync(abs)) {
-      return `/images/${encodeURIComponent(filename)}`;
-    }
-  }
-  return null;
+  return externalImages[0] ?? null;
 }
 
 function scoreProductPopularity(product: ProductRaw, thumbnail: string | null): number {
@@ -275,8 +286,14 @@ function applyCategoryImages(roots: Category[]): void {
       const popularImage = getPopularImageForSectionIds(sectionIds);
       const sectionImage =
         typeof cat.imageUrl === "string" && cat.imageUrl.trim() ? cat.imageUrl.trim() : null;
+      const popularIsLocal = Boolean(popularImage?.startsWith("/images/"));
 
-      if (!sectionImage) {
+      // Prefer locally downloaded product thumbs over remote section art (ssd.ru).
+      if (popularIsLocal) {
+        cat.imageUrl = popularImage;
+        cat.fallbackImageUrl =
+          sectionImage && sectionImage !== popularImage ? sectionImage : null;
+      } else if (!sectionImage) {
         cat.imageUrl = popularImage;
         cat.fallbackImageUrl = null;
       } else {
@@ -400,6 +417,25 @@ function getAllDescendantIds(cat: Category): number[] {
 
 // ---- Product mapping ----
 
+function collectHighlights(p: ProductRaw): string[] {
+  const highlights: string[] = [];
+  const skipNames = new Set(
+    ["производитель", "бренд", "brand", "марка", "торговая марка"].map((s) => s.toLowerCase())
+  );
+  const groups = p.metadata?.chars ?? [];
+  const preferred = groups.find((g) => g.name?.trim() === "Характеристики") ?? groups[0];
+  for (const item of preferred?.items ?? []) {
+    const name = item.name?.trim();
+    const value = item.value?.trim();
+    if (!name || !value) continue;
+    if (skipNames.has(name.toLowerCase())) continue;
+    if (name.startsWith("-") || name.length > 28 || value.length > 24) continue;
+    highlights.push(`${name}: ${value}`);
+    if (highlights.length >= 2) break;
+  }
+  return highlights;
+}
+
 function rawToSummary(p: ProductRaw): ProductSummary {
   const sectionSlug = getSectionSlugByIdMap().get(p.section_id) || "";
   const sku = typeof p.sku === "string" ? p.sku : "";
@@ -415,6 +451,7 @@ function rawToSummary(p: ProductRaw): ProductSummary {
   const externalImages = (p.metadata?.pictures || []).filter(
     (url): url is string => typeof url === "string" && url.trim().length > 0,
   );
+  const brand = (p.metadata?.brand || p.vendor || "").trim();
   return {
     id: p.id,
     name,
@@ -426,11 +463,147 @@ function rawToSummary(p: ProductRaw): ProductSummary {
     price: p.price,
     currency: p.currency,
     currencyCode: p.currency_code,
-    brand: p.metadata?.brand || p.vendor || "",
+    brand: isPlaceholderBrand(brand) ? "" : brand,
     unit: p.metadata?.unit || "шт",
     type: p.metadata?.type || "",
     thumbnail: localImages[0] ?? externalImages[0] ?? null,
+    highlights: collectHighlights(p),
   };
+}
+
+function isPlaceholderBrand(brand: string): boolean {
+  return /^noname$/i.test(brand.trim());
+}
+
+function isJunkCharFacetName(name: string): boolean {
+  const t = name.trim();
+  if (!t) return true;
+  if (t.startsWith("-")) return true;
+  if (t.length > 48) return true;
+  return false;
+}
+
+function productDisplayName(p: ProductRaw): string {
+  if (typeof p.custom_name === "string" && p.custom_name.trim()) return p.custom_name.trim();
+  if (typeof p.name === "string" && p.name.trim()) return p.name.trim();
+  if (typeof p.original_name === "string" && p.original_name.trim()) return p.original_name.trim();
+  return "";
+}
+
+function sortProductsRaw(products: ProductRaw[], sort: ProductSort): ProductRaw[] {
+  if (sort === "relevance") return products;
+
+  const sorted = [...products];
+  sorted.sort((a, b) => {
+    if (sort === "price_asc" || sort === "price_desc") {
+      const ap = a.price > 0 ? a.price : Number.POSITIVE_INFINITY;
+      const bp = b.price > 0 ? b.price : Number.POSITIVE_INFINITY;
+      if (ap !== bp) return sort === "price_asc" ? ap - bp : bp - ap;
+      return productDisplayName(a).localeCompare(productDisplayName(b), "ru");
+    }
+    if (sort === "sku") {
+      return (a.sku || "").localeCompare(b.sku || "", "ru", { numeric: true });
+    }
+    return productDisplayName(a).localeCompare(productDisplayName(b), "ru");
+  });
+  return sorted;
+}
+
+function collectSectionProductsRaw(
+  sectionId: number,
+  includeDescendants: boolean
+): ProductRaw[] {
+  const bySection = getProductsBySectionMap();
+  let allProducts: ProductRaw[] = [];
+
+  if (includeDescendants) {
+    const cat = getCategoryById(sectionId);
+    const ids = cat ? getAllDescendantIds(cat) : [sectionId];
+    for (const id of ids) {
+      allProducts.push(...(bySection.get(id) ?? []));
+    }
+  } else {
+    allProducts = [...(bySection.get(sectionId) ?? [])];
+  }
+
+  return allProducts.filter(
+    (p) => typeof p.sku === "string" && p.sku.trim().length > 0
+  );
+}
+
+function applyProductFilters(
+  products: ProductRaw[],
+  options: {
+    search?: string;
+    brands?: string[];
+    priceMin?: number;
+    priceMax?: number;
+    charFilters?: Record<string, string[]>;
+  }
+): ProductRaw[] {
+  let allProducts = products;
+
+  const search = options.search?.trim();
+  if (search) {
+    const q = search.toLowerCase();
+    allProducts = allProducts.filter((p) => {
+      const name = typeof p.name === "string" ? p.name.toLowerCase() : "";
+      const customName = typeof p.custom_name === "string" ? p.custom_name.toLowerCase() : "";
+      const sku = typeof p.sku === "string" ? p.sku.toLowerCase() : "";
+      const brand = (p.metadata?.brand || "").toLowerCase();
+      return name.includes(q) || customName.includes(q) || sku.includes(q) || brand.includes(q);
+    });
+  }
+
+  if (options.brands && options.brands.length > 0) {
+    const brandSet = new Set(options.brands);
+    allProducts = allProducts.filter((p) => {
+      const b = (p.metadata?.brand || p.vendor || "").trim();
+      return brandSet.has(b);
+    });
+  }
+
+  if (options.priceMin !== undefined && options.priceMin > 0) {
+    allProducts = allProducts.filter((p) => p.price >= options.priceMin!);
+  }
+  if (options.priceMax !== undefined && options.priceMax > 0) {
+    allProducts = allProducts.filter((p) => p.price <= options.priceMax!);
+  }
+
+  if (options.charFilters && Object.keys(options.charFilters).length > 0) {
+    allProducts = allProducts.filter((p) => {
+      for (const [paramName, selectedValues] of Object.entries(options.charFilters!)) {
+        if (!selectedValues.length) continue;
+        const wanted = new Set(
+          selectedValues
+            .map((v) =>
+              isColorCharName(paramName)
+                ? normalizeColorValue(v) || v.trim()
+                : v.trim(),
+            )
+            .filter(Boolean),
+        );
+        let found = false;
+        outer: for (const group of p.metadata?.chars ?? []) {
+          for (const item of group.items) {
+            if (item.name?.trim() !== paramName) continue;
+            const raw = item.value?.trim() || "";
+            const normalized = isColorCharName(paramName)
+              ? normalizeColorValue(raw) || raw
+              : raw;
+            if (wanted.has(normalized) || wanted.has(raw)) {
+              found = true;
+              break outer;
+            }
+          }
+        }
+        if (!found) return false;
+      }
+      return true;
+    });
+  }
+
+  return allProducts;
 }
 
 function rawToProduct(p: ProductRaw): Product {
@@ -452,12 +625,28 @@ function rawToProduct(p: ProductRaw): Product {
     relatedSkus: p.metadata?.soputst || [],
     analogSkus: p.metadata?.analog || [],
     replacementSkus: p.metadata?.zamena || [],
-    chars: p.metadata?.chars || [],
+    chars: normalizeProductCharGroups(p.metadata?.chars || []),
     description: p.metadata?.description || "",
     externalUrl: p.metadata?.url || "",
     minQty: p.metadata?.minQty || 1,
     updatedAt: p.metadata?.updated || "",
   };
+}
+
+function normalizeProductCharGroups(
+  groups: ProductCharGroup[],
+): ProductCharGroup[] {
+  return groups.map((group) => ({
+    ...group,
+    items: (group.items || [])
+      .map((item) => {
+        const name = item.name?.trim() || "";
+        const value = normalizeCharValue(name, item.value);
+        if (!name || !value) return null;
+        return { name, value };
+      })
+      .filter((item): item is { name: string; value: string } => item != null),
+  }));
 }
 
 export function getProductBySku(sku: string): Product | null {
@@ -479,6 +668,7 @@ export interface GetSectionProductsOptions {
   priceMin?: number;
   priceMax?: number;
   charFilters?: Record<string, string[]>;
+  sort?: ProductSort;
 }
 
 export function getSectionProducts(
@@ -494,78 +684,18 @@ export function getSectionProducts(
     priceMin,
     priceMax,
     charFilters,
+    sort = "relevance",
   } = options;
 
-  const bySection = getProductsBySectionMap();
-  let allProducts: ProductRaw[] = [];
-
-  if (includeDescendants) {
-    const cat = getCategoryById(sectionId);
-    const ids = cat ? getAllDescendantIds(cat) : [sectionId];
-    for (const id of ids) {
-      allProducts.push(...(bySection.get(id) ?? []));
-    }
-  } else {
-    allProducts = bySection.get(sectionId) ?? [];
-  }
-
-  if (search) {
-    const q = search.toLowerCase();
-    allProducts = allProducts.filter(
-      (p) => {
-        const name = typeof p.name === "string" ? p.name.toLowerCase() : "";
-        const customName = typeof p.custom_name === "string" ? p.custom_name.toLowerCase() : "";
-        const sku = typeof p.sku === "string" ? p.sku.toLowerCase() : "";
-        const brand = (p.metadata?.brand || "").toLowerCase();
-        return name.includes(q) || customName.includes(q) || sku.includes(q) || brand.includes(q);
-      }
-    );
-  }
-
-  // Items without SKU cannot be opened in product route, hide them from UI listings.
-  allProducts = allProducts.filter(
-    (p) => typeof p.sku === "string" && p.sku.trim().length > 0
-  );
-
-  // Brand filter
-  if (brands && brands.length > 0) {
-    const brandSet = new Set(brands);
-    allProducts = allProducts.filter((p) => {
-      const b = (p.metadata?.brand || p.vendor || "").trim();
-      return brandSet.has(b);
-    });
-  }
-
-  // Price filter
-  if (priceMin !== undefined && priceMin > 0) {
-    allProducts = allProducts.filter((p) => p.price >= priceMin!);
-  }
-  if (priceMax !== undefined && priceMax > 0) {
-    allProducts = allProducts.filter((p) => p.price <= priceMax!);
-  }
-
-  // Dynamic char filters
-  if (charFilters && Object.keys(charFilters).length > 0) {
-    allProducts = allProducts.filter((p) => {
-      for (const [paramName, selectedValues] of Object.entries(charFilters)) {
-        if (!selectedValues.length) continue;
-        let found = false;
-        outer: for (const group of (p.metadata?.chars ?? [])) {
-          for (const item of group.items) {
-            if (
-              item.name?.trim() === paramName &&
-              selectedValues.includes(item.value?.trim())
-            ) {
-              found = true;
-              break outer;
-            }
-          }
-        }
-        if (!found) return false;
-      }
-      return true;
-    });
-  }
+  let allProducts = collectSectionProductsRaw(sectionId, includeDescendants);
+  allProducts = applyProductFilters(allProducts, {
+    search,
+    brands,
+    priceMin,
+    priceMax,
+    charFilters,
+  });
+  allProducts = sortProductsRaw(allProducts, sort);
 
   const total = allProducts.length;
   const start = (page - 1) * limit;
@@ -573,68 +703,166 @@ export function getSectionProducts(
   return { products: slice.map(rawToSummary), total };
 }
 
+function buildSectionProductCountMap(): Map<number, number> {
+  const map = new Map<number, number>();
+  const bySection = getProductsBySectionMap();
+
+  function walk(cat: Category): number {
+    let count = (bySection.get(cat.id) ?? []).filter(
+      (p) => typeof p.sku === "string" && p.sku.trim().length > 0
+    ).length;
+    for (const child of cat.children) {
+      count += walk(child);
+    }
+    map.set(cat.id, count);
+    return count;
+  }
+
+  for (const root of getCategoryTree()) walk(root);
+  return map;
+}
+
+export function getSectionProductCount(sectionId: number): number {
+  if (!_sectionProductCountMap) {
+    _sectionProductCountMap = buildSectionProductCountMap();
+  }
+  return _sectionProductCountMap.get(sectionId) ?? 0;
+}
+
+export function getCatalogNavTree(): CatalogNavNode[] {
+  const mapNode = (cat: Category): CatalogNavNode => ({
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+    productCount: getSectionProductCount(cat.id),
+    children: cat.children.map(mapNode),
+  });
+  return getRootCategories().map(mapNode);
+}
+
+function scoreProductForSearch(p: ProductRaw, variants: string[]): number {
+  const sku = normalizeForSearch(typeof p.sku === "string" ? p.sku : "");
+  const name = normalizeForSearch(typeof p.name === "string" ? p.name : "");
+  const customName = normalizeForSearch(typeof p.custom_name === "string" ? p.custom_name : "");
+  const brand = normalizeForSearch(p.metadata?.brand || "");
+  if (!sku) return 0;
+
+  let bestScore = 0;
+  for (const term of variants) {
+    if (!term) continue;
+
+    if (sku === term) {
+      bestScore = Math.max(bestScore, 120 + Math.min(term.length, 15));
+    } else if (sku.startsWith(term)) {
+      bestScore = Math.max(bestScore, 100 + Math.min(term.length, 12));
+    } else if (sku.includes(term)) {
+      bestScore = Math.max(bestScore, 80 + Math.min(term.length, 10));
+    }
+
+    if (name.startsWith(term)) {
+      bestScore = Math.max(bestScore, 65 + Math.min(term.length, 10));
+    } else if (name.includes(term)) {
+      bestScore = Math.max(bestScore, 45 + Math.min(term.length, 8));
+    }
+
+    if (customName.startsWith(term)) {
+      bestScore = Math.max(bestScore, 70 + Math.min(term.length, 10));
+    } else if (customName.includes(term)) {
+      bestScore = Math.max(bestScore, 50 + Math.min(term.length, 8));
+    }
+
+    if (brand.includes(term)) {
+      bestScore = Math.max(bestScore, 30 + Math.min(term.length, 6));
+    }
+  }
+  return bestScore;
+}
+
 export function searchProducts(
   query: string,
   limit = 24
 ): ProductSummary[] {
+  return searchProductsPaged(query, { page: 1, limit }).products;
+}
+
+export interface SearchProductsPagedOptions {
+  page?: number;
+  limit?: number;
+  sort?: ProductSort;
+  brands?: string[];
+  priceMin?: number;
+  priceMax?: number;
+}
+
+export function searchProductsPaged(
+  query: string,
+  options: SearchProductsPagedOptions = {}
+): {
+  products: ProductSummary[];
+  total: number;
+  sectionHints: Array<{ slug: string; name: string; count: number }>;
+} {
   const q = query.trim().toLowerCase();
-  if (!q) return [];
+  if (!q) return { products: [], total: 0, sectionHints: [] };
+
+  const {
+    page = 1,
+    limit = 24,
+    sort = "relevance",
+    brands,
+    priceMin,
+    priceMax,
+  } = options;
 
   const variants = buildSearchVariants(q);
   const scored: Array<{ p: ProductRaw; score: number }> = [];
 
   for (const p of getProductsRaw()) {
     if (!isProductVisible(p)) continue;
-
-    const sku = normalizeForSearch(typeof p.sku === "string" ? p.sku : "");
-    const name = normalizeForSearch(typeof p.name === "string" ? p.name : "");
-    const customName = normalizeForSearch(typeof p.custom_name === "string" ? p.custom_name : "");
-    const brand = normalizeForSearch(p.metadata?.brand || "");
-
-    // Product route requires SKU; skip broken data rows from search results.
-    if (!sku) continue;
-
-    let bestScore = 0;
-
-    for (const term of variants) {
-      if (!term) continue;
-
-      if (sku === term) {
-        bestScore = Math.max(bestScore, 120 + Math.min(term.length, 15));
-      } else if (sku.startsWith(term)) {
-        bestScore = Math.max(bestScore, 100 + Math.min(term.length, 12));
-      } else if (sku.includes(term)) {
-        bestScore = Math.max(bestScore, 80 + Math.min(term.length, 10));
-      }
-
-      if (name.startsWith(term)) {
-        bestScore = Math.max(bestScore, 65 + Math.min(term.length, 10));
-      } else if (name.includes(term)) {
-        bestScore = Math.max(bestScore, 45 + Math.min(term.length, 8));
-      }
-
-      if (customName.startsWith(term)) {
-        bestScore = Math.max(bestScore, 70 + Math.min(term.length, 10));
-      } else if (customName.includes(term)) {
-        bestScore = Math.max(bestScore, 50 + Math.min(term.length, 8));
-      }
-
-      if (brand.includes(term)) {
-        bestScore = Math.max(bestScore, 30 + Math.min(term.length, 6));
-      }
-    }
-
-    if (bestScore > 0) {
-      scored.push({ p, score: bestScore });
-    }
+    const score = scoreProductForSearch(p, variants);
+    if (score > 0) scored.push({ p, score });
   }
 
-  scored.sort((a, b) => {
-    if (b.score !== a.score) return b.score - a.score;
-    return a.p.id - b.p.id;
-  });
+  let filtered = scored.map((x) => x.p);
+  filtered = applyProductFilters(filtered, { brands, priceMin, priceMax });
 
-  return scored.slice(0, limit).map((x) => rawToSummary(x.p));
+  const scoreById = new Map(scored.map((x) => [x.p.id, x.score]));
+  if (sort === "relevance") {
+    filtered.sort((a, b) => {
+      const sa = scoreById.get(a.id) ?? 0;
+      const sb = scoreById.get(b.id) ?? 0;
+      if (sb !== sa) return sb - sa;
+      return a.id - b.id;
+    });
+  } else {
+    filtered = sortProductsRaw(filtered, sort);
+  }
+
+  const sectionCounts = new Map<string, { slug: string; name: string; count: number }>();
+  for (const p of filtered) {
+    const slug = getSectionSlugByIdMap().get(p.section_id) || "";
+    if (!slug) continue;
+    const prev = sectionCounts.get(slug);
+    if (prev) prev.count += 1;
+    else {
+      sectionCounts.set(slug, {
+        slug,
+        name: p.section_name || slug,
+        count: 1,
+      });
+    }
+  }
+  const sectionHints = [...sectionCounts.values()]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 4);
+
+  const total = filtered.length;
+  const start = (page - 1) * limit;
+  return {
+    products: filtered.slice(start, start + limit).map(rawToSummary),
+    total,
+    sectionHints,
+  };
 }
 
 function normalizeForSearch(value: string): string {
@@ -715,29 +943,70 @@ function translitLatToRu(input: string): string {
   return s;
 }
 
-export function getSectionFacets(sectionId: number): SectionFacets {
-  const bySection = getProductsBySectionMap();
-  let allProducts: ProductRaw[] = [];
-  const cat = getCategoryById(sectionId);
-  const ids = cat ? getAllDescendantIds(cat) : [sectionId];
-  for (const id of ids) {
-    allProducts.push(...(bySection.get(id) ?? []));
-  }
-  allProducts = allProducts.filter(
-    (p) => typeof p.sku === "string" && p.sku.trim().length > 0
-  );
+export interface GetSectionFacetsOptions {
+  search?: string;
+  active?: ActiveFilters;
+}
 
-  // Brands
+/** First number in a facet value: "8", "до 60 Вт", "61–120 Вт", "1,8 м". */
+function parseFacetNumber(value: string): number | null {
+  const m = value
+    .replace(/,/g, ".")
+    .match(/-?\d+(?:\.\d+)?/);
+  if (!m) return null;
+  const n = Number(m[0]);
+  return Number.isFinite(n) ? n : null;
+}
+
+function isOtherFacetValue(value: string): boolean {
+  const v = value.trim().toLowerCase();
+  return v === "другое" || v === "нет" || v === "—";
+}
+
+/** True when most values in a facet look numeric (ports, watts, U, meters…). */
+function isNumericFacetValues(values: string[]): boolean {
+  if (values.length < 2) return false;
+  let numeric = 0;
+  for (const value of values) {
+    if (isOtherFacetValue(value)) continue;
+    if (parseFacetNumber(value) != null) numeric += 1;
+  }
+  const considered = values.filter((v) => !isOtherFacetValue(v)).length;
+  return considered > 0 && numeric >= Math.ceil(considered * 0.7);
+}
+
+function compareFacetValues(
+  aValue: string,
+  bValue: string,
+  aCount: number,
+  bCount: number,
+  allValues: string[],
+): number {
+  if (isNumericFacetValues(allValues)) {
+    const aOther = isOtherFacetValue(aValue) ? 1 : 0;
+    const bOther = isOtherFacetValue(bValue) ? 1 : 0;
+    if (aOther !== bOther) return aOther - bOther;
+    const aNum = parseFacetNumber(aValue);
+    const bNum = parseFacetNumber(bValue);
+    if (aNum != null && bNum != null && aNum !== bNum) return aNum - bNum;
+    if (aNum != null && bNum == null) return -1;
+    if (aNum == null && bNum != null) return 1;
+    return aValue.localeCompare(bValue, "ru", { numeric: true });
+  }
+  return bCount - aCount;
+}
+
+function buildFacetsFromProducts(allProducts: ProductRaw[]): SectionFacets {
   const brandCounts = new Map<string, number>();
   for (const p of allProducts) {
     const brand = (p.metadata?.brand || p.vendor || "").trim();
-    if (brand) brandCounts.set(brand, (brandCounts.get(brand) ?? 0) + 1);
+    if (!brand || isPlaceholderBrand(brand)) continue;
+    brandCounts.set(brand, (brandCounts.get(brand) ?? 0) + 1);
   }
   const brands: FacetItem[] = [...brandCounts.entries()]
     .sort((a, b) => b[1] - a[1])
     .map(([value, count]) => ({ value, count }));
 
-  // Price range
   let priceMin = Infinity;
   let priceMax = 0;
   for (const p of allProducts) {
@@ -748,17 +1017,12 @@ export function getSectionFacets(sectionId: number): SectionFacets {
   }
   if (!isFinite(priceMin)) priceMin = 0;
 
-  // Char names that duplicate the brands facet — skip to avoid two "Производитель" groups
   const BRAND_CHAR_NAMES = new Set(
     ["производитель", "бренд", "brand", "марка", "торговая марка"].map((s) =>
       s.toLowerCase()
     )
   );
 
-  // Dynamic char facets — flatten all char items across products.
-  // Names that appear in any synthetic «Характеристики» group are counted
-  // only from that group, so manufacturer free-text specs (Питание, Порты…)
-  // do not pollute filter enums or blow past the 2–30 distinct limit.
   const sectionSyntheticNames = new Set<string>();
   for (const p of allProducts) {
     for (const group of p.metadata?.chars ?? []) {
@@ -776,11 +1040,15 @@ export function getSectionFacets(sectionId: number): SectionFacets {
       const isSynthetic = group.name?.trim() === "Характеристики";
       for (const item of group.items) {
         const name = item.name?.trim();
-        const value = item.value?.trim();
-        if (!name || !value) continue;
+        const rawValue = item.value?.trim();
+        if (!name || !rawValue) continue;
+        if (isJunkCharFacetName(name)) continue;
         if (sectionSyntheticNames.has(name) && !isSynthetic) continue;
-        // Skip char names that are already covered by the brands facet
         if (BRAND_CHAR_NAMES.has(name.toLowerCase())) continue;
+        const value = isColorCharName(name)
+          ? normalizeColorValue(rawValue)
+          : rawValue;
+        if (!value) continue;
         if (!charMap.has(name)) charMap.set(name, new Map());
         const vm = charMap.get(name)!;
         vm.set(value, (vm.get(value) ?? 0) + 1);
@@ -790,26 +1058,14 @@ export function getSectionFacets(sectionId: number): SectionFacets {
 
   const chars: CharFacet[] = [];
   for (const [name, valMap] of charMap.entries()) {
-    // Only include facets with 2–30 distinct values
     if (valMap.size < 2 || valMap.size > 30) continue;
-    const values: FacetItem[] = [...valMap.entries()]
-      .sort((a, b) => {
-        if (name === "Порты") {
-          const aOther = a[0] === "Другое" ? 1 : 0;
-          const bOther = b[0] === "Другое" ? 1 : 0;
-          if (aOther !== bOther) return aOther - bOther;
-          const aNum = Number(a[0]);
-          const bNum = Number(b[0]);
-          if (Number.isFinite(aNum) && Number.isFinite(bNum)) return aNum - bNum;
-          return a[0].localeCompare(b[0], "ru");
-        }
-        return b[1] - a[1];
-      })
+    const entries = [...valMap.entries()];
+    const values: FacetItem[] = entries
+      .sort((a, b) => compareFacetValues(a[0], b[0], a[1], b[1], entries.map((e) => e[0])))
       .map(([value, count]) => ({ value, count }));
     chars.push({ name, values });
   }
 
-  // Prefer synthetic filter facets, then coverage; keep enough for whitelists.
   chars.sort((a, b) => {
     const aSyn = sectionSyntheticNames.has(a.name) ? 1 : 0;
     const bSyn = sectionSyntheticNames.has(b.name) ? 1 : 0;
@@ -820,6 +1076,73 @@ export function getSectionFacets(sectionId: number): SectionFacets {
   });
 
   return { brands, priceMin, priceMax, chars: chars.slice(0, 24) };
+}
+
+/**
+ * Facets with optional narrowing: counts shrink based on other active filters
+ * (classic e-commerce facet behavior; each dimension ignores its own selection).
+ */
+export function getSectionFacets(
+  sectionId: number,
+  options: GetSectionFacetsOptions = {}
+): SectionFacets {
+  const base = collectSectionProductsRaw(sectionId, true);
+  const search = options.search?.trim() || "";
+  const active = options.active;
+
+  if (!active) {
+    return buildFacetsFromProducts(
+      applyProductFilters(base, { search })
+    );
+  }
+
+  const withoutBrands = applyProductFilters(base, {
+    search,
+    priceMin: active.priceMin ?? undefined,
+    priceMax: active.priceMax ?? undefined,
+    charFilters: active.charFilters,
+  });
+  const withoutPrice = applyProductFilters(base, {
+    search,
+    brands: active.brands,
+    charFilters: active.charFilters,
+  });
+  const brandFacets = buildFacetsFromProducts(withoutBrands);
+  const priceFacets = buildFacetsFromProducts(withoutPrice);
+
+  const charNames = new Set<string>([
+    ...Object.keys(active.charFilters),
+    ...brandFacets.chars.map((c) => c.name),
+  ]);
+
+  const chars: CharFacet[] = [];
+  for (const charName of charNames) {
+    const otherChars = { ...active.charFilters };
+    delete otherChars[charName];
+    const subset = applyProductFilters(base, {
+      search,
+      brands: active.brands,
+      priceMin: active.priceMin ?? undefined,
+      priceMax: active.priceMax ?? undefined,
+      charFilters: otherChars,
+    });
+    const built = buildFacetsFromProducts(subset);
+    const facet = built.chars.find((c) => c.name === charName);
+    if (facet) chars.push(facet);
+  }
+
+  chars.sort((a, b) => {
+    const sa = a.values.reduce((s, v) => s + v.count, 0);
+    const sb = b.values.reduce((s, v) => s + v.count, 0);
+    return sb - sa;
+  });
+
+  return {
+    brands: brandFacets.brands,
+    priceMin: priceFacets.priceMin,
+    priceMax: priceFacets.priceMax,
+    chars: chars.slice(0, 24),
+  };
 }
 
 /** Returns all section external_ids (slugs) for static params generation */

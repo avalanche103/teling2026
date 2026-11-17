@@ -31,6 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
 DB_PATH = BASE_DIR / "ssd_catalog.db"
 SETTINGS_PATH = BASE_DIR / "settings.json"
+SECTION_OVERRIDES_PATH = BASE_DIR / "section_overrides.json"
 DEFAULT_EXPORT_DIR = BASE_DIR / "export"
 DEFAULT_RUB_TO_BYN_RATE = Decimal("0.036")
 VAT_RATE = Decimal("0.20")
@@ -316,3 +317,74 @@ def apply_product_overrides(
         "vendor_overridden": bool(effective_vendor and effective_vendor != vendor),
         "price_overridden": to_float(price_override) is not None,
     }
+
+
+def read_section_overrides() -> dict[int, dict[str, Any]]:
+    """Load local section name/parent overrides that must survive SSD reimport/merge."""
+    if not SECTION_OVERRIDES_PATH.exists():
+        return {}
+    try:
+        with open(SECTION_OVERRIDES_PATH, encoding="utf-8") as file:
+            raw = json.load(file)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+
+    result: dict[int, dict[str, Any]] = {}
+    for key, value in raw.items():
+        try:
+            sid = int(key)
+        except (TypeError, ValueError):
+            continue
+        if not isinstance(value, dict):
+            continue
+        result[sid] = value
+    return result
+
+
+def apply_section_overrides(
+    sections: list[dict[str, Any]],
+    overrides: dict[int, dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    """Apply custom_name / custom_parent to exported/site sections in-place copy."""
+    ov = overrides if overrides is not None else read_section_overrides()
+    if not ov:
+        return sections
+
+    by_id = {s.get("id"): s for s in sections if isinstance(s.get("id"), int)}
+    out: list[dict[str, Any]] = []
+    for section in sections:
+        sid = section.get("id")
+        if not isinstance(sid, int) or sid not in ov:
+            out.append(section)
+            continue
+
+        patch = ov[sid]
+        updated = dict(section)
+        meta = dict(updated.get("metadata") or {})
+
+        custom_name = patch.get("custom_name")
+        if isinstance(custom_name, str) and custom_name.strip():
+            updated["name"] = custom_name.strip()
+            meta["name"] = custom_name.strip()
+
+        custom_parent = patch.get("custom_parent")
+        if custom_parent is not None:
+            try:
+                parent_id = int(custom_parent)
+            except (TypeError, ValueError):
+                parent_id = None
+            if parent_id is not None:
+                updated["parent"] = parent_id
+                meta["parent_id"] = parent_id
+                parent = by_id.get(parent_id)
+                parent_level = None
+                if parent and isinstance(parent.get("metadata"), dict):
+                    parent_level = parent["metadata"].get("level")
+                if isinstance(parent_level, int):
+                    meta["level"] = parent_level + 1
+
+        updated["metadata"] = meta
+        out.append(updated)
+    return out

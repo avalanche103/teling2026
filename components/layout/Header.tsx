@@ -3,9 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ClipboardList, Menu, Phone, X } from "lucide-react";
+import { ClipboardList, Menu, Phone, Search, X } from "lucide-react";
 import { SearchAutocomplete } from "@/components/layout/SearchAutocomplete";
+import { CatalogMegaMenu } from "@/components/catalog/CatalogMegaMenu";
 import { useRequestCart } from "@/components/request/RequestCartProvider";
+import type { CatalogNavNode } from "@/lib/types";
 
 function CountBadge({
   count,
@@ -32,14 +34,18 @@ function CountBadge({
   );
 }
 
-export function Header() {
+interface HeaderProps {
+  catalogNav?: CatalogNavNode[];
+}
+
+export function Header({ catalogNav = [] }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const { lineCount, ready } = useRequestCart();
   const count = ready ? lineCount : 0;
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-black shadow-sm backdrop-blur">
-      {/* Top bar */}
       <div className="hidden border-b border-slate-700 bg-slate-900 text-slate-100 md:block">
         <div className="container mx-auto flex items-center justify-between px-4 py-1.5 text-sm text-slate-200">
           <span>г. Минск, ул. Шафарнянская, 11, офис 33</span>
@@ -56,10 +62,8 @@ export function Header() {
         </div>
       </div>
 
-      {/* Main nav */}
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <Image
               src="/teling-circle.jpg"
@@ -74,20 +78,19 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Search bar (desktop) */}
           <SearchAutocomplete containerClassName="relative hidden max-w-xl flex-1 md:flex" />
 
-          {/* Desktop nav links */}
           <nav className="hidden shrink-0 items-center gap-6 text-sm font-semibold md:flex">
             <Link href="/" className="transition-colors hover:text-black/70">
               Главная
             </Link>
-            <Link
-              href="/catalog"
-              className="transition-colors hover:text-black/70"
-            >
-              Каталог
-            </Link>
+            {catalogNav.length > 0 ? (
+              <CatalogMegaMenu roots={catalogNav} />
+            ) : (
+              <Link href="/catalog" className="transition-colors hover:text-black/70">
+                Каталог
+              </Link>
+            )}
             <Link
               href="/#contacts"
               className="transition-colors hover:text-black/70"
@@ -105,8 +108,17 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Mobile: request icon + burger — badge on icon corner (compact, always visible) */}
           <div className="flex items-center gap-1 md:hidden">
+            <button
+              className="rounded-lg p-2 text-black"
+              onClick={() => {
+                setMobileSearchOpen((v) => !v);
+                setMenuOpen(false);
+              }}
+              aria-label="Поиск"
+            >
+              {mobileSearchOpen ? <X className="h-6 w-6" /> : <Search className="h-6 w-6" />}
+            </button>
             <Link
               href="/request"
               className="relative rounded-lg p-2 text-black"
@@ -117,7 +129,10 @@ export function Header() {
             </Link>
             <button
               className="rounded-lg p-2 text-black"
-              onClick={() => setMenuOpen(!menuOpen)}
+              onClick={() => {
+                setMenuOpen(!menuOpen);
+                setMobileSearchOpen(false);
+              }}
               aria-label="Меню"
             >
               {menuOpen ? (
@@ -130,16 +145,20 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {mobileSearchOpen && (
+        <div className="border-t border-slate-200 bg-white px-4 py-3 md:hidden">
+          <SearchAutocomplete
+            placeholder="Поиск по названию или артикулу…"
+            containerClassName="relative"
+            inputClassName="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 pr-10 text-sm text-black placeholder-slate-400 outline-none"
+            onNavigate={() => setMobileSearchOpen(false)}
+          />
+        </div>
+      )}
+
       {menuOpen && (
         <div className="border-t border-slate-200 bg-white px-4 pb-4 md:hidden">
-          <SearchAutocomplete
-            placeholder="Поиск…"
-            containerClassName="relative mt-4 mb-3"
-            inputClassName="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 pr-10 text-sm text-black placeholder-slate-400 outline-none"
-            onNavigate={() => setMenuOpen(false)}
-          />
-          <nav className="flex flex-col gap-3 text-sm font-medium">
+          <nav className="mt-3 flex flex-col gap-3 text-sm font-medium">
             <Link
               href="/"
               onClick={() => setMenuOpen(false)}
@@ -154,6 +173,16 @@ export function Header() {
             >
               Каталог
             </Link>
+            {catalogNav.slice(0, 4).map((root) => (
+              <Link
+                key={root.id}
+                href={`/catalog/${root.slug}`}
+                onClick={() => setMenuOpen(false)}
+                className="py-1 pl-3 text-black/70 hover:text-black"
+              >
+                {root.name}
+              </Link>
+            ))}
             <Link
               href="/#contacts"
               onClick={() => setMenuOpen(false)}

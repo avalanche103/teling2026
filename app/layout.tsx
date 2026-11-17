@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
+import { Onest } from "next/font/google";
 import { ConsentAwareAnalytics } from "@/components/analytics/ConsentAwareAnalytics";
 import "./generated-globals.css";
+
+const onest = Onest({
+  subsets: ["cyrillic", "latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-onest",
+  display: "swap",
+});
 
 function getSiteUrl(): URL {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.SITE_URL?.trim() || "https://teling.by";
@@ -52,7 +60,7 @@ export default function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID?.trim();
 
   return (
-    <html lang="ru" className="h-full antialiased">
+    <html lang="ru" className={`${onest.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
         {children}
         {gaId ? <ConsentAwareAnalytics gaId={gaId} /> : null}

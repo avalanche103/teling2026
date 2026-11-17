@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CategoryCard } from "@/components/catalog/CategoryCard";
-import { getRootCategories } from "@/lib/data";
+import { getRootCategories, getSectionProductCount } from "@/lib/data";
 import { getContentBlock } from "@/lib/content";
 import type { ContactsContent } from "@/lib/types";
 
@@ -140,7 +140,11 @@ export default async function HomePage() {
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {topCategories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+            <CategoryCard
+              key={category.id}
+              category={category}
+              productCount={getSectionProductCount(category.id)}
+            />
           ))}
         </div>
       </section>

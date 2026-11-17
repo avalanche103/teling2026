@@ -9,6 +9,7 @@ from pathlib import Path
 from catalog_utils import (
     DEFAULT_EXPORT_DIR,
     apply_product_overrides,
+    apply_section_overrides,
     build_export_pricing,
     ensure_product_overrides_table,
     extract_offer_fields,
@@ -76,6 +77,7 @@ def export_sections():
                 "external_id": external_id,
                 "metadata": safe_json_loads(metadata, {}),
             })
+        sections = apply_section_overrides(sections)
         with open(EXPORT_DIR / "sections.json", "w", encoding="utf-8") as f:
             json.dump(sections, f, ensure_ascii=False, indent=2)
         print(f"Exported {len(sections)} sections to {EXPORT_DIR / 'sections.json'}")
@@ -241,6 +243,14 @@ def main():
         "--output-dir",
         help="Папка для JSON-файлов (относительно ssd-admin-app или абсолютный путь внутри проекта)",
     )
+    parser.add_argument(
+        "--apply-sections-to-site",
+        action="store_true",
+        help=(
+            "После экспорта безопасно смержить разделы в data/sections.json "
+            "(сохраняет Microinform/local-only и selected_filters)"
+        ),
+    )
     args = parser.parse_args()
 
     export_dir = configure_export_dir(args.output_dir)
@@ -249,6 +259,21 @@ def main():
     export_products()
     export_catalog_tree()
     print(f"Export complete. Files in '{export_dir}' directory.")
+
+    if args.apply_sections_to_site:
+        from merge_sections import apply_ssd_sections_to_site
+
+        stats = apply_ssd_sections_to_site()
+        print("Merged SSD sections into site data/sections.json:")
+        print(
+            f"  added={stats['added']} updated={stats['updated_count']} "
+            f"local_only={stats['local_only']} conflicts={stats['skipped_conflicts']}"
+        )
+        if stats["skipped_conflicts"]:
+            raise SystemExit(
+                "SSD export claimed Microinform-owned section ids: "
+                f"{stats['skipped_conflicts']}"
+            )
 
 
 if __name__ == "__main__":

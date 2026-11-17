@@ -127,8 +127,18 @@ export function readSections(): SectionRaw[] {
   return JSON.parse(readFileSync(SECTIONS_PATH, "utf-8")) as SectionRaw[];
 }
 
+/**
+ * Write sections without dropping any previously existing ids.
+ * Microinform apply may append/update entries, but must never wipe SSD/local sections
+ * if a caller accidentally passes a partial list.
+ */
 export function writeSections(sections: SectionRaw[]): void {
-  writeFileSync(SECTIONS_PATH, JSON.stringify(sections, null, 2), "utf-8");
+  const previous = existsSync(SECTIONS_PATH) ? readSections() : [];
+  const byId = new Map<number, SectionRaw>();
+  for (const section of previous) byId.set(section.id, section);
+  for (const section of sections) byId.set(section.id, section);
+  const merged = [...byId.values()].sort((a, b) => a.id - b.id);
+  writeFileSync(SECTIONS_PATH, JSON.stringify(merged, null, 2), "utf-8");
 }
 
 export function readSsdSkuSet(): Set<string> {

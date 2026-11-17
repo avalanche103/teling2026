@@ -6,7 +6,12 @@ import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductCharacteristics } from "@/components/product/ProductCharacteristics";
 import { ViewedProducts } from "@/components/product/ViewedProducts";
 import { ProductAddToRequest } from "@/components/request/ProductAddToRequest";
-import { getCategoryById, getProductBySku, getProductSummaryBySku } from "@/lib/data";
+import {
+  getCategoryAncestors,
+  getCategoryById,
+  getProductBySku,
+  getProductSummaryBySku,
+} from "@/lib/data";
 import { formatPrice, formatPriceValue, hasPrice, normalizeCurrency } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -86,6 +91,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const origin = getSiteOrigin();
 
   const category = getCategoryById(product.sectionId);
+  const ancestors = category ? getCategoryAncestors(category.id) : [];
+  const crumbCategories = category ? [...ancestors, category] : [];
   const showVatDetails = hasPrice(product.price);
   const maxCharRows = product.chars.reduce(
     (max, group) => Math.max(max, group.items.length),
@@ -148,29 +155,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
         name: "Каталог",
         item: `${origin}/catalog`,
       },
-      ...(category
-        ? [
-            {
-              "@type": "ListItem",
-              position: 3,
-              name: category.name,
-              item: `${origin}/catalog/${category.slug}`,
-            },
-            {
-              "@type": "ListItem",
-              position: 4,
-              name: product.name,
-              item: `${origin}${canonicalPath}`,
-            },
-          ]
-        : [
-            {
-              "@type": "ListItem",
-              position: 3,
-              name: product.name,
-              item: `${origin}${canonicalPath}`,
-            },
-          ]),
+      ...crumbCategories.map((cat, idx) => ({
+        "@type": "ListItem",
+        position: idx + 3,
+        name: cat.name,
+        item: `${origin}/catalog/${cat.slug}`,
+      })),
+      {
+        "@type": "ListItem",
+        position: crumbCategories.length + 3,
+        name: product.name,
+        item: `${origin}${canonicalPath}`,
+      },
     ],
   };
 
@@ -191,14 +187,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <Link href="/" className="hover:text-black">Главная</Link>
         <span>/</span>
         <Link href="/catalog" className="hover:text-black">Каталог</Link>
-        {category && (
-          <>
+        {crumbCategories.map((cat) => (
+          <span key={cat.id} className="contents">
             <span>/</span>
-            <Link href={`/catalog/${category.slug}`} className="hover:text-black">
-              {category.name}
+            <Link href={`/catalog/${cat.slug}`} className="hover:text-black">
+              {cat.name}
             </Link>
-          </>
-        )}
+          </span>
+        ))}
         <span>/</span>
         <span className="font-semibold text-black">{product.sku}</span>
       </div>
@@ -300,7 +296,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {relatedProducts.length > 0 && (
             <div>
               <h2 className="mb-4 text-xl font-black text-black">Сопутствующие товары</h2>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {relatedProducts.slice(0, 8).map((item) => (
                   <ProductCard key={`related-${item.sku}`} product={item} />
                 ))}
@@ -311,7 +307,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {similarProducts.length > 0 && (
             <div>
               <h2 className="mb-4 text-xl font-black text-black">Похожие товары</h2>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {similarProducts.slice(0, 8).map((item) => (
                   <ProductCard key={`similar-${item.sku}`} product={item} />
                 ))}

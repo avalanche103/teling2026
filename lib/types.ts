@@ -15,6 +15,8 @@ export interface SectionRaw {
     parent_id: number | null;
     picture: string;
     selected_filters?: string[];
+    /** Set on sections created by Microinform sync. */
+    source?: string;
   };
 }
 
@@ -78,6 +80,10 @@ export interface ProductRaw {
     soputst: string[];
     chars: ProductCharGroup[];
     description: string;
+    /** Pending Microinform review queue — hidden until published. */
+    import_status?: "new";
+    /** Present in catalog but missing from the latest successful price apply. */
+    absent_from_price?: boolean;
   };
 }
 
@@ -96,6 +102,8 @@ export interface Category {
   children: Category[];
 }
 
+export type ProductSort = "relevance" | "price_asc" | "price_desc" | "name" | "sku";
+
 /** Lightweight card representation of a product (list / grid views) */
 export interface ProductSummary {
   id: number;
@@ -112,6 +120,17 @@ export interface ProductSummary {
   unit: string;
   type: string;
   thumbnail: string | null; // first picture URL (external)
+  /** Short char snippets for list cards */
+  highlights?: string[];
+}
+
+/** Compact tree node for header mega-menu / catalog index */
+export interface CatalogNavNode {
+  id: number;
+  name: string;
+  slug: string;
+  productCount: number;
+  children: CatalogNavNode[];
 }
 
 /** Full product representation (detail page) */

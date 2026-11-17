@@ -14,36 +14,51 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-      <Link href={href} className="relative block h-44 bg-slate-100">
+      <Link href={href} className="relative block min-h-[220px] bg-slate-100">
         {product.thumbnail ? (
           <Image
             src={product.thumbnail}
             alt={product.name}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
-            className="object-cover transition duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-contain p-2 transition duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-slate-400">
-            Нет фото
+          <div className="flex min-h-[220px] flex-col items-center justify-center gap-1 px-4 text-center">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Фото скоро
+            </span>
+            <span className="line-clamp-2 text-xs text-slate-400">{product.sku}</span>
           </div>
         )}
       </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-black/70">
-          Артикул: {product.sku}
+        <p className="font-mono text-xs font-semibold tracking-wide text-black/70">
+          {product.sku}
         </p>
 
-        <Link href={href}>
-          <h3 className="line-clamp-3 text-sm font-semibold text-black hover:underline">
+        <Link href={href} title={product.name}>
+          <h3 className="line-clamp-2 text-base font-semibold text-black hover:underline">
             {product.name}
           </h3>
         </Link>
 
-        <p className="mt-auto text-sm text-black/80">{product.brand}</p>
+        {product.brand ? (
+          <p className="text-sm text-black/80">{product.brand}</p>
+        ) : null}
 
-        <div className="rounded-xl bg-slate-100 px-3 py-2">
+        {product.highlights && product.highlights.length > 0 ? (
+          <ul className="space-y-0.5 text-xs text-black/55">
+            {product.highlights.map((line) => (
+              <li key={line} className="truncate" title={line}>
+                {line}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        <div className="mt-auto rounded-xl bg-slate-100 px-3 py-2 text-center">
           <span className="text-lg font-bold text-black">
             {formatPrice(product.price, product.currency)}
           </span>

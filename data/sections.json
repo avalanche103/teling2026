@@ -687,7 +687,7 @@
     "metadata": {
       "id": 324,
       "name": "Шнуры оптические (патч-корды)",
-      "sort": 1001,
+      "sort": 1008,
       "code": "shnury-opticheskie-patch-kordy",
       "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/shnury-opticheskie-patch-kordy/",
       "level": 3,
@@ -697,13 +697,13 @@
   },
   {
     "id": 325,
-    "name": "Шнуры оптические (пигтейлы)",
+    "name": "Шнуры оптические (пигтейлы) HS",
     "parent": 288,
     "external_id": "shnury-opticheskie-pigteyly-3015",
     "metadata": {
       "id": 325,
-      "name": "Шнуры оптические (пигтейлы)",
-      "sort": 1002,
+      "name": "Шнуры оптические (пигтейлы) HS",
+      "sort": 1009,
       "code": "shnury-opticheskie-pigteyly-3015",
       "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/shnury-opticheskie-pigteyly-3015/",
       "level": 3,
@@ -719,7 +719,7 @@
     "metadata": {
       "id": 326,
       "name": "Адаптеры оптические",
-      "sort": 1003,
+      "sort": 1002,
       "code": "adaptery-opticheskie-3016",
       "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/adaptery-opticheskie-3016/",
       "level": 3,
@@ -735,7 +735,7 @@
     "metadata": {
       "id": 327,
       "name": "Оптические разветвители (сплиттеры)",
-      "sort": 1004,
+      "sort": 1005,
       "code": "opticheskie-razvetviteli-splittery",
       "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/opticheskie-razvetviteli-splittery/",
       "level": 3,
@@ -751,7 +751,7 @@
     "metadata": {
       "id": 328,
       "name": "Претерминированные кабельные сборки",
-      "sort": 1005,
+      "sort": 1006,
       "code": "preterminirovannye-kabelnye-sborki-3018",
       "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/preterminirovannye-kabelnye-sborki-3018/",
       "level": 3,
@@ -767,9 +767,9 @@
     "metadata": {
       "id": 329,
       "name": "Абонентские подвесные дроп-кабели (патч-корды)",
-      "sort": 1006,
+      "sort": 1001,
       "code": "abonentskie-podvesnye-drop-kabeli-patch-kordy",
-      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/abonentskie-podvesnye-drop-kabeli-patch-kordy/",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/abonentskie-podvesnye-drop-kabeli-patch-kordy/",
       "level": 3,
       "parent_id": 288,
       "picture": "https://ssd.ru/upload/resta.ssd/53e/hkl797tbiq3ysndfimacy916knqqweck/P1010027.webp"
@@ -783,7 +783,7 @@
     "metadata": {
       "id": 330,
       "name": "Аттенюаторы оптические",
-      "sort": 1007,
+      "sort": 1003,
       "code": "attenyuatory_opticheskie",
       "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/attenyuatory_opticheskie/",
       "level": 3,
@@ -799,7 +799,7 @@
     "metadata": {
       "id": 331,
       "name": "Механические соединители и неполируемые коннекторы",
-      "sort": 1008,
+      "sort": 1004,
       "code": "mekhanicheskie_soediniteli_i_nepoliruemye_konnektory",
       "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/mekhanicheskie_soediniteli_i_nepoliruemye_konnektory/",
       "level": 3,
@@ -1784,6 +1784,22 @@
     }
   },
   {
+    "id": 452,
+    "name": "Аксессуары для кабельных муфт",
+    "parent": 287,
+    "external_id": "aksessuary_dlya_kabelnykh_muft",
+    "metadata": {
+      "id": 452,
+      "name": "Аксессуары для кабельных муфт",
+      "sort": 1002,
+      "code": "aksessuary_dlya_kabelnykh_muft",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/termousazhivaemye-kabelnye-mufty-i-aksessuary/aksessuary_dlya_kabelnykh_muft/",
+      "level": 3,
+      "parent_id": 287,
+      "picture": "https://ssd.ru/upload/resta.ssd/480/ahdj0ab1mubv3cy8gejuzaxmfkw3zak3/01.webp"
+    }
+  },
+  {
     "id": 453,
     "name": "Муфты кабельные универсальные для ЖД",
     "parent": 294,
@@ -2580,7 +2596,7 @@
       "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/shkafy_klimaticheskie/",
       "level": 3,
       "parent_id": 258,
-      "picture": "https://ssd.ru/upload/resta.ssd/fc8/p5llcq10mhj11u70eygbzd02vm4l1ny1/130411_00841_OpenDoor_Front.webp"
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/c33/okgm9xjzrjnvoqkia4igf3oi67wfxn3v/96000_960_1/3.webp"
     }
   },
   {
@@ -2761,18 +2777,30 @@
   },
   {
     "id": 517,
-    "name": "Трансиверы",
+    "name": "SFP модули",
     "parent": 293,
     "external_id": "sfp_moduli",
     "metadata": {
       "id": 517,
-      "name": "Трансиверы",
-      "sort": 800,
+      "name": "SFP модули",
+      "sort": 1001,
       "code": "sfp_moduli",
       "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/aktivnoe-setevoe-oborudovanie/sfp_moduli/",
       "level": 3,
       "parent_id": 293,
-      "picture": "https://ssd.ru/upload/resta.ssd/aa9/gfu0qota7k2wsrbigylt0nz2ug9lh188/01.webp"
+      "picture": "https://ssd.ru/upload/resta.ssd/aa9/gfu0qota7k2wsrbigylt0nz2ug9lh188/01.webp",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Форм-фактор",
+        "char:Скорость",
+        "char:Среда",
+        "char:Разъем",
+        "char:Дальность",
+        "char:WDM",
+        "char:Исполнение"
+      ]
     }
   },
   {
@@ -2783,12 +2811,23 @@
     "metadata": {
       "id": 518,
       "name": "Медиаконвертеры",
-      "sort": 700,
+      "sort": 1002,
       "code": "mediakonvertery",
       "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/aktivnoe-setevoe-oborudovanie/mediakonvertery/",
       "level": 3,
       "parent_id": 293,
-      "picture": "https://ssd.ru/upload/resta.ssd/7dc/g5w2cxjnwcg3wcqk9kug869niup2th20/01.webp"
+      "picture": "https://ssd.ru/upload/resta.ssd/7dc/g5w2cxjnwcg3wcqk9kug869niup2th20/01.webp",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Скорость",
+        "char:Оптика",
+        "char:Волокно",
+        "char:WDM",
+        "char:Дальность",
+        "char:Слоты"
+      ]
     }
   },
   {
@@ -3016,6 +3055,22 @@
     }
   },
   {
+    "id": 536,
+    "name": "Лотки кабеленесущие",
+    "parent": 279,
+    "external_id": "lotki_kabelenesushchie",
+    "metadata": {
+      "id": 536,
+      "name": "Лотки кабеленесущие",
+      "sort": 1001,
+      "code": "lotki_kabelenesushchie",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/kabelenesushchie-sistemy/lotki_kabelenesushchie/",
+      "level": 3,
+      "parent_id": 279,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
     "id": 544,
     "name": "Модульное заземление",
     "parent": 280,
@@ -3156,7 +3211,7 @@
       "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/instrument_dlya_vitoy_pary_i_koaksialnogo_kabelya/",
       "level": 3,
       "parent_id": 482,
-      "picture": "https://ssd.ru/upload/resta.ssd/7a0/bt9sij8mx1lqm5c97w1oshl924mb1h95/171575164.webp"
+      "picture": "https://ssd.ru/upload/resta.ssd/ed6/3ta5sbzob2nwuxy8zffkutlxnqvrnqhc/Krimper.webp"
     }
   },
   {
@@ -3172,7 +3227,7 @@
       "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/nozhnitsy/",
       "level": 3,
       "parent_id": 482,
-      "picture": "https://ssd.ru"
+      "picture": "https://ssd.ru/upload/resta.ssd/7cf/6gw5n2xt2hp8rvl9w6ndzwswb0h9hee2/Nozhnitsy.webp"
     }
   },
   {
@@ -3204,7 +3259,7 @@
       "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/passatizhi_i_ploskogubtsy/",
       "level": 3,
       "parent_id": 482,
-      "picture": "https://ssd.ru"
+      "picture": "https://ssd.ru/upload/resta.ssd/4c5/9juawpkobqd8vr42jkyl1ijgm21kfk6i/Ploskogubtsy.webp"
     }
   },
   {
@@ -3220,7 +3275,7 @@
       "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/kleshchi/",
       "level": 3,
       "parent_id": 482,
-      "picture": "https://ssd.ru"
+      "picture": "https://ssd.ru/upload/resta.ssd/501/covolk1w4q4z7rbbz3agohq139lkt5q1/Kleshchi.webp"
     }
   },
   {
@@ -3236,7 +3291,7 @@
       "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/kabelrezy/",
       "level": 3,
       "parent_id": 482,
-      "picture": "https://ssd.ru"
+      "picture": "https://ssd.ru/upload/resta.ssd/df8/t8ydavt7x2kp2mr17xzh4usr694s79d3/Kabelrez.webp"
     }
   },
   {
@@ -3252,7 +3307,7 @@
       "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/nozhi/",
       "level": 3,
       "parent_id": 482,
-      "picture": "https://ssd.ru"
+      "picture": "https://ssd.ru/upload/resta.ssd/fbf/34pxfmc36c95vonr7g0v27tr91p82s7g/Nozhi.webp"
     }
   },
   {
@@ -3268,7 +3323,7 @@
       "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/strippery/",
       "level": 3,
       "parent_id": 482,
-      "picture": "https://ssd.ru"
+      "picture": "https://ssd.ru/upload/resta.ssd/d8c/uiywmvx5437n43xxscr1rsv8s5kar9p1/Stripper.webp"
     }
   },
   {
@@ -3284,7 +3339,7 @@
       "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/nozhovki/",
       "level": 3,
       "parent_id": 482,
-      "picture": "https://ssd.ru"
+      "picture": "https://ssd.ru/upload/resta.ssd/1c0/awhf91atzsqso7cv8hat9uyma1lw4n5a/Nozhovka.webp"
     }
   },
   {
@@ -3300,7 +3355,7 @@
       "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/instrumenty_dlya_raboty_s_kabelem/payalniki/",
       "level": 3,
       "parent_id": 482,
-      "picture": "https://ssd.ru"
+      "picture": "https://ssd.ru/upload/resta.ssd/acf/ysy252duuzkf478qh06h2lrdmk0ysqv7/Payalniki.webp"
     }
   },
   {
@@ -3335,7 +3390,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Тип",
+        "char:Wi-Fi",
+        "char:Класс Wi-Fi",
+        "char:Диапазон",
+        "char:PoE",
+        "char:Размещение",
+        "char:Монтаж",
+        "char:Антенны"
       ]
     }
   },
@@ -3385,7 +3448,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Wi-Fi",
+        "char:Класс Wi-Fi",
+        "char:Диапазон",
+        "char:Ethernet",
+        "char:WAN",
+        "char:Мобильная сеть",
+        "char:SIM",
+        "char:Дополнительно"
       ]
     }
   },
@@ -3405,7 +3476,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Разрешение",
+        "char:Корпус",
+        "char:Размещение",
+        "char:PoE",
+        "char:ИК-подсветка",
+        "char:Объектив",
+        "char:Поворот",
+        "char:Защита"
       ]
     }
   },
@@ -3425,7 +3504,13 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Тип",
+        "char:Стандарт DSL",
+        "char:Annex",
+        "char:Подключение",
+        "char:Кабель",
+        "char:Вывод кабеля"
       ]
     }
   },
@@ -3445,7 +3530,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Тип",
+        "char:FXS-порты",
+        "char:SIP-аккаунты",
+        "char:Ethernet",
+        "char:PoE",
+        "char:Дисплей",
+        "char:Монтаж",
+        "char:HD Voice"
       ]
     }
   },
@@ -3465,7 +3558,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Тип",
+        "char:Скорость",
+        "char:Стандарт PoE",
+        "char:Выходы PoE",
+        "char:Мощность",
+        "char:Питание",
+        "char:Монтаж",
+        "char:Исполнение"
       ]
     }
   },
@@ -3485,7 +3586,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Тип",
+        "char:Вход",
+        "char:Мощность",
+        "char:Выход",
+        "char:Монтаж",
+        "char:Исполнение",
+        "char:PoE",
+        "char:Назначение"
       ]
     }
   },
@@ -3505,7 +3614,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Тип",
+        "char:USB",
+        "char:Хост",
+        "char:USB-порты",
+        "char:Ethernet",
+        "char:Видео",
+        "char:Power Delivery",
+        "char:Картридер"
       ]
     }
   },
@@ -3525,7 +3642,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Тип",
+        "char:ПК",
+        "char:Видео",
+        "char:Периферия",
+        "char:Разрешение",
+        "char:Монтаж",
+        "char:Кабель",
+        "char:Длина"
       ]
     }
   },
@@ -3545,7 +3670,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Тип",
+        "char:Подключение",
+        "char:Скорость",
+        "char:Порт",
+        "char:Порты",
+        "char:Wi-Fi",
+        "char:Антенны",
+        "char:ОС"
       ]
     }
   },
@@ -3565,7 +3698,15 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Тип",
+        "char:PON",
+        "char:Оптический класс",
+        "char:Ethernet",
+        "char:FXS",
+        "char:Разъем PON",
+        "char:Дальность",
+        "char:WAN"
       ]
     }
   },
@@ -3585,8 +3726,112 @@
       "picture": "",
       "selected_filters": [
         "brand",
-        "price"
+        "price",
+        "char:Продукт",
+        "char:Версия",
+        "char:Лицензия",
+        "char:Архитектура",
+        "char:Платформа",
+        "char:Разрядность",
+        "char:Обнаружение",
+        "char:Язык"
       ]
+    }
+  },
+  {
+    "id": 645,
+    "name": "Шкафы для систем видеонаблюдения",
+    "parent": 258,
+    "external_id": "shkafy_dlya_sistem_videonablyudeniya",
+    "metadata": {
+      "id": 645,
+      "name": "Шкафы для систем видеонаблюдения",
+      "sort": 13,
+      "code": "shkafy_dlya_sistem_videonablyudeniya",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/shkafy_dlya_sistem_videonablyudeniya/",
+      "level": 3,
+      "parent_id": 258,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/59d/hwpxp71a6a5vtk6yj0jfi18lx164kz3m/96000_960_1/2258_Open_Front.webp"
+    }
+  },
+  {
+    "id": 647,
+    "name": "Трубы ССД-ПроПайп",
+    "parent": 261,
+    "external_id": "truby_ssd_propayp",
+    "metadata": {
+      "id": 647,
+      "name": "Трубы ССД-ПроПайп",
+      "sort": 1013,
+      "code": "truby_ssd_propayp",
+      "url": "https://ssd.ru/catalog/stroitelstvo-obektov-infrastruktury-svyazi/truby-dlya-kabelnoy-kanalizatsii/truby_ssd_propayp/",
+      "level": 3,
+      "parent_id": 261,
+      "picture": "https://ssd.ru/upload/resize_cache/resta.ssd/84e/2x6j1ioq534ir7t9etm4p23c5ng3wof9/96000_960_1/3.webp"
+    }
+  },
+  {
+    "id": 649,
+    "name": "Шнуры оптические (патч-корды) HS",
+    "parent": 288,
+    "external_id": "shnury_opticheskie_patch_kordy_hs",
+    "metadata": {
+      "id": 649,
+      "name": "Шнуры оптические (патч-корды) HS",
+      "sort": 1007,
+      "code": "shnury_opticheskie_patch_kordy_hs",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/shnury_opticheskie_patch_kordy_hs/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 650,
+    "name": "Шнуры оптические (пигтейлы)",
+    "parent": 288,
+    "external_id": "shnury_opticheskie_pigteyly_yuva",
+    "metadata": {
+      "id": 650,
+      "name": "Шнуры оптические (пигтейлы)",
+      "sort": 1010,
+      "code": "shnury_opticheskie_pigteyly_yuva",
+      "url": "https://ssd.ru/catalog/montazh-i-izmereniya-opticheskikh-kabeley-svyazi/abonentskaya-storona-vols/shnury_opticheskie_pigteyly_yuva/",
+      "level": 3,
+      "parent_id": 288,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 651,
+    "name": "Шкафы электротехнические навесные уличные IP65",
+    "parent": 253,
+    "external_id": "shkafy_elektrotekhnicheskie_navesnye_ulichnye_ip65",
+    "metadata": {
+      "id": 651,
+      "name": "Шкафы электротехнические навесные уличные IP65",
+      "sort": 1,
+      "code": "shkafy_elektrotekhnicheskie_navesnye_ulichnye_ip65",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/shkafy-elektrotekhnicheskie/shkafy_elektrotekhnicheskie_navesnye_ulichnye_ip65/",
+      "level": 3,
+      "parent_id": 253,
+      "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 652,
+    "name": "Шкафы электротехнические напольные",
+    "parent": 253,
+    "external_id": "shkafy_elektrotekhnicheskie_napolnye",
+    "metadata": {
+      "id": 652,
+      "name": "Шкафы электротехнические напольные",
+      "sort": 2,
+      "code": "shkafy_elektrotekhnicheskie_napolnye",
+      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/shkafy-elektrotekhnicheskie/shkafy_elektrotekhnicheskie_napolnye/",
+      "level": 3,
+      "parent_id": 253,
+      "picture": "https://ssd.ru"
     }
   }
 ]

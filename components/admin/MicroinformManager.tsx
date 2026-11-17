@@ -8,6 +8,7 @@ interface CatalogSectionOption {
   name: string;
   parent: number | null;
   external_id: string;
+  selected_filters?: string[];
 }
 
 interface AnalysisSection {
@@ -37,6 +38,40 @@ interface AnalysisPayload {
   duplicateArticuls: string[];
 }
 
+interface PendingProduct {
+  id: number;
+  sku: string;
+  vendor: string;
+  articul: string;
+  name: string;
+  section_id: number;
+  section_name: string;
+  price: number;
+  timeDelivery: string;
+  hasUrl: boolean;
+  hasDescription: boolean;
+  hasPictures: boolean;
+  pictureCount: number;
+}
+
+interface LastSyncInfo {
+  at: string;
+  ok: boolean;
+  skipped?: boolean;
+  reason?: string;
+  priceDate?: string | null;
+  productCount?: number;
+  error?: string;
+  result?: {
+    created: number;
+    updated: number;
+    hiddenAbsent: number;
+    pendingNew: number;
+    totalMicroinform: number;
+    createdSections: string[];
+  };
+}
+
 function mappingToSelectValue(mapping: SectionMapAction): string {
   if (mapping.action === "skip") return "skip";
   if (mapping.action === "existing") return `existing:${mapping.sectionId}`;
@@ -56,30 +91,15 @@ function selectValueToMapping(
   if (value.startsWith("create:")) {
     const externalId = value.slice("create:".length);
     const known = catalog.find((s) => s.external_id === externalId);
-    if (externalId === "kommutatory") {
-      return {
-        action: "create",
-        name: "Коммутаторы",
-        externalId: "kommutatory",
-        parentId: 293,
-        selectedFilters: [
-          "brand",
-          "price",
-          "char:Управление",
-          "char:Скорость",
-          "char:PoE",
-          "char:Исполнение",
-          "char:Порты",
-        ],
-      };
-    }
     if (known) {
       return {
         action: "create",
         name: known.name,
         externalId,
         parentId: known.parent ?? 293,
-        selectedFilters: ["brand", "price"],
+        selectedFilters: known.selected_filters?.length
+          ? known.selected_filters
+          : ["brand", "price"],
       };
     }
     return {
@@ -107,6 +127,21 @@ export function MicroinformManager() {
   const [markupPercent, setMarkupPercent] = useState(0);
   const [enabledVendors, setEnabledVendors] = useState<string[]>(["D-Link", "Origo"]);
   const [allVendors, setAllVendors] = useState<string[]>([]);
+  const [pending, setPending] = useState<PendingProduct[]>([]);
+  const [selectedPending, setSelectedPending] = useState<number[]>([]);
+  const [pendingSections, setPendingSections] = useState<Record<number, number>>({});
+  const [lastSync, setLastSync] = useState<LastSyncInfo | null>(null);
+
+  const loadPending = useCallback(async () => {
+    const res = await fetch("/api/admin/microinform/pending", { cache: "no-store" });
+    if (!res.ok) return;
+    const json = await res.json();
+    setPending(json.products || []);
+    setLastSync(json.lastSync || null);
+    setSelectedPending((prev) =>
+      prev.filter((id: number) => (json.products || []).some((p: PendingProduct) => p.id === id)),
+    );
+  }, []);
 
   const loadAnalyze = useCallback(async () => {
     setError(null);
@@ -114,6 +149,7 @@ export function MicroinformManager() {
     if (res.status === 404) {
       setAnalysis(null);
       setLoading(false);
+      await loadPending();
       return;
     }
     const json = await res.json();
@@ -134,7 +170,8 @@ export function MicroinformManager() {
     setAllVendors(json.analysis.vendors || []);
     setCatalogSections(json.catalogSections || []);
     setLoading(false);
-  }, []);
+    await loadPending();
+  }, [loadPending]);
 
   useEffect(() => {
     void loadAnalyze();
@@ -200,7 +237,7 @@ export function MicroinformManager() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Ошибка применения");
       setMessage(
-        `Применено: ${json.upserted} товаров` +
+        `Применено: новых ${json.created ?? 0}, обновлено ${json.updated ?? json.upserted}, скрыто ${json.hiddenAbsent ?? json.removedOrHidden ?? 0}, в очереди ${json.pendingNew ?? 0}` +
           (json.createdSections?.length ? `, разделы: ${json.createdSections.join(", ")}` : ""),
       );
       await loadAnalyze();
@@ -211,26 +248,82 @@ export function MicroinformManager() {
     }
   }
 
-  async function handleEnrich() {
-    setBusy("enrich");
+  async function handleEnrich(productIds?: number[]) {
+    setBusy(productIds?.length ? "enrich-pending" : "enrich");
     setError(null);
     setMessage(null);
     try {
       const res = await fetch("/api/admin/microinform/enrich", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ onlyMissing: true, limit: 30 }),
+        body: JSON.stringify({
+          onlyMissing: true,
+          limit: productIds?.length ? Math.min(productIds.length, 100) : 30,
+          ...(productIds?.length ? { productIds } : {}),
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Ошибка обогащения");
       setMessage(
         `Обогащение: обработано ${json.processed}, с описанием ${json.withDescription ?? "—"}, успешно ${json.succeeded}, ошибок ${json.failed}, фото ${json.imagesDownloaded}. Можно нажать ещё раз для следующей пачки.`,
       );
+      await loadPending();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Ошибка обогащения");
     } finally {
       setBusy(null);
     }
+  }
+
+  async function handlePublishSelected() {
+    if (selectedPending.length === 0) return;
+    setBusy("publish");
+    setError(null);
+    setMessage(null);
+    try {
+      // Publish one-by-one when section overrides differ; otherwise bulk.
+      const groups = new Map<string, number[]>();
+      for (const id of selectedPending) {
+        const sectionId = pendingSections[id];
+        const key = typeof sectionId === "number" ? String(sectionId) : "";
+        const list = groups.get(key) || [];
+        list.push(id);
+        groups.set(key, list);
+      }
+      let published = 0;
+      for (const [key, ids] of groups) {
+        const res = await fetch("/api/admin/microinform/publish", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ids,
+            ...(key ? { sectionId: Number(key) } : {}),
+          }),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || "Ошибка публикации");
+        published += json.published || 0;
+      }
+      setMessage(`Опубликовано товаров: ${published}`);
+      setSelectedPending([]);
+      await loadPending();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Ошибка публикации");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  function togglePending(id: number) {
+    setSelectedPending((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+  }
+
+  function toggleAllPending() {
+    setSelectedPending((prev) =>
+      prev.length === pending.length ? [] : pending.map((p) => p.id),
+    );
   }
 
   async function handleVerifyManufacturers() {
@@ -336,6 +429,22 @@ export function MicroinformManager() {
           </p>
         )}
 
+        {lastSync && (
+          <p className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+            Последний sync:{" "}
+            {new Date(lastSync.at).toLocaleString("ru-RU", { timeZone: "Europe/Minsk" })}
+            {lastSync.ok
+              ? ` · ок${lastSync.priceDate ? `, прайс ${lastSync.priceDate}` : ""}${
+                  lastSync.result
+                    ? ` · +${lastSync.result.created} / ~${lastSync.result.updated} / скрыто ${lastSync.result.hiddenAbsent} / очередь ${lastSync.result.pendingNew}`
+                    : ""
+                }`
+              : lastSync.skipped
+                ? ` · пропущен (${lastSync.reason || "busy"})`
+                : ` · ошибка: ${lastSync.error || "неизвестно"}`}
+          </p>
+        )}
+
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <label className="block text-sm">
             <span className="font-medium text-slate-700">Наценка %</span>
@@ -393,6 +502,114 @@ export function MicroinformManager() {
               <div className="text-xl font-bold text-slate-900">{analysis.sections.length}</div>
               <div className="text-xs text-slate-500">секций вендоров</div>
             </div>
+          </div>
+        )}
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-3">
+          <div>
+            <h3 className="font-bold text-slate-900">Новые товары</h3>
+            <p className="text-xs text-slate-500">
+              Скрыты на сайте, пока не обогатите и не опубликуете. Раздел можно поменять перед публикацией.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() =>
+                void handleEnrich(
+                  selectedPending.length ? selectedPending : pending.map((p) => p.id),
+                )
+              }
+              disabled={Boolean(busy) || pending.length === 0}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 disabled:opacity-50"
+            >
+              {busy === "enrich-pending" ? "Обогащение…" : "Обогатить выбранные"}
+            </button>
+            <button
+              type="button"
+              onClick={() => void handlePublishSelected()}
+              disabled={Boolean(busy) || selectedPending.length === 0}
+              className="rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-500 disabled:opacity-50"
+            >
+              {busy === "publish" ? "Публикация…" : `Опубликовать (${selectedPending.length})`}
+            </button>
+          </div>
+        </div>
+        {pending.length === 0 ? (
+          <p className="px-5 py-6 text-sm text-slate-500">Очередь пуста — новых товаров нет.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-left text-sm">
+              <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+                <tr>
+                  <th className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedPending.length === pending.length && pending.length > 0}
+                      onChange={toggleAllPending}
+                      aria-label="Выбрать все"
+                    />
+                  </th>
+                  <th className="px-4 py-3">Товар</th>
+                  <th className="px-4 py-3">Вендор</th>
+                  <th className="px-4 py-3">Цена</th>
+                  <th className="px-4 py-3">Срок</th>
+                  <th className="px-4 py-3">Обогащение</th>
+                  <th className="px-4 py-3">Раздел</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pending.map((product) => (
+                  <tr key={product.id} className="border-t border-slate-100">
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedPending.includes(product.id)}
+                        onChange={() => togglePending(product.id)}
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-slate-800">{product.name}</div>
+                      <div className="text-xs text-slate-500">
+                        {product.articul} · {product.sku}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">{product.vendor}</td>
+                    <td className="px-4 py-3 text-slate-600">{product.price.toFixed(2)}</td>
+                    <td className="px-4 py-3 text-slate-600">{product.timeDelivery || "—"}</td>
+                    <td className="px-4 py-3 text-xs text-slate-600">
+                      {[
+                        product.hasUrl ? "URL" : null,
+                        product.hasDescription ? "описание" : null,
+                        product.hasPictures ? `фото ${product.pictureCount}` : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ") || "пусто"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <select
+                        className="w-full min-w-[200px] rounded-lg border border-slate-300 px-2 py-1.5"
+                        value={pendingSections[product.id] ?? product.section_id}
+                        onChange={(e) =>
+                          setPendingSections((prev) => ({
+                            ...prev,
+                            [product.id]: Number(e.target.value),
+                          }))
+                        }
+                      >
+                        {existingOptions.map((opt) => (
+                          <option key={opt.value} value={Number(opt.value.slice("existing:".length))}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

@@ -4,8 +4,8 @@ import type { ParsedPriceRow } from "./parse-price";
 import { computeMicroinformPrice } from "./pricing";
 import { allocateId, allocateSku } from "./sku";
 import type { MicroinformState } from "./store";
-import { refineSwitchCharGroups } from "./switch-chars";
-import { classifyPriceSection } from "./section-hints";
+import { refineActiveNetworkChars } from "./chars";
+import { classifyPriceSection, classifyProductGroup } from "./section-hints";
 
 function nowStamp(): string {
   const d = new Date();
@@ -42,16 +42,19 @@ export function buildMicroinformProduct(params: {
   const id = allocateId(state, articul);
   const { price, priceWithoutVat, vatAmount } = computeMicroinformPrice(row.priceA, markupPercent);
 
-  const group = classifyPriceSection(row.sectionTitle, row.vendor);
-  const chars =
-    group === "switches"
-      ? refineSwitchCharGroups(
-          row.sectionTitle,
-          displayName,
-          articul,
-          previous?.metadata?.chars,
-        )
-      : previous?.metadata?.chars || [];
+  const group = classifyProductGroup(
+    articul,
+    displayName,
+    row.sectionTitle,
+    row.vendor,
+  );
+  const chars = refineActiveNetworkChars(
+    group,
+    row.sectionTitle,
+    displayName,
+    articul,
+    previous?.metadata?.chars,
+  );
 
   const descriptionFromPrice =
     row.descriptionRaw && !isUrlDescription(row.descriptionRaw)
@@ -59,6 +62,19 @@ export function buildMicroinformProduct(params: {
       : previous?.metadata?.description || "";
 
   const sourceUrl = row.sourceUrl || previous?.metadata?.url || "";
+  const isNew = !previous;
+  const pendingNew = isNew || previous?.metadata?.import_status === "new";
+  const wasAbsent = previous?.metadata?.absent_from_price === true;
+
+  let visible: boolean;
+  if (pendingNew) {
+    visible = false;
+  } else if (wasAbsent) {
+    // Returned to price after absence — restore to public catalog.
+    visible = true;
+  } else {
+    visible = previous?.visible ?? true;
+  }
 
   return {
     id,
@@ -67,7 +83,7 @@ export function buildMicroinformProduct(params: {
     custom_name: previous?.custom_name ?? null,
     sku,
     supplier: "microinform",
-    visible: previous?.visible ?? true,
+    visible,
     section_id: section.id,
     section_name: section.name,
     price,
@@ -80,9 +96,14 @@ export function buildMicroinformProduct(params: {
     vendor: row.vendor,
     metadata: {
       articul,
-      type: group === "switches" ? "Коммутатор" : previous?.metadata?.type || "",
+      type:
+        group === "switches"
+          ? "Коммутатор"
+          : group === "skip" || group === "mixed"
+            ? previous?.metadata?.type || ""
+            : previous?.metadata?.type || section.name,
       url: sourceUrl,
-      ...(group === "switches" ? { price_section: row.sectionTitle } : {}),
+      ...(group !== "skip" ? { price_section: row.sectionTitle } : {}),
       sections: [section.id],
       brand: row.vendor,
       unit: "шт",
@@ -100,6 +121,7 @@ export function buildMicroinformProduct(params: {
       soputst: [],
       chars,
       description: descriptionFromPrice,
+      ...(pendingNew ? { import_status: "new" as const } : {}),
     },
   };
 }
