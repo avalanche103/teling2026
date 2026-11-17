@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { ClipboardList, Menu, Phone, Search, X } from "lucide-react";
+import { useEffect, useId, useState } from "react";
+import { ChevronDown, ClipboardList, Menu, Phone, Search, X } from "lucide-react";
 import { SearchAutocomplete } from "@/components/layout/SearchAutocomplete";
-import { CatalogMegaMenu } from "@/components/catalog/CatalogMegaMenu";
+import {
+  CatalogMegaMenuPanel,
+  CatalogMegaMenuTrigger,
+} from "@/components/catalog/CatalogMegaMenu";
 import { useRequestCart } from "@/components/request/RequestCartProvider";
 import type { CatalogNavNode } from "@/lib/types";
 
@@ -41,11 +44,55 @@ interface HeaderProps {
 export function Header({ catalogNav = [] }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [catalogOpen, setCatalogOpen] = useState(false);
+  const [activeRootId, setActiveRootId] = useState<number | null>(
+    catalogNav[0]?.id ?? null
+  );
+  const [mobileCatalogOpenId, setMobileCatalogOpenId] = useState<number | null>(
+    null
+  );
+  const catalogPanelId = useId();
   const { lineCount, ready } = useRequestCart();
   const count = ready ? lineCount : 0;
 
+  useEffect(() => {
+    if (!catalogNav.length) return;
+    if (!catalogNav.some((root) => root.id === activeRootId)) {
+      setActiveRootId(catalogNav[0].id);
+    }
+  }, [catalogNav, activeRootId]);
+
+  useEffect(() => {
+    if (!catalogOpen) return;
+
+    const onPointerDown = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (
+        target?.closest("[data-catalog-flyout-trigger]") ||
+        target?.closest("[data-catalog-flyout-panel]")
+      ) {
+        return;
+      }
+      setCatalogOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setCatalogOpen(false);
+    };
+
+    const timer = window.setTimeout(() => {
+      document.addEventListener("mousedown", onPointerDown);
+    }, 0);
+
+    document.addEventListener("keydown", onKey);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [catalogOpen]);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-black shadow-sm backdrop-blur">
+    <header className="relative sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-black shadow-sm backdrop-blur">
       <div className="hidden border-b border-slate-700 bg-slate-900 text-slate-100 md:block">
         <div className="container mx-auto flex items-center justify-between px-4 py-1.5 text-sm text-slate-200">
           <span>г. Минск, ул. Шафарнянская, 11, офис 33</span>
@@ -85,7 +132,15 @@ export function Header({ catalogNav = [] }: HeaderProps) {
               Главная
             </Link>
             {catalogNav.length > 0 ? (
-              <CatalogMegaMenu roots={catalogNav} />
+              <CatalogMegaMenuTrigger
+                open={catalogOpen}
+                panelId={catalogPanelId}
+                onToggle={() => {
+                  setCatalogOpen((v) => !v);
+                  setMenuOpen(false);
+                  setMobileSearchOpen(false);
+                }}
+              />
             ) : (
               <Link href="/catalog" className="transition-colors hover:text-black/70">
                 Каталог
@@ -114,6 +169,7 @@ export function Header({ catalogNav = [] }: HeaderProps) {
               onClick={() => {
                 setMobileSearchOpen((v) => !v);
                 setMenuOpen(false);
+                setCatalogOpen(false);
               }}
               aria-label="Поиск"
             >
@@ -132,6 +188,7 @@ export function Header({ catalogNav = [] }: HeaderProps) {
               onClick={() => {
                 setMenuOpen(!menuOpen);
                 setMobileSearchOpen(false);
+                setCatalogOpen(false);
               }}
               aria-label="Меню"
             >
@@ -144,6 +201,16 @@ export function Header({ catalogNav = [] }: HeaderProps) {
           </div>
         </div>
       </div>
+
+      {catalogOpen && catalogNav.length > 0 ? (
+        <CatalogMegaMenuPanel
+          roots={catalogNav}
+          activeRootId={activeRootId}
+          onActiveRootIdChange={setActiveRootId}
+          onClose={() => setCatalogOpen(false)}
+          panelId={catalogPanelId}
+        />
+      ) : null}
 
       {mobileSearchOpen && (
         <div className="border-t border-slate-200 bg-white px-4 py-3 md:hidden">
@@ -166,23 +233,74 @@ export function Header({ catalogNav = [] }: HeaderProps) {
             >
               Главная
             </Link>
-            <Link
-              href="/catalog"
-              onClick={() => setMenuOpen(false)}
-              className="py-1 hover:text-black/70"
-            >
-              Каталог
-            </Link>
-            {catalogNav.slice(0, 4).map((root) => (
-              <Link
-                key={root.id}
-                href={`/catalog/${root.slug}`}
-                onClick={() => setMenuOpen(false)}
-                className="py-1 pl-3 text-black/70 hover:text-black"
-              >
-                {root.name}
-              </Link>
-            ))}
+            <div className="border-t border-b border-slate-100 py-1">
+              <div className="flex items-center justify-between gap-2 py-1">
+                <Link
+                  href="/catalog"
+                  onClick={() => setMenuOpen(false)}
+                  className="font-semibold hover:text-black/70"
+                >
+                  Каталог
+                </Link>
+                <Link
+                  href="/catalog"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-xs font-medium text-black/50 hover:text-black"
+                >
+                  Все разделы →
+                </Link>
+              </div>
+              {catalogNav.map((root) => {
+                const expanded = mobileCatalogOpenId === root.id;
+                return (
+                  <div key={root.id} className="border-t border-slate-100">
+                    <div className="flex items-start gap-1">
+                      <Link
+                        href={`/catalog/${root.slug}`}
+                        onClick={() => setMenuOpen(false)}
+                        className="min-w-0 flex-1 py-2 pr-2 text-sm leading-snug text-black/80 hover:text-black"
+                      >
+                        {root.name}
+                      </Link>
+                      {root.children.length > 0 ? (
+                        <button
+                          type="button"
+                          className="mt-1 rounded-lg p-2 text-black/50 hover:bg-slate-100 hover:text-black"
+                          aria-expanded={expanded}
+                          aria-label={
+                            expanded
+                              ? "Свернуть подкатегории"
+                              : "Показать подкатегории"
+                          }
+                          onClick={() =>
+                            setMobileCatalogOpenId(expanded ? null : root.id)
+                          }
+                        >
+                          <ChevronDown
+                            className={`h-4 w-4 transition ${expanded ? "rotate-180" : ""}`}
+                          />
+                        </button>
+                      ) : null}
+                    </div>
+                    {expanded && root.children.length > 0 ? (
+                      <ul className="mb-2 space-y-1 pb-1 pl-3">
+                        {root.children.map((child) => (
+                          <li key={child.id}>
+                            <Link
+                              href={`/catalog/${child.slug}`}
+                              onClick={() => setMenuOpen(false)}
+                              className="block py-1.5 text-sm leading-snug text-black/60 hover:text-black"
+                            >
+                              {child.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
             <Link
               href="/#contacts"
               onClick={() => setMenuOpen(false)}
