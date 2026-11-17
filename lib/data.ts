@@ -755,14 +755,30 @@ export function getSectionFacets(sectionId: number): SectionFacets {
     )
   );
 
-  // Dynamic char facets — flatten all char items across products
+  // Dynamic char facets — flatten all char items across products.
+  // Names that appear in any synthetic «Характеристики» group are counted
+  // only from that group, so manufacturer free-text specs (Питание, Порты…)
+  // do not pollute filter enums or blow past the 2–30 distinct limit.
+  const sectionSyntheticNames = new Set<string>();
+  for (const p of allProducts) {
+    for (const group of p.metadata?.chars ?? []) {
+      if (group.name?.trim() !== "Характеристики") continue;
+      for (const item of group.items ?? []) {
+        const name = item.name?.trim();
+        if (name) sectionSyntheticNames.add(name);
+      }
+    }
+  }
+
   const charMap = new Map<string, Map<string, number>>();
   for (const p of allProducts) {
-    for (const group of (p.metadata?.chars ?? [])) {
+    for (const group of p.metadata?.chars ?? []) {
+      const isSynthetic = group.name?.trim() === "Характеристики";
       for (const item of group.items) {
         const name = item.name?.trim();
         const value = item.value?.trim();
         if (!name || !value) continue;
+        if (sectionSyntheticNames.has(name) && !isSynthetic) continue;
         // Skip char names that are already covered by the brands facet
         if (BRAND_CHAR_NAMES.has(name.toLowerCase())) continue;
         if (!charMap.has(name)) charMap.set(name, new Map());
@@ -777,19 +793,33 @@ export function getSectionFacets(sectionId: number): SectionFacets {
     // Only include facets with 2–30 distinct values
     if (valMap.size < 2 || valMap.size > 30) continue;
     const values: FacetItem[] = [...valMap.entries()]
-      .sort((a, b) => b[1] - a[1])
+      .sort((a, b) => {
+        if (name === "Порты") {
+          const aOther = a[0] === "Другое" ? 1 : 0;
+          const bOther = b[0] === "Другое" ? 1 : 0;
+          if (aOther !== bOther) return aOther - bOther;
+          const aNum = Number(a[0]);
+          const bNum = Number(b[0]);
+          if (Number.isFinite(aNum) && Number.isFinite(bNum)) return aNum - bNum;
+          return a[0].localeCompare(b[0], "ru");
+        }
+        return b[1] - a[1];
+      })
       .map(([value, count]) => ({ value, count }));
     chars.push({ name, values });
   }
 
-  // Sort by total coverage, keep top 12
+  // Prefer synthetic filter facets, then coverage; keep enough for whitelists.
   chars.sort((a, b) => {
+    const aSyn = sectionSyntheticNames.has(a.name) ? 1 : 0;
+    const bSyn = sectionSyntheticNames.has(b.name) ? 1 : 0;
+    if (aSyn !== bSyn) return bSyn - aSyn;
     const sa = a.values.reduce((s, v) => s + v.count, 0);
     const sb = b.values.reduce((s, v) => s + v.count, 0);
     return sb - sa;
   });
 
-  return { brands, priceMin, priceMax, chars: chars.slice(0, 12) };
+  return { brands, priceMin, priceMax, chars: chars.slice(0, 24) };
 }
 
 /** Returns all section external_ids (slugs) for static params generation */

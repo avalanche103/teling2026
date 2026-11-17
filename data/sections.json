@@ -2761,13 +2761,13 @@
   },
   {
     "id": 517,
-    "name": "SFP модули",
+    "name": "Трансиверы",
     "parent": 293,
     "external_id": "sfp_moduli",
     "metadata": {
       "id": 517,
-      "name": "SFP модули",
-      "sort": 1001,
+      "name": "Трансиверы",
+      "sort": 800,
       "code": "sfp_moduli",
       "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/aktivnoe-setevoe-oborudovanie/sfp_moduli/",
       "level": 3,
@@ -2783,7 +2783,7 @@
     "metadata": {
       "id": 518,
       "name": "Медиаконвертеры",
-      "sort": 1002,
+      "sort": 700,
       "code": "mediakonvertery",
       "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/aktivnoe-setevoe-oborudovanie/mediakonvertery/",
       "level": 3,
@@ -3321,13 +3321,13 @@
   },
   {
     "id": 632,
-    "name": "Беспроводное оборудование",
+    "name": "Оборудование Wi-Fi",
     "parent": 293,
     "external_id": "besprovodnoe-oborudovanie",
     "metadata": {
       "id": 632,
-      "name": "Беспроводное оборудование",
-      "sort": 500,
+      "name": "Оборудование Wi-Fi",
+      "sort": 300,
       "code": "besprovodnoe-oborudovanie",
       "url": "",
       "level": 3,
@@ -3347,7 +3347,7 @@
     "metadata": {
       "id": 633,
       "name": "Коммутаторы",
-      "sort": 500,
+      "sort": 100,
       "code": "kommutatory",
       "url": "",
       "level": 3,
@@ -3359,8 +3359,233 @@
         "char:Управление",
         "char:Скорость",
         "char:PoE",
+        "char:Бюджет PoE",
         "char:Исполнение",
-        "char:Порты"
+        "char:Порты",
+        "char:Uplink",
+        "char:Монтаж",
+        "char:Охлаждение",
+        "char:Питание"
+      ]
+    }
+  },
+  {
+    "id": 634,
+    "name": "Маршрутизаторы",
+    "parent": 293,
+    "external_id": "marshrutizatory",
+    "metadata": {
+      "id": 634,
+      "name": "Маршрутизаторы",
+      "sort": 200,
+      "code": "marshrutizatory",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 635,
+    "name": "Видеонаблюдение",
+    "parent": 293,
+    "external_id": "videonablyudenie",
+    "metadata": {
+      "id": 635,
+      "name": "Видеонаблюдение",
+      "sort": 400,
+      "code": "videonablyudenie",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 636,
+    "name": "Устройства xDSL",
+    "parent": 293,
+    "external_id": "ustroystva-xdsl",
+    "metadata": {
+      "id": 636,
+      "name": "Устройства xDSL",
+      "sort": 500,
+      "code": "ustroystva-xdsl",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 637,
+    "name": "Устройства VoIP",
+    "parent": 293,
+    "external_id": "ustroystva-voip",
+    "metadata": {
+      "id": 637,
+      "name": "Устройства VoIP",
+      "sort": 600,
+      "code": "ustroystva-voip",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 638,
+    "name": "Power over Ethernet",
+    "parent": 293,
+    "external_id": "power-over-ethernet",
+    "metadata": {
+      "id": 638,
+      "name": "Power over Ethernet",
+      "sort": 900,
+      "code": "power-over-ethernet",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 639,
+    "name": "Блоки питания",
+    "parent": 293,
+    "external_id": "bloki-pitaniya",
+    "metadata": {
+      "id": 639,
+      "name": "Блоки питания",
+      "sort": 1000,
+      "code": "bloki-pitaniya",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 640,
+    "name": "Устройства USB",
+    "parent": 293,
+    "external_id": "ustroystva-usb",
+    "metadata": {
+      "id": 640,
+      "name": "Устройства USB",
+      "sort": 1100,
+      "code": "ustroystva-usb",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 641,
+    "name": "Переключатели KVM",
+    "parent": 293,
+    "external_id": "pereklyuchateli-kvm",
+    "metadata": {
+      "id": 641,
+      "name": "Переключатели KVM",
+      "sort": 1200,
+      "code": "pereklyuchateli-kvm",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 642,
+    "name": "Сетевые адаптеры",
+    "parent": 293,
+    "external_id": "setevye-adaptery",
+    "metadata": {
+      "id": 642,
+      "name": "Сетевые адаптеры",
+      "sort": 1300,
+      "code": "setevye-adaptery",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 643,
+    "name": "Оборудование GPON",
+    "parent": 293,
+    "external_id": "oborudovanie-gpon",
+    "metadata": {
+      "id": 643,
+      "name": "Оборудование GPON",
+      "sort": 1400,
+      "code": "oborudovanie-gpon",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ]
+    }
+  },
+  {
+    "id": 644,
+    "name": "Управление и мониторинг сети",
+    "parent": 293,
+    "external_id": "upravlenie-i-monitoring-seti",
+    "metadata": {
+      "id": 644,
+      "name": "Управление и мониторинг сети",
+      "sort": 1500,
+      "code": "upravlenie-i-monitoring-seti",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
       ]
     }
   }

@@ -20,12 +20,18 @@ export function normalizeMicroinformArticul(vendor: string, articul: string): st
   return parts.join("/");
 }
 
-/** Remove `/F1A`-style revision tokens from product titles. */
+/** Remove `/F1A`-style (and trailing `/A`, `/B`) revision tokens from product titles. */
 export function stripDlinkRevisionsFromText(text: string): string {
   if (!text) return text;
   return text
     .replace(/\/([A-Z]{1,3}\d[A-Z0-9]{0,3})\b/gi, "")
+    // Old D-Link cards title hardware letters as DES-1008P/A or DGS-1008A/B.
+    .replace(/\/[A-Z]\b/gi, "")
+    .replace(/\bEOL\b/gi, "")
+    .replace(/\bEOS\b/gi, "")
     .replace(/[ \t]{2,}/g, " ")
     .replace(/\s+,/g, ",")
-    .trim();
+    .replace(/\/{2,}/g, "/")
+    .trim()
+    .replace(/\/$/g, "");
 }

@@ -4,7 +4,7 @@ import type { ParsedPriceRow } from "./parse-price";
 import { computeMicroinformPrice } from "./pricing";
 import { allocateId, allocateSku } from "./sku";
 import type { MicroinformState } from "./store";
-import { buildSwitchChars } from "./switch-chars";
+import { refineSwitchCharGroups } from "./switch-chars";
 import { classifyPriceSection } from "./section-hints";
 
 function nowStamp(): string {
@@ -45,7 +45,12 @@ export function buildMicroinformProduct(params: {
   const group = classifyPriceSection(row.sectionTitle, row.vendor);
   const chars =
     group === "switches"
-      ? buildSwitchChars(row.sectionTitle, displayName, articul)
+      ? refineSwitchCharGroups(
+          row.sectionTitle,
+          displayName,
+          articul,
+          previous?.metadata?.chars,
+        )
       : previous?.metadata?.chars || [];
 
   const descriptionFromPrice =
@@ -77,6 +82,7 @@ export function buildMicroinformProduct(params: {
       articul,
       type: group === "switches" ? "Коммутатор" : previous?.metadata?.type || "",
       url: sourceUrl,
+      ...(group === "switches" ? { price_section: row.sectionTitle } : {}),
       sections: [section.id],
       brand: row.vendor,
       unit: "шт",

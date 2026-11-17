@@ -14,6 +14,8 @@ export interface ManufacturerIndexEntry {
   model: string;
   url: string;
   subtitle: string;
+  /** Category-listing packshot (often /up/prod/min/*_prev.jpg angled hero). */
+  listingImage?: string;
 }
 
 export interface ManufacturerIndex {
@@ -93,6 +95,12 @@ function collectModelKeys(model: string): string[] {
   const noRev = normalizeMicroinformArticul("D-Link", raw).toUpperCase();
   keys.add(noRev);
   keys.add(noRev.split("/")[0] || noRev);
+  // Soft licenses / option SKUs → parent hardware model (DXS-3610-54S-SE-LIC → DXS-3610-54S).
+  const noLic = noRev.replace(/-(?:SE-)?LIC$/i, "").replace(/-LIC$/i, "");
+  if (noLic && noLic !== noRev) {
+    keys.add(noLic);
+    keys.add(noLic.split("/")[0] || noLic);
+  }
   if (/^DEM-/i.test(raw)) keys.add(raw.replace(/^DEM-/i, "").toUpperCase());
   else if (/^\d{3}[A-Z]/i.test(raw) || /^(310|311|330|331|431|433|435|436)/i.test(raw)) {
     keys.add(`DEM-${raw}`.toUpperCase());
@@ -100,9 +108,31 @@ function collectModelKeys(model: string): string[] {
   return [...keys];
 }
 
+/** dlink.ru /ru/products/{id}/ — only categories that list `.product` cards. */
+const DLINK_CATEGORY_IDS = [
+  1, // Коммутаторы (+ часть трансиверов/БП в листинге)
+  2, // Оборудование Wi-Fi (+ часть камер/GPON)
+  3, // Устройства xDSL
+  4, // Медиаконвертеры
+  5, // Маршрутизаторы
+  6, // Межсетевые экраны
+  7, // Сетевые адаптеры
+  8, // Устройства VoIP
+  9, // Принт-серверы
+  10, // Переключатели KVM
+  11, // Кабельный модем
+  14, // Мультимедиа
+  16, // PowerLine
+] as const;
+
+/** Origo listing ids that currently expose `.model_name` cards (not contiguous). */
+const ORIGO_CATEGORY_IDS = [
+  1, 8, 9, 10, 13, 15, 19, 21, 25, 28, 33, 35, 40, 50,
+] as const;
+
 async function scrapeDlinkCategories(): Promise<ManufacturerIndexEntry[]> {
   const entries: ManufacturerIndexEntry[] = [];
-  for (let cat = 1; cat <= 7; cat++) {
+  for (const cat of DLINK_CATEGORY_IDS) {
     const listUrl = `https://dlink.ru/ru/products/${cat}/`;
     let html = "";
     try {
@@ -118,7 +148,25 @@ async function scrapeDlinkCategories(): Promise<ManufacturerIndexEntry[]> {
       const subtitle = cleanText(root.find("p.description, .description").first().text());
       if (!href || !model) return;
       const abs = normalizeManufacturerUrl(new URL(href, listUrl).toString());
-      entries.push({ vendor: "D-Link", model, url: abs, subtitle });
+      const imgSrc =
+        root.find("img").first().attr("src") ||
+        root.find("img").first().attr("data-src") ||
+        "";
+      let listingImage: string | undefined;
+      if (imgSrc) {
+        try {
+          listingImage = normalizeManufacturerUrl(new URL(imgSrc, listUrl).toString());
+        } catch {
+          listingImage = undefined;
+        }
+      }
+      entries.push({
+        vendor: "D-Link",
+        model,
+        url: abs,
+        subtitle,
+        ...(listingImage ? { listingImage } : {}),
+      });
     });
   }
   return entries;
@@ -126,24 +174,26 @@ async function scrapeDlinkCategories(): Promise<ManufacturerIndexEntry[]> {
 
 async function scrapeOrigoCategories(): Promise<ManufacturerIndexEntry[]> {
   const entries: ManufacturerIndexEntry[] = [];
-  const listUrl = "https://origo-networks.ru/products/1/";
-  let html = "";
-  try {
-    html = await fetchText(listUrl);
-  } catch {
-    return entries;
+  for (const cat of ORIGO_CATEGORY_IDS) {
+    const listUrl = `https://origo-networks.ru/products/${cat}/`;
+    let html = "";
+    try {
+      html = await fetchText(listUrl);
+    } catch {
+      continue;
+    }
+    const $ = cheerio.load(html);
+    $("a[href*='/products/']").each((_, el) => {
+      const root = $(el);
+      const href = root.attr("href") || "";
+      const model = cleanText(root.find(".model_name").first().text());
+      const subtitle = cleanText(root.find(".model_title, h3.model_title").first().text());
+      if (!href || !model) return;
+      if (!/\/products\/\d+\/\d+\.html/i.test(href)) return;
+      const abs = normalizeManufacturerUrl(new URL(href, listUrl).toString());
+      entries.push({ vendor: "Origo", model, url: abs, subtitle });
+    });
   }
-  const $ = cheerio.load(html);
-  $("a[href*='/products/']").each((_, el) => {
-    const root = $(el);
-    const href = root.attr("href") || "";
-    const model = cleanText(root.find(".model_name").first().text());
-    const subtitle = cleanText(root.find(".model_title, h3.model_title").first().text());
-    if (!href || !model) return;
-    if (!/\/products\/\d+\/\d+\.html/i.test(href)) return;
-    const abs = normalizeManufacturerUrl(new URL(href, listUrl).toString());
-    entries.push({ vendor: "Origo", model, url: abs, subtitle });
-  });
   return entries;
 }
 
@@ -216,6 +266,36 @@ export function lookupManufacturerEntry(
   return null;
 }
 
+/** Follow D-Link "Рекомендованная замена" when the open card is an old EOL revision. */
+export function extractDlinkReplacementUrl(pageUrl: string, html: string): string | null {
+  const $ = cheerio.load(html);
+  let found: string | null = null;
+  $("a[href*='/products/']").each((_, el) => {
+    if (found) return;
+    const $a = $(el);
+    const ctx = cleanText(`${$a.text()} ${$a.parent().text()} ${$a.closest("table, p, div").text()}`);
+    if (!/рекомендованная\s+замена/i.test(ctx)) return;
+    const href = $a.attr("href");
+    if (!href) return;
+    try {
+      found = normalizeManufacturerUrl(new URL(href, pageUrl).toString());
+    } catch {
+      /* ignore */
+    }
+  });
+  return found;
+}
+
+export function isDlinkObsoleteProductPage(html: string): boolean {
+  const text = cleanText(cheerio.load(html)("h2, h3, .product-description, title, body").first().text() || "");
+  const full = cleanText(cheerio.load(html)("body").text());
+  return (
+    /\bEOL\b/i.test(text) ||
+    /\bEOS\b/i.test(text) ||
+    /рекомендованная\s+замена/i.test(full)
+  );
+}
+
 export function extractManufacturerPageInfo(
   pageUrl: string,
   html: string,
@@ -243,6 +323,9 @@ export function extractManufacturerPageInfo(
       subtitle = subtitle.replace(new RegExp(`^${model}\\s*[–—:-]\\s*`, "i"), "").trim();
     }
   }
+
+  model = stripDlinkRevisionsFromText(model);
+  subtitle = stripDlinkRevisionsFromText(subtitle);
 
   if (!model) model = normalized.split("/")[0] || normalized;
   if (!subtitle) return null;
@@ -273,6 +356,28 @@ export function buildManufacturerDisplayName(
   return `${brand} ${cleanModel}, ${cleanSubtitle}`;
 }
 
+function urlKey(url: string): string {
+  try {
+    const u = new URL(url);
+    return `${u.hostname.replace(/^www\./i, "").toLowerCase()}${u.pathname}`.toLowerCase();
+  } catch {
+    return url.toLowerCase();
+  }
+}
+
+function modelMatchesArticul(
+  vendor: string,
+  articul: string,
+  pageModel: string,
+): boolean {
+  return collectModelKeys(articul)
+    .concat(collectModelKeys(normalizeMicroinformArticul(vendor, articul)))
+    .some((k) => {
+      const keys = collectModelKeys(pageModel);
+      return keys.includes(k.toUpperCase()) || pageModel.toUpperCase().includes(k.toUpperCase());
+    });
+}
+
 export async function resolveManufacturerPage(
   vendor: string,
   articul: string,
@@ -280,36 +385,53 @@ export async function resolveManufacturerPage(
   index: ManufacturerIndex,
 ): Promise<{
   url: string | null;
-  source: "current" | "index" | "none";
+  source: "current" | "index" | "replacement" | "none";
   entry: ManufacturerIndexEntry | null;
   currentMatches: boolean;
 }> {
   const entry = lookupManufacturerEntry(index, vendor, articul);
   const rewritten = currentUrl ? normalizeManufacturerUrl(currentUrl) : "";
 
+  // Category index is the current product card. Prefer it over stale EOL revision URLs
+  // that still match the model name (e.g. DGS-1008A/B → DGS-1008A).
+  if (entry?.url) {
+    const indexUrl = normalizeManufacturerUrl(entry.url);
+    const currentMatches = Boolean(rewritten && urlKey(rewritten) === urlKey(indexUrl));
+    return { url: indexUrl, source: "index", entry, currentMatches };
+  }
+
   if (rewritten) {
     try {
       const html = await fetchText(rewritten);
       const info = extractManufacturerPageInfo(rewritten, html, vendor, articul);
-      const modelOk = Boolean(
-        info &&
-          collectModelKeys(articul)
-            .concat(collectModelKeys(normalizeMicroinformArticul(vendor, articul)))
-            .some((k) => {
-              const keys = collectModelKeys(info.model);
-              return keys.includes(k.toUpperCase()) || info.model.toUpperCase().includes(k.toUpperCase());
-            }),
-      );
+      const modelOk = Boolean(info && modelMatchesArticul(vendor, articul, info.model));
+
+      if (modelOk && isDlinkObsoleteProductPage(html)) {
+        const replacement = extractDlinkReplacementUrl(rewritten, html);
+        if (replacement && urlKey(replacement) !== urlKey(rewritten)) {
+          try {
+            const replHtml = await fetchText(replacement);
+            const replInfo = extractManufacturerPageInfo(replacement, replHtml, vendor, articul);
+            if (replInfo && modelMatchesArticul(vendor, articul, replInfo.model)) {
+              return {
+                url: replacement,
+                source: "replacement",
+                entry: null,
+                currentMatches: false,
+              };
+            }
+          } catch {
+            /* keep current if replacement fetch fails */
+          }
+        }
+      }
+
       if (modelOk) {
-        return { url: rewritten, source: "current", entry, currentMatches: true };
+        return { url: rewritten, source: "current", entry: null, currentMatches: true };
       }
     } catch {
-      /* try index */
+      /* fall through */
     }
-  }
-
-  if (entry?.url) {
-    return { url: entry.url, source: "index", entry, currentMatches: false };
   }
 
   return { url: null, source: "none", entry: null, currentMatches: false };

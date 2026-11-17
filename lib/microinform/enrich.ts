@@ -11,8 +11,11 @@ import path from "path";
 import { Readable } from "stream";
 import * as cheerio from "cheerio";
 import type { ProductCharGroup, ProductDocument, ProductRaw } from "@/lib/types";
+import { normalizeMicroinformArticul } from "./articul";
+import { getManufacturerIndex, lookupManufacturerEntry } from "./manufacturer";
 import { PUBLIC_IMAGES_DIR } from "./paths";
 import { readMicroinformProducts, writeMicroinformProducts } from "./store";
+import { isSwitchProduct, refineSwitchCharGroups } from "./switch-chars";
 
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
@@ -112,9 +115,16 @@ function guessDocType(name: string, href: string): string {
   return "Документ";
 }
 
+function isListingPrevImage(url: string): boolean {
+  // D-Link category thumbs: *_prev.jpg or angled *_x.jpg (not min_ gallery thumbs).
+  return /\/up\/prod\/min\/[^/?#]+(?:_prev|_x)\.(jpe?g|png|webp|gif)(\?|$)/i.test(url);
+}
+
 function isLikelyProductImage(url: string): boolean {
   const u = url.toLowerCase();
   if (u.includes("logo") || u.includes("icon") || u.includes("favicon") || u.includes("award")) return false;
+  // Category listing *_prev.jpg / *_x.jpg is often the only angled packshot.
+  if (isListingPrevImage(url)) return true;
   if (u.includes("/min/") || u.includes("mini_") || u.includes("/min_")) return false;
   if (u.includes("/i/") && !u.includes("prod")) return false;
   // Diagrams / install collages from support sections are usually not the hero shot.
@@ -132,20 +142,23 @@ function scoreProductImage(url: string): number {
   if (u.includes("/up/prod/600/")) {
     if (/\/up\/prod\/600\/[^/?#]+_\d+\.(jpe?g|png|webp|gif)/i.test(u)) score += 40;
     else score += 220;
+  } else if (isListingPrevImage(url)) {
+    // Listing prev is angled; prefer over Front-only /600/ cards.
+    score += 210;
   } else if (u.includes("/up/prod_fotos/")) score += 100;
   else if (u.includes("/up/prod/")) score += 70;
   else if (u.includes("/prod_fotos/")) score += 80;
 
   // Gallery angles are useful, but Front (even under /600/) is not the preferred hero.
   if (/_front\b|front\d*\.|\/front|\bfront_/i.test(u)) {
-    score -= u.includes("/up/prod/600/") ? 60 : 5;
+    score -= u.includes("/up/prod/600/") ? 160 : 80;
   } else if (/_side|_left|_right/i.test(u) && u.includes("/up/prod/600/")) {
     score += 25;
   }
-  // Origo numbered gallery: _2 is the angled packshot; _1 is flat ports/front.
-  if (/\/(?:up\/)?prod_fotos\/[^/?#]+_2\.(jpe?g|png|webp|gif)/i.test(u)) score += 90;
-  else if (/\/(?:up\/)?prod_fotos\/[^/?#]+_1\.(jpe?g|png|webp|gif)/i.test(u)) score += 30;
-  else if (/_1\.(jpe?g|png|webp|gif)/i.test(u) || /_1_/i.test(u)) score += 20;
+  // Origo numbered gallery: _2 / _02 angled; _1 / _01 / _1- flat ports/front.
+  if (/\/(?:up\/)?prod_fotos\/[^/?#]+_0?2(?:[-_]*)\.(jpe?g|png|webp|gif)/i.test(u)) score += 90;
+  else if (/\/(?:up\/)?prod_fotos\/[^/?#]+_0?1(?:[-_]*)\.(jpe?g|png|webp|gif)/i.test(u)) score += 5;
+  else if (/_0?1(?:[-_]*)\.(jpe?g|png|webp|gif)/i.test(u)) score += 5;
   if (/_side|_back|_bottom|_top|_rear/i.test(u)) score += 10;
   if (u.includes("/support/")) score -= 50;
   if (u.includes("diagram") || u.includes("schema") || u.includes("install")) score -= 40;
@@ -158,6 +171,7 @@ function scoreProductImage(url: string): number {
 /** Catalog packshots from /up/prod/600/ are often 6–15KB JPEG. */
 function minImageBytes(url: string): number {
   if (/\/up\/prod\/600\//i.test(url)) return 3_500;
+  if (isListingPrevImage(url)) return 8_000;
   return 12_000;
 }
 
@@ -185,11 +199,22 @@ function clearLocalSkuImages(sku: string): void {
   }
 }
 
+function isFrontHero(url: string): boolean {
+  return /_front\b|front\d*\.|\/front|\bfront_/i.test(url);
+}
+
+function isOrigoFlatHero(url: string): boolean {
+  // Prefer *_2 / *_02 over flat *_1 / *_01 packshots.
+  return /origo/i.test(url) && /_(?:0?1)(?:[-_]*)\.(jpe?g|png|webp|gif)/i.test(url);
+}
+
 function firstPictureNeedsRefresh(pictures: string[] | undefined): boolean {
   const first = pictures?.[0] || "";
   if (!first) return true;
   if (/\/support\//i.test(first)) return true;
+  if (isFrontHero(first) || isOrigoFlatHero(first)) return true;
   if (/\/up\/prod\/600\//i.test(first)) return false;
+  if (isListingPrevImage(first)) return false;
   const score = scoreProductImage(first);
   return score < 80;
 }
@@ -199,7 +224,13 @@ function pickDescription($: ReturnType<typeof cheerio.load>, pageUrl: string): s
 
   const push = (html: string | null | undefined) => {
     if (!html) return;
-    const cleaned = sanitizeHtml(pageUrl, html);
+    // Drop EOL "recommended replacement" banner tables before sanitize.
+    const $frag = cheerio.load(`<div id="teling-desc">${html}</div>`, false);
+    $frag("#teling-desc table").each((_, el) => {
+      const t = $frag(el).text().replace(/\s+/g, " ").trim();
+      if (/^рекомендованная\s+замена/i.test(t)) $frag(el).remove();
+    });
+    const cleaned = sanitizeHtml(pageUrl, $frag("#teling-desc").html() || "");
     const text = cheerio.load(cleaned).text().replace(/\s+/g, " ").trim();
     if (text.length >= 40 || cleaned.length >= 80) candidates.push(cleaned);
   };
@@ -328,7 +359,11 @@ function mergeCharGroups(
   return result;
 }
 
-export function extractFromHtml(pageUrl: string, html: string): {
+export function extractFromHtml(
+  pageUrl: string,
+  html: string,
+  options?: { listingImage?: string | null },
+): {
   description: string;
   imageUrls: string[];
   documents: ProductDocument[];
@@ -345,6 +380,9 @@ export function extractFromHtml(pageUrl: string, html: string): {
     if (!abs || !isLikelyProductImage(abs)) return;
     if (!collected.includes(abs)) collected.push(abs);
   };
+
+  // Category listing packshot first — often the only true angled hero.
+  if (options?.listingImage) pushImage(options.listingImage);
 
   // Prefer lightbox/full-size links from the product photo strip first.
   $("a[href*='prod_fotos'], a[href*='/prod/']").each((_, el) => {
@@ -389,30 +427,61 @@ export function extractFromHtml(pageUrl: string, html: string): {
   };
 }
 
+function dlinkWwwFallback(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.hostname.replace(/^www\./i, "").toLowerCase() !== "dlink.ru") return null;
+    if (u.hostname.toLowerCase().startsWith("www.")) return null;
+    u.hostname = "www.dlink.ru";
+    return u.toString();
+  } catch {
+    return null;
+  }
+}
+
 async function fetchText(url: string): Promise<string> {
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent": UA,
-      Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-      "Accept-Language": "ru-RU,ru;q=0.9,en;q=0.8",
-    },
-    redirect: "follow",
-    signal: AbortSignal.timeout(30000),
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return await res.text();
+  const attempt = async (target: string) => {
+    const res = await fetch(target, {
+      headers: {
+        "User-Agent": UA,
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "ru-RU,ru;q=0.9,en;q=0.8",
+      },
+      redirect: "follow",
+      signal: AbortSignal.timeout(45000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.text();
+  };
+  try {
+    return await attempt(url);
+  } catch (error) {
+    const alt = dlinkWwwFallback(url);
+    if (!alt) throw error;
+    return await attempt(alt);
+  }
 }
 
 async function downloadImage(url: string, destPath: string): Promise<boolean> {
-  try {
-    const res = await fetch(url, {
+  const tryOne = async (target: string) => {
+    const res = await fetch(target, {
       headers: { "User-Agent": UA },
       redirect: "follow",
-      signal: AbortSignal.timeout(30000),
+      signal: AbortSignal.timeout(45000),
     });
     if (!res.ok || !res.body) return false;
     await pipeline(Readable.fromWeb(res.body as never), createWriteStream(destPath));
     return true;
+  };
+  try {
+    if (await tryOne(url)) return true;
+  } catch {
+    /* try www fallback */
+  }
+  const alt = dlinkWwwFallback(url);
+  if (!alt) return false;
+  try {
+    return await tryOne(alt);
   } catch {
     return false;
   }
@@ -451,7 +520,16 @@ export async function enrichProduct(product: ProductRaw): Promise<{
 
   try {
     const html = await fetchText(pageUrl);
-    const extracted = extractFromHtml(pageUrl, html);
+    const vendor = product.vendor || product.metadata?.brand || "";
+    const articul = normalizeMicroinformArticul(vendor, product.metadata?.articul || "");
+    let listingImage: string | undefined;
+    try {
+      const index = await getManufacturerIndex({ rebuild: false });
+      listingImage = lookupManufacturerEntry(index, vendor, articul)?.listingImage;
+    } catch {
+      /* index optional for enrich */
+    }
+    const extracted = extractFromHtml(pageUrl, html, { listingImage });
 
     if (!existsSync(PUBLIC_IMAGES_DIR)) {
       mkdirSync(PUBLIC_IMAGES_DIR, { recursive: true });
@@ -485,7 +563,19 @@ export async function enrichProduct(product: ProductRaw): Promise<{
       extracted.description.trim() ||
       product.metadata.description ||
       "";
-    const nextChars = mergeCharGroups(product.metadata.chars, extracted.charGroups);
+    let nextChars = mergeCharGroups(product.metadata.chars, extracted.charGroups);
+    if (isSwitchProduct(product)) {
+      const priceSection =
+        typeof product.metadata?.price_section === "string"
+          ? product.metadata.price_section
+          : "";
+      nextChars = refineSwitchCharGroups(
+        priceSection || product.section_name || "Коммутаторы",
+        product.name,
+        articul,
+        nextChars,
+      );
+    }
 
     const next: ProductRaw = {
       ...product,

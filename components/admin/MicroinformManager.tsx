@@ -55,6 +55,7 @@ function selectValueToMapping(
   }
   if (value.startsWith("create:")) {
     const externalId = value.slice("create:".length);
+    const known = catalog.find((s) => s.external_id === externalId);
     if (externalId === "kommutatory") {
       return {
         action: "create",
@@ -72,21 +73,21 @@ function selectValueToMapping(
         ],
       };
     }
-    if (externalId === "besprovodnoe-oborudovanie") {
+    if (known) {
       return {
         action: "create",
-        name: "Беспроводное оборудование",
-        externalId: "besprovodnoe-oborudovanie",
-        parentId: 293,
+        name: known.name,
+        externalId,
+        parentId: known.parent ?? 293,
         selectedFilters: ["brand", "price"],
       };
     }
-    const known = catalog.find((s) => s.external_id === externalId);
     return {
       action: "create",
-      name: known?.name || section.title,
+      name: section.title,
       externalId,
-      parentId: known?.parent ?? 293,
+      parentId: 293,
+      selectedFilters: ["brand", "price"],
     };
   }
   return { action: "skip" };
@@ -140,18 +141,18 @@ export function MicroinformManager() {
   }, [loadAnalyze]);
 
   const createOptions = useMemo(
-    () => [
-      { value: "create:kommutatory", label: "Создать: Коммутаторы" },
-      {
-        value: "create:besprovodnoe-oborudovanie",
-        label: "Создать: Беспроводное оборудование",
-      },
-    ],
-    [],
+    () =>
+      catalogSections
+        .filter((s) => s.parent === 293)
+        .map((s) => ({
+          value: `create:${s.external_id}`,
+          label: `Создать: ${s.name}`,
+        })),
+    [catalogSections],
   );
 
   const existingOptions = useMemo(() => {
-    const prefer = catalogSections.filter((s) => [293, 517, 518].includes(s.id) || s.parent === 293);
+    const prefer = catalogSections.filter((s) => s.id === 293 || s.parent === 293);
     const rest = catalogSections.filter((s) => !prefer.some((p) => p.id === s.id));
     return [...prefer, ...rest].map((s) => ({
       value: `existing:${s.id}`,
@@ -401,7 +402,7 @@ export function MicroinformManager() {
           <div className="border-b border-slate-200 px-5 py-3">
             <h3 className="font-bold text-slate-900">Маппинг секций прайса</h3>
             <p className="text-xs text-slate-500">
-              v1: конвертеры → 518, модули → 517, коммутаторы/Wi‑Fi → создать. Остальное — Пропустить.
+              Разделы как на dlink.ru. Маршрутизаторы (DIR/DWR/…) выделяются из беспроводного по SKU.
             </p>
           </div>
           <div className="overflow-x-auto">

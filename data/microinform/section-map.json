@@ -1,106 +1,51 @@
 {
   "D-LINK (сетевое оборудование)": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 632
   },
   "D-Link USB устройства": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 640
   },
   "D-Link Беспроводное оборудование": {
-    "action": "create",
-    "name": "Беспроводное оборудование",
-    "externalId": "besprovodnoe-oborudovanie",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price"
-    ]
+    "action": "existing",
+    "sectionId": 632
   },
   "Антенны": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 632
   },
   "D-Link Блоки питания": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 639
   },
   "D-Link Интернет камеры": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 635
   },
   "D-Link КВМ-переключатели и кабели": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 641
   },
   "D-Link Коммутаторы Fast Ethernet 10/100Мбит/c": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "D-Link Коммутаторы Gigabit Ethernet 1000Мбит/c": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "D-Link Коммутаторы Gigabit Ethernet 10Gбит/c": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "D-Link Коммутаторы Мультигигабитные": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "D-Link Коммутаторы Промышленные": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "D-Link Медиаконвертеры": {
     "action": "existing",
@@ -111,94 +56,44 @@
     "sectionId": 517
   },
   "D-Link Оборудование xDSL": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 636
   },
   "D-Link Программное обеспечение": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 644
   },
   "D-Link Сетевые адаптеры": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 642
   },
   "D-Link Устройства VoIP": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 637
   },
   "ORIGO": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 632
   },
   "(1) Коммутаторы Origo неуправлемые": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "(2) Коммутаторы Origo настраиваемые": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "(3) Коммутаторы Origo управляемые": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "(4) Коммутаторы Origo промышленные неуправляемые": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "(5) Коммутаторы Origo промышленные управляемые": {
-    "action": "create",
-    "name": "Коммутаторы",
-    "externalId": "kommutatory",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price",
-      "char:Управление",
-      "char:Скорость",
-      "char:PoE",
-      "char:Исполнение",
-      "char:Порты"
-    ]
+    "action": "existing",
+    "sectionId": 633
   },
   "(6) Модули и кабели": {
     "action": "existing",
@@ -209,25 +104,23 @@
     "sectionId": 518
   },
   "(8) Сетевые адаптеры": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 642
   },
   "IP-телефоны Origo": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 637
   },
   "KVM-переключатели Origo": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 641
   },
   "Беспроводное оборудование ORIGO": {
-    "action": "create",
-    "name": "Беспроводное оборудование",
-    "externalId": "besprovodnoe-oborudovanie",
-    "parentId": 293,
-    "selectedFilters": [
-      "brand",
-      "price"
-    ]
+    "action": "existing",
+    "sectionId": 632
   },
   "Док-станции и USB концентраторы Origo": {
-    "action": "skip"
+    "action": "existing",
+    "sectionId": 640
   }
 }

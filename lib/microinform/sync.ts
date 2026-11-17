@@ -2,7 +2,12 @@ import type { ProductRaw, SectionRaw } from "@/lib/types";
 import { normalizeMicroinformArticul } from "./articul";
 import { buildMicroinformProduct } from "./build-product";
 import type { ParsedPriceBook, ParsedPriceRow } from "./parse-price";
-import { buildDefaultSectionMap, classifyPriceSection } from "./section-hints";
+import {
+  buildDefaultSectionMap,
+  classifyPriceSection,
+  classifyProductGroup,
+  sectionIdForGroup,
+} from "./section-hints";
 import {
   readMicroinformProducts,
   readSectionMap,
@@ -19,6 +24,20 @@ import {
   type SectionMapAction,
   type MicroinformSettings,
 } from "./store";
+
+function resolveRowSection(
+  row: ParsedPriceRow,
+  titleSection: SectionRaw | undefined,
+  sections: SectionRaw[],
+): SectionRaw | null {
+  const group = classifyProductGroup(row.articul, row.name, row.sectionTitle, row.vendor);
+  const sectionId = sectionIdForGroup(group);
+  if (sectionId != null) {
+    const byId = sections.find((s) => s.id === sectionId);
+    if (byId) return byId;
+  }
+  return titleSection || null;
+}
 
 function rowDedupeKey(row: ParsedPriceRow): string {
   const articul = normalizeMicroinformArticul(row.vendor, row.articul);
@@ -234,7 +253,8 @@ export function applyPriceBook(
   const keepArticuls = new Set<string>();
 
   for (const row of selectedRows) {
-    const section = titleToSection.get(row.sectionTitle);
+    const titleSection = titleToSection.get(row.sectionTitle);
+    const section = resolveRowSection(row, titleSection, sections);
     if (!section) continue;
     const normalized = normalizeMicroinformArticul(row.vendor, row.articul);
     const prev = previousByArticul.get(normalized.toUpperCase()) || null;

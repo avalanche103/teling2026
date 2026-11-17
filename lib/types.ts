@@ -59,6 +59,8 @@ export interface ProductRaw {
     articul: string;
     type: string;
     url: string;
+    /** Original Microinform price-list section title (used for switch filter heuristics). */
+    price_section?: string;
     sections: number[];
     brand: string;
     unit: string;
