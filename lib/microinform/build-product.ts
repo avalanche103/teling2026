@@ -1,5 +1,9 @@
 import type { ProductRaw, SectionRaw } from "@/lib/types";
-import { normalizeMicroinformArticul, stripDlinkRevisionsFromText } from "./articul";
+import {
+  normalizeMicroinformArticul,
+  stripAtenPackFromText,
+  stripDlinkRevisionsFromText,
+} from "./articul";
 import type { ParsedPriceRow } from "./parse-price";
 import { computeMicroinformPrice } from "./pricing";
 import { allocateId, allocateSku } from "./sku";
@@ -36,7 +40,9 @@ export function buildMicroinformProduct(params: {
 }): ProductRaw {
   const { row, section, markupPercent, state, occupiedSkus, previous } = params;
   const articul = normalizeMicroinformArticul(row.vendor, row.articul);
-  const displayName = stripDlinkRevisionsFromText(row.name);
+  const displayName = /^aten$/i.test(row.vendor)
+    ? stripAtenPackFromText(row.name)
+    : stripDlinkRevisionsFromText(row.name);
   const sku = allocateSku(state, articul, occupiedSkus);
   occupiedSkus.add(sku);
   const id = allocateId(state, articul);

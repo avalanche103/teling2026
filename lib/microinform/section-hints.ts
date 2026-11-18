@@ -8,6 +8,10 @@ export type CatalogGroup =
   | "media_converters"
   | "modules"
   | "kvm"
+  | "kvm_consoles"
+  | "kvm_extenders"
+  | "kvm_cables"
+  | "kvm_modules"
   | "adapters"
   | "usb"
   | "cameras"
@@ -17,12 +21,18 @@ export type CatalogGroup =
   | "power_supplies"
   | "poe"
   | "gpon"
+  | "av_extenders"
+  | "av_matrix"
+  | "av_switches"
+  | "av_splitters"
+  | "av_converters"
+  | "av_cables"
   | "mixed"
   | "skip";
 
 const BASIC_FILTERS = ["brand", "price"] as const;
 
-/** Stable section ids under #293 (Активное сетевое оборудование). */
+/** Stable section ids under Microinform catalog tree. */
 export const CATALOG_SECTION_IDS = {
   switches: 633,
   routers: 634,
@@ -36,15 +46,44 @@ export const CATALOG_SECTION_IDS = {
   power_supplies: 639,
   usb: 640,
   kvm: 641,
+  kvm_consoles: 654,
+  kvm_extenders: 655,
+  kvm_cables: 656,
+  kvm_modules: 657,
   adapters: 642,
   gpon: 643,
   software: 644,
+  av_extenders: 659,
+  av_matrix: 660,
+  av_switches: 661,
+  av_splitters: 662,
+  av_converters: 663,
+  av_cables: 664,
 } as const;
+
+function isSupportedVendor(vendor: string): boolean {
+  const v = vendor.toLowerCase();
+  return v.includes("d-link") || v.includes("origo") || v.includes("aten");
+}
 
 export function classifyPriceSection(title: string, vendor: string): CatalogGroup {
   const t = title.toLowerCase();
   const v = vendor.toLowerCase();
-  if (!(v.includes("d-link") || v.includes("origo"))) return "skip";
+  if (!isSupportedVendor(vendor)) return "skip";
+
+  if (v.includes("aten")) {
+    if (t.includes("проданн")) return "skip";
+    if (t.includes("altusen")) return "mixed";
+    if (t.includes("a/v") || t.includes("a\\/v") || t.includes("профессиональн")) return "mixed";
+    if (t.includes("консол") && !t.includes("удлинит")) return "kvm_consoles";
+    if (t.includes("удлинит") && t.includes("консол")) return "kvm_extenders";
+    if (t.includes("кабел") && (t.includes("квм") || t.includes("kvm"))) return "kvm_cables";
+    if (t.includes("систем") && t.includes("управлен")) return "kvm_modules";
+    if (t.includes("настольн") || t.includes("стоечн")) return "kvm";
+    if (t.includes("usb")) return "usb";
+    if (t.includes("квм") || t.includes("kvm")) return "kvm";
+    return "skip";
+  }
 
   // Mixed buckets — products classified by SKU later.
   if (t === "origo" || t.includes("сетевое оборудование")) return "mixed";
@@ -73,10 +112,48 @@ export function classifyPriceSection(title: string, vendor: string): CatalogGrou
   return "skip";
 }
 
-function classifyBySku(articul: string, name: string): CatalogGroup | null {
+function classifyAtenBySku(articul: string, name: string, sectionTitle: string): CatalogGroup | null {
+  const a = (articul || "").toUpperCase();
+  const n = (name || "").toLowerCase();
+  const section = (sectionTitle || "").toLowerCase();
+  const base = a.replace(/\/.*$/, "");
+  const inAv = section.includes("a/v") || section.includes("профессиональн");
+
+  // Longer prefixes first.
+  if (/^UCE|^UEH|^UE\d/.test(base)) return "usb";
+  if (/^UH|^UC/.test(base)) return inAv ? "av_converters" : "usb";
+  if (/^CL/.test(base)) return "kvm_consoles";
+  if (/^(CE|KE)/.test(base)) return "kvm_extenders";
+  if (/^(KH|KN|CS)/.test(base)) return "kvm";
+  if (/^(KA|2X)/.test(base)) return inAv ? "av_converters" : "kvm_modules";
+  if (/^2A|^VC/.test(base)) return "av_converters";
+  if (/^VM/.test(base)) return "av_matrix";
+  if (/^VS/.test(base)) {
+    if (/матриц/.test(n)) return "av_matrix";
+    if (/разветв|splitter|сплит/.test(n)) return "av_splitters";
+    if (/переключ|switch|коммутат/.test(n)) return "av_switches";
+    return "av_splitters";
+  }
+  if (/^VE781|^VE783/.test(base)) return "av_cables";
+  if (/^VE/.test(base)) {
+    if (/кабел|cable/.test(n)) return "av_cables";
+    return "av_extenders";
+  }
+  if (/^2L-7D.*H/.test(base) || (/^2L/.test(base) && inAv)) return "av_cables";
+  if (/^2L/.test(base)) return "kvm_cables";
+  if (/\bkvm\b|квм/.test(n)) return "kvm";
+  return null;
+}
+
+function classifyBySku(articul: string, name: string, sectionTitle = ""): CatalogGroup | null {
   const a = (articul || "").toUpperCase();
   const n = (name || "").toLowerCase();
   const base = a.replace(/\/.*$/, "");
+
+  const atenHit = classifyAtenBySku(articul, name, sectionTitle);
+  if (atenHit && (/^(CS|CL|CE|KE|KH|KN|KA|UC|UH|UCE|UE|UEH|2L|2X|2A|VE|VM|VS|VC)/.test(base) || /aten/i.test(sectionTitle))) {
+    return atenHit;
+  }
 
   if (/^DPN-/.test(base)) return "gpon";
   if (/^(DPE-|OPE)/.test(base)) return "poe";
@@ -95,12 +172,12 @@ function classifyBySku(articul: string, name: string): CatalogGroup | null {
   if (/питани/.test(n) && /(блок|источник|шасси)/.test(n)) return "power_supplies";
   if (/маршрут/.test(n)) return "routers";
   if (/usb|док-станц|хаб|dock/.test(n)) return "usb";
-  return null;
+  return atenHit;
 }
 
 /**
  * Product-level resolve. Homogeneous price headers keep their section group;
- * wireless splits routers/adapters; mixed ORIGO/D-LINK headers use SKU heuristics.
+ * wireless splits routers/adapters; mixed headers use SKU heuristics.
  */
 export function classifyProductGroup(
   articul: string,
@@ -111,19 +188,19 @@ export function classifyProductGroup(
   const sectionGroup = classifyPriceSection(sectionTitle, vendor);
 
   if (sectionGroup === "wireless") {
-    const bySku = classifyBySku(articul, name);
+    const bySku = classifyBySku(articul, name, sectionTitle);
     if (bySku === "routers" || bySku === "adapters") return bySku;
     return "wireless";
   }
 
   if (sectionGroup === "mixed") {
-    return classifyBySku(articul, name) || "skip";
+    return classifyBySku(articul, name, sectionTitle) || "skip";
   }
 
   // Homogeneous price sections win (avoids "SFP" in switch names → modules).
   if (sectionGroup !== "skip") return sectionGroup;
 
-  return classifyBySku(articul, name) || "skip";
+  return classifyBySku(articul, name, sectionTitle) || "skip";
 }
 
 export function sectionIdForGroup(group: CatalogGroup): number | null {
@@ -149,6 +226,14 @@ export function defaultActionForSection(
       return { action: "existing", sectionId: CATALOG_SECTION_IDS.routers };
     case "kvm":
       return { action: "existing", sectionId: CATALOG_SECTION_IDS.kvm };
+    case "kvm_consoles":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.kvm_consoles };
+    case "kvm_extenders":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.kvm_extenders };
+    case "kvm_cables":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.kvm_cables };
+    case "kvm_modules":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.kvm_modules };
     case "adapters":
       return { action: "existing", sectionId: CATALOG_SECTION_IDS.adapters };
     case "usb":
@@ -167,6 +252,18 @@ export function defaultActionForSection(
       return { action: "existing", sectionId: CATALOG_SECTION_IDS.poe };
     case "gpon":
       return { action: "existing", sectionId: CATALOG_SECTION_IDS.gpon };
+    case "av_extenders":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.av_extenders };
+    case "av_matrix":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.av_matrix };
+    case "av_switches":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.av_switches };
+    case "av_splitters":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.av_splitters };
+    case "av_converters":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.av_converters };
+    case "av_cables":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.av_cables };
     case "mixed":
       // Placeholder: products re-resolved per SKU in sync.
       return { action: "existing", sectionId: CATALOG_SECTION_IDS.wireless };

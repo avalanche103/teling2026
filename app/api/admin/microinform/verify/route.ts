@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     const vendors = Array.isArray(body.vendors) && body.vendors.length
       ? body.vendors
-      : ["D-Link", "Origo"];
+      : ["D-Link", "Origo", "ATEN"];
 
     const result = await verifyManufacturerProducts({
       vendors,

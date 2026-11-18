@@ -3629,16 +3629,16 @@
   {
     "id": 641,
     "name": "Переключатели KVM",
-    "parent": 293,
+    "parent": 653,
     "external_id": "pereklyuchateli-kvm",
     "metadata": {
       "id": 641,
       "name": "Переключатели KVM",
-      "sort": 1200,
+      "sort": 50,
       "code": "pereklyuchateli-kvm",
       "url": "",
-      "level": 3,
-      "parent_id": 293,
+      "level": 4,
+      "parent_id": 653,
       "picture": "",
       "selected_filters": [
         "brand",
@@ -3832,6 +3832,314 @@
       "level": 3,
       "parent_id": 253,
       "picture": "https://ssd.ru"
+    }
+  },
+  {
+    "id": 653,
+    "name": "KVM",
+    "parent": 293,
+    "external_id": "kvm",
+    "metadata": {
+      "id": 653,
+      "name": "KVM",
+      "sort": 1190,
+      "code": "kvm",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 654,
+    "name": "Консоли KVM",
+    "parent": 653,
+    "external_id": "konsoli-kvm",
+    "metadata": {
+      "id": 654,
+      "name": "Консоли KVM",
+      "sort": 100,
+      "code": "konsoli-kvm",
+      "url": "",
+      "level": 4,
+      "parent_id": 653,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:ПК",
+        "char:Видео",
+        "char:Периферия",
+        "char:Разрешение",
+        "char:Монтаж",
+        "char:Кабель",
+        "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 655,
+    "name": "Удлинители KVM",
+    "parent": 653,
+    "external_id": "udliniteli-kvm",
+    "metadata": {
+      "id": 655,
+      "name": "Удлинители KVM",
+      "sort": 200,
+      "code": "udliniteli-kvm",
+      "url": "",
+      "level": 4,
+      "parent_id": 653,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:ПК",
+        "char:Видео",
+        "char:Периферия",
+        "char:Разрешение",
+        "char:Монтаж",
+        "char:Кабель",
+        "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 656,
+    "name": "Кабели KVM",
+    "parent": 653,
+    "external_id": "kabeli-kvm",
+    "metadata": {
+      "id": 656,
+      "name": "Кабели KVM",
+      "sort": 300,
+      "code": "kabeli-kvm",
+      "url": "",
+      "level": 4,
+      "parent_id": 653,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:ПК",
+        "char:Видео",
+        "char:Периферия",
+        "char:Разрешение",
+        "char:Монтаж",
+        "char:Кабель",
+        "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 657,
+    "name": "Модули и аксессуары KVM",
+    "parent": 653,
+    "external_id": "moduli-i-aksessuary-kvm",
+    "metadata": {
+      "id": 657,
+      "name": "Модули и аксессуары KVM",
+      "sort": 400,
+      "code": "moduli-i-aksessuary-kvm",
+      "url": "",
+      "level": 4,
+      "parent_id": 653,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:ПК",
+        "char:Видео",
+        "char:Периферия",
+        "char:Разрешение",
+        "char:Монтаж",
+        "char:Кабель",
+        "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 658,
+    "name": "Профессиональное A/V оборудование",
+    "parent": 257,
+    "external_id": "professionalnoe-av-oborudovanie",
+    "metadata": {
+      "id": 658,
+      "name": "Профессиональное A/V оборудование",
+      "sort": 850,
+      "code": "professionalnoe-av-oborudovanie",
+      "url": "",
+      "level": 2,
+      "parent_id": 257,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 659,
+    "name": "Видеоудлинители",
+    "parent": 658,
+    "external_id": "videoudliniteli",
+    "metadata": {
+      "id": 659,
+      "name": "Видеоудлинители",
+      "sort": 100,
+      "code": "videoudliniteli",
+      "url": "",
+      "level": 3,
+      "parent_id": 658,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Видео",
+        "char:Разрешение",
+        "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 660,
+    "name": "Матричные видеокоммутаторы",
+    "parent": 658,
+    "external_id": "matrichnye-videokommutatory",
+    "metadata": {
+      "id": 660,
+      "name": "Матричные видеокоммутаторы",
+      "sort": 200,
+      "code": "matrichnye-videokommutatory",
+      "url": "",
+      "level": 3,
+      "parent_id": 658,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Видео",
+        "char:Разрешение",
+        "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 661,
+    "name": "Переключатели видеосигнала",
+    "parent": 658,
+    "external_id": "pereklyuchateli-videosignala",
+    "metadata": {
+      "id": 661,
+      "name": "Переключатели видеосигнала",
+      "sort": 300,
+      "code": "pereklyuchateli-videosignala",
+      "url": "",
+      "level": 3,
+      "parent_id": 658,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Видео",
+        "char:Разрешение",
+        "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 662,
+    "name": "Разветвители видеосигнала",
+    "parent": 658,
+    "external_id": "razvetviteli-videosignala",
+    "metadata": {
+      "id": 662,
+      "name": "Разветвители видеосигнала",
+      "sort": 400,
+      "code": "razvetviteli-videosignala",
+      "url": "",
+      "level": 3,
+      "parent_id": 658,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Видео",
+        "char:Разрешение",
+        "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 663,
+    "name": "Видеоконвертеры и адаптеры",
+    "parent": 658,
+    "external_id": "videokonvertery-i-adaptery",
+    "metadata": {
+      "id": 663,
+      "name": "Видеоконвертеры и адаптеры",
+      "sort": 500,
+      "code": "videokonvertery-i-adaptery",
+      "url": "",
+      "level": 3,
+      "parent_id": 658,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Видео",
+        "char:Разрешение",
+        "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 664,
+    "name": "Кабели A/V",
+    "parent": 658,
+    "external_id": "kabeli-av",
+    "metadata": {
+      "id": 664,
+      "name": "Кабели A/V",
+      "sort": 600,
+      "code": "kabeli-av",
+      "url": "",
+      "level": 3,
+      "parent_id": 658,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Видео",
+        "char:Разрешение",
+        "char:Длина"
+      ],
+      "source": "microinform"
     }
   }
 ]

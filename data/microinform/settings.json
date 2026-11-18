@@ -3,6 +3,7 @@
   "markupPercent": 0,
   "enabledVendors": [
     "D-Link",
-    "Origo"
+    "Origo",
+    "ATEN"
   ]
 }

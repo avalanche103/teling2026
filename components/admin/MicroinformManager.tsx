@@ -125,7 +125,7 @@ export function MicroinformManager() {
   const [catalogSections, setCatalogSections] = useState<CatalogSectionOption[]>([]);
   const [sectionMap, setSectionMap] = useState<SectionMap>({});
   const [markupPercent, setMarkupPercent] = useState(0);
-  const [enabledVendors, setEnabledVendors] = useState<string[]>(["D-Link", "Origo"]);
+  const [enabledVendors, setEnabledVendors] = useState<string[]>(["D-Link", "Origo", "ATEN"]);
   const [allVendors, setAllVendors] = useState<string[]>([]);
   const [pending, setPending] = useState<PendingProduct[]>([]);
   const [selectedPending, setSelectedPending] = useState<number[]>([]);
@@ -166,7 +166,7 @@ export function MicroinformManager() {
     setAnalysis(json.analysis);
     setSectionMap(json.analysis.sectionMap);
     setMarkupPercent(json.analysis.settings.markupPercent ?? 0);
-    setEnabledVendors(json.analysis.settings.enabledVendors || ["D-Link", "Origo"]);
+    setEnabledVendors(json.analysis.settings.enabledVendors || ["D-Link", "Origo", "ATEN"]);
     setAllVendors(json.analysis.vendors || []);
     setCatalogSections(json.catalogSections || []);
     setLoading(false);
@@ -335,7 +335,7 @@ export function MicroinformManager() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          vendors: enabledVendors.length ? enabledVendors : ["D-Link", "Origo"],
+          vendors: enabledVendors.length ? enabledVendors : ["D-Link", "Origo", "ATEN"],
           limit: 100,
           rebuildIndex: true,
           updateMedia: true,
@@ -345,7 +345,7 @@ export function MicroinformManager() {
       if (!res.ok) throw new Error(json.error || "Ошибка проверки");
       setMessage(
         json.message ||
-          `Проверка D-Link/Origo: URL ${json.urlUpdated}, названий ${json.nameUpdated}, обогащено ${json.enriched}.`,
+          `Проверка D-Link/Origo/ATEN: URL ${json.urlUpdated}, названий ${json.nameUpdated}, обогащено ${json.enriched}.`,
       );
     } catch (e) {
       setError(e instanceof Error ? e.message : "Ошибка проверки");
@@ -410,10 +410,10 @@ export function MicroinformManager() {
               type="button"
               onClick={() => void handleVerifyManufacturers()}
               disabled={Boolean(busy)}
-              title="Сопоставить артикулы со страницами D-Link/Origo, обновить URL, названия и описания"
+              title="Сопоставить артикулы со страницами D-Link/Origo/ATEN, обновить URL, названия и описания"
               className="rounded-lg border border-sky-300 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-900 hover:bg-sky-100 disabled:opacity-50"
             >
-              {busy === "verify" ? "Проверка…" : "Проверить D-Link / Origo"}
+              {busy === "verify" ? "Проверка…" : "Проверить D-Link / Origo / ATEN"}
             </button>
           </div>
         </div>
@@ -463,7 +463,7 @@ export function MicroinformManager() {
           <div className="text-sm">
             <div className="font-medium text-slate-700">Вендоры</div>
             <div className="mt-2 flex flex-wrap gap-2">
-              {(allVendors.length ? allVendors : ["D-Link", "Origo"]).map((vendor) => (
+              {(allVendors.length ? allVendors : ["D-Link", "Origo", "ATEN"]).map((vendor) => (
                 <label
                   key={vendor}
                   className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5"

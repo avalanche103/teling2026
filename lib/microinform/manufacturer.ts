@@ -10,7 +10,7 @@ const UA =
 const INDEX_PATH = path.join(MICROINFORM_DIR, "manufacturer-index.json");
 
 export interface ManufacturerIndexEntry {
-  vendor: "D-Link" | "Origo";
+  vendor: "D-Link" | "Origo" | "ATEN";
   model: string;
   url: string;
   subtitle: string;
@@ -45,12 +45,24 @@ export function normalizeManufacturerUrl(url: string): string {
     let host = u.hostname.replace(/^www\./i, "").toLowerCase();
     if (host === "d-link.ru" || host === "dlink.by") host = "dlink.ru";
     if (host === "origo-networks.ru" || host === "www.origo-networks.ru") host = "origo-networks.ru";
+    if (host === "aten.ru" || host === "ru.aten.com") host = "aten.com";
     u.protocol = "https:";
     u.hostname = host;
     // Prefer RU locale pages for D-Link.
     if (host === "dlink.ru") {
       u.pathname = u.pathname.replace(/^\/by\//i, "/ru/");
       u.pathname = u.pathname.replace(/^\/en\//i, "/ru/");
+    }
+    // aten.com /ru/ru/ is often CloudFront-403 from DC IPs; global/en works.
+    if (host === "aten.com") {
+      u.hash = "";
+      u.pathname = u.pathname
+        .replace(/^\/ru\/ru\//i, "/global/en/")
+        .replace(/^\/us\/en\//i, "/global/en/")
+        .replace(/^\/eu\/en\//i, "/global/en/");
+      if (u.hostname !== "www.aten.com" && u.hostname === "aten.com") {
+        u.hostname = "www.aten.com";
+      }
     }
     u.hash = "";
     return u.toString();
@@ -89,10 +101,11 @@ function addIndexAlias(
   if ((entry.subtitle?.length || 0) > (prev.subtitle?.length || 0)) map.set(k, entry);
 }
 
-function collectModelKeys(model: string): string[] {
+function collectModelKeys(model: string, vendorHint = ""): string[] {
   const raw = model.trim();
   const keys = new Set<string>([raw.toUpperCase()]);
-  const noRev = normalizeMicroinformArticul("D-Link", raw).toUpperCase();
+  const vendorForNorm = /^aten$/i.test(vendorHint) ? "ATEN" : "D-Link";
+  const noRev = normalizeMicroinformArticul(vendorForNorm, raw).toUpperCase();
   keys.add(noRev);
   keys.add(noRev.split("/")[0] || noRev);
   // Soft licenses / option SKUs → parent hardware model (DXS-3610-54S-SE-LIC → DXS-3610-54S).
@@ -105,7 +118,133 @@ function collectModelKeys(model: string): string[] {
   else if (/^\d{3}[A-Z]/i.test(raw) || /^(310|311|330|331|431|433|435|436)/i.test(raw)) {
     keys.add(`DEM-${raw}`.toUpperCase());
   }
+  // ATEN URL/model slugs are lowercase without pack suffixes.
+  if (/^aten$/i.test(vendorHint) || /^(CS|CL|CE|KE|KH|KA|UC|UE|VE|VM|VS|VC|2L|2X)/i.test(raw)) {
+    const aten = normalizeMicroinformArticul("ATEN", raw).toUpperCase();
+    keys.add(aten);
+    keys.add(aten.split("/")[0] || aten);
+    keys.add(aten.replace(/-/g, ""));
+  }
   return [...keys];
+}
+
+function modelFromAtenUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    const parts = u.pathname.split("/").filter(Boolean);
+    const last = decodeURIComponent(parts[parts.length - 1] || "")
+      .replace(/\.html?$/i, "")
+      .replace(/~.*$/, "");
+    if (/^[a-z0-9][a-z0-9._/-]*$/i.test(last) && last.length >= 3) return last.toUpperCase();
+  } catch {
+    /* ignore */
+  }
+  return "";
+}
+
+async function refreshAtenSitemapMap(): Promise<Record<string, string>> {
+  const mapPath = path.join(MICROINFORM_DIR, "aten-url-map.json");
+  try {
+    const res = await fetch("https://www.aten.com/sitemap.xml", {
+      headers: { "User-Agent": UA, Accept: "application/xml,text/xml,*/*" },
+      signal: AbortSignal.timeout(60000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const xml = await res.text();
+    const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((m) => m[1]!.trim());
+    const map: Record<string, string> = {};
+    for (const url of locs) {
+      if (!/\/global\/en\/products\/.+\/[a-z0-9][a-z0-9._-]+\/?$/i.test(url)) continue;
+      const clean = url.endsWith("/") ? url : `${url}/`;
+      const parts = clean.split("/").filter(Boolean);
+      const model = (parts[parts.length - 1] || "").toUpperCase();
+      if (!model) continue;
+      if (!map[model] || clean.length < map[model]!.length) map[model] = clean;
+    }
+    if (!existsSync(MICROINFORM_DIR)) mkdirSync(MICROINFORM_DIR, { recursive: true });
+    writeFileSync(mapPath, JSON.stringify(map, null, 2), "utf-8");
+    return map;
+  } catch {
+    if (!existsSync(mapPath)) return {};
+    try {
+      return JSON.parse(readFileSync(mapPath, "utf-8")) as Record<string, string>;
+    } catch {
+      return {};
+    }
+  }
+}
+
+function readAtenSitemapMap(): Record<string, string> {
+  const mapPath = path.join(MICROINFORM_DIR, "aten-url-map.json");
+  if (!existsSync(mapPath)) return {};
+  try {
+    return JSON.parse(readFileSync(mapPath, "utf-8")) as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+function isModernAtenProductUrl(url: string): boolean {
+  return /\/global\/en\/products\/.+\//i.test(url) && !/%[0-9A-F]{2}/i.test(url) && !/productItem\.php/i.test(url);
+}
+
+function buildAtenIndexFromPrice(): ManufacturerIndexEntry[] {
+  const parsedPath = path.join(MICROINFORM_DIR, "price-parsed.json");
+  const sitemap = readAtenSitemapMap();
+  const byModel = new Map<string, ManufacturerIndexEntry>();
+
+  const upsert = (model: string, url: string, subtitle: string) => {
+    const key = model.toUpperCase();
+    if (!key || !url) return;
+    const normalizedUrl = normalizeManufacturerUrl(url);
+    if (!normalizedUrl) return;
+    const prev = byModel.get(key);
+    const prefer = isModernAtenProductUrl(normalizedUrl);
+    const prevPrefer = prev ? isModernAtenProductUrl(prev.url) : false;
+    if (!prev || (prefer && !prevPrefer) || (prefer === prevPrefer && normalizedUrl.length < (prev?.url.length || 9999))) {
+      byModel.set(key, {
+        vendor: "ATEN",
+        model: key,
+        url: normalizedUrl,
+        subtitle,
+      });
+    }
+  };
+
+  for (const [model, url] of Object.entries(sitemap)) {
+    upsert(model, url, "");
+  }
+
+  if (existsSync(parsedPath)) {
+    try {
+      const book = JSON.parse(readFileSync(parsedPath, "utf-8")) as {
+        products?: Array<{
+          vendor?: string;
+          articul?: string;
+          name?: string;
+          sourceUrl?: string;
+        }>;
+      };
+      for (const row of book.products || []) {
+        if (!/^aten$/i.test(row.vendor || "")) continue;
+        const model = normalizeMicroinformArticul("ATEN", row.articul || "");
+        if (!model) continue;
+        const subtitle = cleanText(String(row.name || "").replace(/^ATEN\s+/i, ""));
+        const sitemapUrl = sitemap[model.toUpperCase()] || sitemap[model.toUpperCase().split("/")[0] || ""];
+        if (sitemapUrl) {
+          upsert(model, sitemapUrl, subtitle);
+          continue;
+        }
+        const rawUrl = String(row.sourceUrl || "").trim();
+        if (!rawUrl || !/^https?:\/\//i.test(rawUrl) || /^https?:\/\/ru\/?$/i.test(rawUrl)) continue;
+        upsert(model, rawUrl, subtitle);
+      }
+    } catch {
+      /* ignore broken price cache */
+    }
+  }
+
+  return [...byModel.values()];
 }
 
 /** dlink.ru /ru/products/{id}/ — only categories that list `.product` cards. */
@@ -199,9 +338,11 @@ async function scrapeOrigoCategories(): Promise<ManufacturerIndexEntry[]> {
 
 export async function buildManufacturerIndex(): Promise<ManufacturerIndex> {
   const [dlink, origo] = await Promise.all([scrapeDlinkCategories(), scrapeOrigoCategories()]);
+  await refreshAtenSitemapMap();
+  const aten = buildAtenIndexFromPrice();
   const index: ManufacturerIndex = {
     builtAt: new Date().toISOString(),
-    entries: [...dlink, ...origo],
+    entries: [...dlink, ...origo, ...aten],
   };
   if (!existsSync(MICROINFORM_DIR)) mkdirSync(MICROINFORM_DIR, { recursive: true });
   writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2), "utf-8");
@@ -235,9 +376,16 @@ export async function getManufacturerIndex(options?: {
 function indexLookupMap(index: ManufacturerIndex): Map<string, ManufacturerIndexEntry> {
   const map = new Map<string, ManufacturerIndexEntry>();
   for (const entry of index.entries) {
-    for (const key of collectModelKeys(entry.model)) addIndexAlias(map, key, entry);
+    for (const key of collectModelKeys(entry.model, entry.vendor)) addIndexAlias(map, key, entry);
   }
   return map;
+}
+
+function normalizeVendorName(vendor: string): "D-Link" | "Origo" | "ATEN" | "" {
+  if (/^d-?link$/i.test(vendor)) return "D-Link";
+  if (/^origo$/i.test(vendor)) return "Origo";
+  if (/^aten$/i.test(vendor)) return "ATEN";
+  return "";
 }
 
 export function lookupManufacturerEntry(
@@ -246,10 +394,10 @@ export function lookupManufacturerEntry(
   articul: string,
 ): ManufacturerIndexEntry | null {
   const map = indexLookupMap(index);
-  const vendorNorm = /^d-?link$/i.test(vendor) ? "D-Link" : /^origo$/i.test(vendor) ? "Origo" : "";
+  const vendorNorm = normalizeVendorName(vendor);
   if (!vendorNorm) return null;
   const normalized = normalizeMicroinformArticul(vendor, articul);
-  const candidates = collectModelKeys(normalized);
+  const candidates = collectModelKeys(normalized, vendorNorm);
   for (const key of candidates) {
     const hit = map.get(key.toUpperCase());
     if (hit && hit.vendor === vendorNorm) return hit;
@@ -303,7 +451,7 @@ export function extractManufacturerPageInfo(
   articul: string,
 ): ManufacturerPageInfo | null {
   const $ = cheerio.load(html);
-  const brand = /^d-?link$/i.test(vendor) ? "D-Link" : /^origo$/i.test(vendor) ? "Origo" : vendor;
+  const brand = normalizeVendorName(vendor) || vendor;
   const normalized = normalizeMicroinformArticul(vendor, articul);
 
   let model = "";
@@ -322,13 +470,32 @@ export function extractManufacturerPageInfo(
     if (subtitle.toUpperCase().startsWith(model.toUpperCase())) {
       subtitle = subtitle.replace(new RegExp(`^${model}\\s*[–—:-]\\s*`, "i"), "").trim();
     }
+  } else if (brand === "ATEN") {
+    model =
+      cleanText($("h1").first().text()) ||
+      cleanText($(".product-name, .productTitle, .model-name").first().text()) ||
+      modelFromAtenUrl(pageUrl) ||
+      "";
+    // Title often "CS22H | Cable KVM Switch | ATEN ..."
+    const title = cleanText($("title").text());
+    if (!model && title) model = title.split("|")[0]?.trim() || "";
+    subtitle =
+      cleanText($("h1 + p, .product-brief, .product-desc, .hero-desc, meta[name='description']").first().text()) ||
+      cleanText($("meta[property='og:description']").attr("content") || "") ||
+      (title.includes("|") ? cleanText(title.split("|").slice(1, -1).join("|")) : "");
+    if (subtitle.toUpperCase().startsWith(model.toUpperCase())) {
+      subtitle = subtitle.replace(new RegExp(`^${model}\\s*[–—:|/-]\\s*`, "i"), "").trim();
+    }
   }
 
   model = stripDlinkRevisionsFromText(model);
   subtitle = stripDlinkRevisionsFromText(subtitle);
 
   if (!model) model = normalized.split("/")[0] || normalized;
-  if (!subtitle) return null;
+  if (!subtitle) {
+    if (brand === "ATEN") subtitle = model;
+    else return null;
+  }
 
   const displayName = buildManufacturerDisplayName(brand, model, subtitle);
   return {
@@ -430,7 +597,10 @@ export async function resolveManufacturerPage(
         return { url: rewritten, source: "current", entry: null, currentMatches: true };
       }
     } catch {
-      /* fall through */
+      // ATEN often blocks datacenter IPs; keep a plausible product URL for later enrich.
+      if (/^aten$/i.test(vendor) && /aten\.com|aten\.ru/i.test(rewritten)) {
+        return { url: rewritten, source: "current", entry: null, currentMatches: true };
+      }
     }
   }
 

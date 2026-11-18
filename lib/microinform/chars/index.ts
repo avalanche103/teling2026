@@ -63,6 +63,10 @@ const REFINERS: Record<ActiveNetworkGroup, RefineFn> = {
   poe: refinePoeCharGroups,
   power_supplies: refinePowerSupplyCharGroups,
   kvm: refineKvmCharGroups,
+  kvm_consoles: refineKvmCharGroups,
+  kvm_extenders: refineKvmCharGroups,
+  kvm_cables: refineKvmCharGroups,
+  kvm_modules: refineKvmCharGroups,
   adapters: refineAdapterCharGroups,
   usb: refineUsbCharGroups,
   cameras: refineCameraCharGroups,
@@ -70,6 +74,12 @@ const REFINERS: Record<ActiveNetworkGroup, RefineFn> = {
   voip: refineVoipCharGroups,
   gpon: refineGponCharGroups,
   software: refineSoftwareCharGroups,
+  av_extenders: refineKvmCharGroups,
+  av_matrix: refineKvmCharGroups,
+  av_switches: refineKvmCharGroups,
+  av_splitters: refineKvmCharGroups,
+  av_converters: refineAdapterCharGroups,
+  av_cables: refineKvmCharGroups,
 };
 
 export const SELECTED_FILTERS_BY_GROUP: Record<ActiveNetworkGroup, string[]> = {
@@ -81,6 +91,10 @@ export const SELECTED_FILTERS_BY_GROUP: Record<ActiveNetworkGroup, string[]> = {
   poe: POE_SELECTED_FILTERS,
   power_supplies: POWER_SUPPLY_SELECTED_FILTERS,
   kvm: KVM_SELECTED_FILTERS,
+  kvm_consoles: KVM_SELECTED_FILTERS,
+  kvm_extenders: KVM_SELECTED_FILTERS,
+  kvm_cables: KVM_SELECTED_FILTERS,
+  kvm_modules: KVM_SELECTED_FILTERS,
   adapters: ADAPTER_SELECTED_FILTERS,
   usb: USB_SELECTED_FILTERS,
   cameras: CAMERA_SELECTED_FILTERS,
@@ -88,6 +102,12 @@ export const SELECTED_FILTERS_BY_GROUP: Record<ActiveNetworkGroup, string[]> = {
   voip: VOIP_SELECTED_FILTERS,
   gpon: GPON_SELECTED_FILTERS,
   software: SOFTWARE_SELECTED_FILTERS,
+  av_extenders: KVM_SELECTED_FILTERS,
+  av_matrix: KVM_SELECTED_FILTERS,
+  av_switches: KVM_SELECTED_FILTERS,
+  av_splitters: KVM_SELECTED_FILTERS,
+  av_converters: ADAPTER_SELECTED_FILTERS,
+  av_cables: KVM_SELECTED_FILTERS,
 };
 
 const SECTION_ID_TO_GROUP = new Map<number, ActiveNetworkGroup>(

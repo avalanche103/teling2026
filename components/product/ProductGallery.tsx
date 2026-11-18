@@ -14,7 +14,8 @@ function isExternalUrl(src: string): boolean {
 }
 
 export function ProductGallery({ localImages, externalImages = [], alt }: ProductGalleryProps) {
-  const images = [...localImages, ...externalImages];
+  // Local-first: if disk files exist, do not mix in ssd.ru fallbacks.
+  const images = localImages.length > 0 ? localImages : externalImages;
 
   const [active, setActive] = useState(0);
 

@@ -149,6 +149,14 @@ function scoreProductImage(url: string): number {
   } else if (isListingPrevImage(url)) {
     // Listing prev is angled; prefer over Front-only /600/ cards.
     score += 210;
+  } else if (u.includes("assets.aten.com/product/image/")) {
+    // ATEN hero packshot CDN.
+    score += 230;
+  } else if (u.includes("assets.aten.com/product/overview/")) {
+    if (/icon|feature|model-name|logo/i.test(u)) score += 20;
+    else score += 120;
+  } else if (u.includes("assets.aten.com/")) {
+    score += 90;
   } else if (u.includes("/up/prod_fotos/")) score += 100;
   else if (u.includes("/up/prod/")) score += 70;
   else if (u.includes("/prod_fotos/")) score += 80;
@@ -176,6 +184,7 @@ function scoreProductImage(url: string): number {
 function minImageBytes(url: string): number {
   if (/\/up\/prod\/600\//i.test(url)) return 3_500;
   if (isListingPrevImage(url)) return 8_000;
+  if (/assets\.aten\.com\/product\/image\//i.test(url)) return 4_000;
   return 12_000;
 }
 
@@ -266,6 +275,42 @@ function pickDescription($: ReturnType<typeof cheerio.load>, pageUrl: string): s
   const section = $("#section1").first().clone();
   section.find("h3, h4, .title-block, .title_block").first().remove();
   push(section.html());
+
+  // 4) ATEN / generic product pages
+  for (const sel of [
+    "[itemprop='description']",
+    ".product-description",
+    ".product-overview",
+    ".product-brief",
+    ".overview-content",
+    "#overview",
+    ".tab-content .description",
+    ".pd-content",
+    ".product-detail-content",
+    ".Rich-Content-Block-Description",
+  ]) {
+    push($(sel).first().html());
+  }
+  // ATEN rich-content feature sections (text blocks only; skip promo banners).
+  const atenBlocks: string[] = [];
+  $(".row.Rich-Content-Section .wording_block, .Rich-Content-Block-Description").each((_, el) => {
+    const clone = $(el).clone();
+    clone.find("img, picture, video, script, style").remove();
+    const htmlBlock = clone.html() || "";
+    const text = cheerio.load(htmlBlock).text().replace(/\s+/g, " ").trim();
+    if (text.length < 50 || text.length > 1200) return;
+    if (/latest server room|cookie|privacy|related products|newsletter/i.test(text)) return;
+    atenBlocks.push(htmlBlock);
+  });
+  if (atenBlocks.length) push(atenBlocks.slice(0, 8).join("\n"));
+  const h1 = $("h1").first().text().replace(/\s+/g, " ").trim();
+  if (h1 && h1.length >= 20) push(`<p>${h1}</p>`);
+  const og = $("meta[property='og:description']").attr("content");
+  if (og && og.trim().length >= 40) push(`<p>${og.trim()}</p>`);
+  const metaDesc = $("meta[name='description']").attr("content");
+  if (metaDesc && metaDesc.trim().length >= 40 && !/^\s*\|\s*/.test(metaDesc)) {
+    push(`<p>${metaDesc.trim()}</p>`);
+  }
 
   // Prefer the longest textual candidate
   candidates.sort((a, b) => {
@@ -387,20 +432,22 @@ export function extractFromHtml(
 
   // Category listing packshot first — often the only true angled hero.
   if (options?.listingImage) pushImage(options.listingImage);
+  pushImage($("meta[property='og:image']").attr("content"));
+  pushImage($("meta[name='twitter:image']").attr("content"));
 
   // Prefer lightbox/full-size links from the product photo strip first.
-  $("a[href*='prod_fotos'], a[href*='/prod/']").each((_, el) => {
+  $("a[href*='prod_fotos'], a[href*='/prod/'], a[href*='assets.aten.com']").each((_, el) => {
     pushImage($(el).attr("href"));
   });
   $("a[href]").each((_, el) => {
     const href = $(el).attr("href");
     if (href && /\.(jpe?g|png|webp|gif)(\?|$)/i.test(href)) pushImage(href);
   });
-  $("img[src*='prod_fotos'], img[src*='/prod/']").each((_, el) => {
-    pushImage($(el).attr("src"));
+  $("img[src*='prod_fotos'], img[src*='/prod/'], img[src*='assets.aten.com']").each((_, el) => {
+    pushImage($(el).attr("src") || $(el).attr("data-src") || $(el).attr("data-lazy"));
   });
   $("img[src]").each((_, el) => {
-    pushImage($(el).attr("src"));
+    pushImage($(el).attr("src") || $(el).attr("data-src"));
   });
 
   const imageUrls = rankProductImages(collected);

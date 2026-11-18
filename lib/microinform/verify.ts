@@ -30,7 +30,7 @@ export interface VerifyBatchResult {
 }
 
 function isTargetVendor(vendor: string): boolean {
-  return /^d-?link$/i.test(vendor) || /^origo$/i.test(vendor);
+  return /^d-?link$/i.test(vendor) || /^origo$/i.test(vendor) || /^aten$/i.test(vendor);
 }
 
 function namesDiffer(a: string, b: string): boolean {
@@ -125,8 +125,20 @@ export async function verifyManufacturerProducts(options?: {
       // Always refresh manufacturer title; optionally refresh media/description.
       const html = await fetchText(resolved.url);
       const info = extractManufacturerPageInfo(resolved.url, html, vendor, articul);
-      const manufacturerName = info?.displayName
-        ? stripDlinkRevisionsFromText(info.displayName)
+      const modelMatches = Boolean(
+        info &&
+          (info.model || "")
+            .toUpperCase()
+            .replace(/[^A-Z0-9/-]/g, "")
+            .includes(articul.toUpperCase().replace(/[^A-Z0-9/-]/g, "").slice(0, 6)),
+      );
+      // ATEN legacy productItem.php pages are often shared across SKUs — keep price name unless model matches.
+      const canRename =
+        Boolean(info?.displayName) &&
+        (!/^aten$/i.test(vendor) ||
+          (modelMatches && !/productItem\.php/i.test(resolved.url || "")));
+      const manufacturerName = canRename
+        ? stripDlinkRevisionsFromText(info!.displayName)
         : stripDlinkRevisionsFromText(nameBefore);
 
       const shouldEnrich =
@@ -155,7 +167,7 @@ export async function verifyManufacturerProducts(options?: {
         }
       }
 
-      if (manufacturerName) {
+      if (canRename && manufacturerName) {
         if (namesDiffer(nameBefore, manufacturerName)) nameUpdated += 1;
         next = {
           ...next,
