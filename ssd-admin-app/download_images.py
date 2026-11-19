@@ -79,14 +79,14 @@ def build_image_filename(product, pic_url, image_index):
     return f"{article_safe}_{image_index}{ext}"
 
 
-def download_image(session: requests.Session, url: str, filename: str, retries: int = 2) -> bool:
+def download_image(session: requests.Session, url: str, filename: str, retries: int = 3) -> bool:
     """Download image to project public/images directory."""
     filepath = IMAGES_DIR / filename
     last_error = None
     for attempt in range(1, retries + 1):
         try:
-            # (connect timeout, read timeout) — balance speed vs ssd.ru flakiness
-            r = session.get(url, timeout=(8, 25))
+            # (connect timeout, read timeout) — ssd.ru rate-limits aggressive parallel pulls
+            r = session.get(url, timeout=(15, 60))
             r.raise_for_status()
             if not r.content:
                 raise ValueError("empty body")
@@ -97,7 +97,7 @@ def download_image(session: requests.Session, url: str, filename: str, retries: 
             return True
         except Exception as e:
             last_error = e
-            time.sleep(0.15 * attempt)
+            time.sleep(0.4 * attempt)
     print(f"Failed to download {url}: {last_error}", flush=True)
     return False
 

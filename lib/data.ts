@@ -1082,6 +1082,18 @@ function buildFacetsFromProducts(allProducts: ProductRaw[]): SectionFacets {
  * Facets with optional narrowing: counts shrink based on other active filters
  * (classic e-commerce facet behavior; each dimension ignores its own selection).
  */
+function hasMeaningfulActiveFilters(
+  active: GetSectionFacetsOptions["active"]
+): boolean {
+  if (!active) return false;
+  return (
+    active.brands.length > 0 ||
+    active.priceMin != null ||
+    active.priceMax != null ||
+    Object.keys(active.charFilters).length > 0
+  );
+}
+
 export function getSectionFacets(
   sectionId: number,
   options: GetSectionFacetsOptions = {}
@@ -1090,7 +1102,9 @@ export function getSectionFacets(
   const search = options.search?.trim() || "";
   const active = options.active;
 
-  if (!active) {
+  // Empty ActiveFilters object used to take the expensive per-char rebuild path
+  // (hundreds of passes on Microinform sections like Коммутаторы).
+  if (!hasMeaningfulActiveFilters(active)) {
     return buildFacetsFromProducts(
       applyProductFilters(base, { search })
     );
@@ -1098,37 +1112,41 @@ export function getSectionFacets(
 
   const withoutBrands = applyProductFilters(base, {
     search,
-    priceMin: active.priceMin ?? undefined,
-    priceMax: active.priceMax ?? undefined,
-    charFilters: active.charFilters,
+    priceMin: active!.priceMin ?? undefined,
+    priceMax: active!.priceMax ?? undefined,
+    charFilters: active!.charFilters,
   });
   const withoutPrice = applyProductFilters(base, {
     search,
-    brands: active.brands,
-    charFilters: active.charFilters,
+    brands: active!.brands,
+    charFilters: active!.charFilters,
   });
   const brandFacets = buildFacetsFromProducts(withoutBrands);
   const priceFacets = buildFacetsFromProducts(withoutPrice);
 
-  const charNames = new Set<string>([
-    ...Object.keys(active.charFilters),
-    ...brandFacets.chars.map((c) => c.name),
-  ]);
+  // Only refine facets the user touched (plus any already selected char filters).
+  // Do NOT iterate every discovered char name — that is O(chars × products).
+  const charNames = new Set<string>(Object.keys(active!.charFilters));
 
   const chars: CharFacet[] = [];
   for (const charName of charNames) {
-    const otherChars = { ...active.charFilters };
+    const otherChars = { ...active!.charFilters };
     delete otherChars[charName];
     const subset = applyProductFilters(base, {
       search,
-      brands: active.brands,
-      priceMin: active.priceMin ?? undefined,
-      priceMax: active.priceMax ?? undefined,
+      brands: active!.brands,
+      priceMin: active!.priceMin ?? undefined,
+      priceMax: active!.priceMax ?? undefined,
       charFilters: otherChars,
     });
     const built = buildFacetsFromProducts(subset);
     const facet = built.chars.find((c) => c.name === charName);
     if (facet) chars.push(facet);
+  }
+
+  // Keep unrelated char facets from the brand-filtered set so the sidebar stays filled.
+  for (const facet of brandFacets.chars) {
+    if (!charNames.has(facet.name)) chars.push(facet);
   }
 
   chars.sort((a, b) => {

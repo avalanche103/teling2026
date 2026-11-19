@@ -1,0 +1,14 @@
+{
+  "kvmParent": 653,
+  "kvmConsoles": 654,
+  "kvmExtenders": 655,
+  "kvmCables": 656,
+  "kvmModules": 657,
+  "avParent": 658,
+  "avExtenders": 659,
+  "avMatrix": 660,
+  "avSwitches": 661,
+  "avSplitters": 662,
+  "avConverters": 663,
+  "avCables": 664
+}

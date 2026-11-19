@@ -1,4 +1,44 @@
 {
+  "ATEN (системы управления IT инфраструктурой )": {
+    "action": "existing",
+    "sectionId": 657
+  },
+  "ATEN USB устройства": {
+    "action": "existing",
+    "sectionId": 640
+  },
+  "ATEN Кабели для КВМ-переключателей": {
+    "action": "existing",
+    "sectionId": 656
+  },
+  "ATEN Консоли": {
+    "action": "existing",
+    "sectionId": 654
+  },
+  "ATEN Настольные КВМ переключатели": {
+    "action": "existing",
+    "sectionId": 641
+  },
+  "ATEN Серия устройств Altusen": {
+    "action": "existing",
+    "sectionId": 641
+  },
+  "ATEN Стоечные КВМ переключатели": {
+    "action": "existing",
+    "sectionId": 641
+  },
+  "ATEN Удлинители консоли": {
+    "action": "existing",
+    "sectionId": 655
+  },
+  "ATEN Профессиональные A/V решения": {
+    "action": "existing",
+    "sectionId": 659
+  },
+  "ATEN Профессиональные A/V решения ПРОМО": {
+    "action": "existing",
+    "sectionId": 659
+  },
   "D-LINK (сетевое оборудование)": {
     "action": "existing",
     "sectionId": 632
@@ -122,48 +162,5 @@
   "Док-станции и USB концентраторы Origo": {
     "action": "existing",
     "sectionId": 640
-  },
-  "ATEN USB устройства": {
-    "action": "existing",
-    "sectionId": 640
-  },
-  "ATEN Настольные КВМ переключатели": {
-    "action": "existing",
-    "sectionId": 641
-  },
-  "ATEN Стоечные КВМ переключатели": {
-    "action": "existing",
-    "sectionId": 641
-  },
-  "ATEN Консоли": {
-    "action": "existing",
-    "sectionId": 654
-  },
-  "ATEN Удлинители консоли": {
-    "action": "existing",
-    "sectionId": 655
-  },
-  "ATEN Кабели для КВМ-переключателей": {
-    "action": "existing",
-    "sectionId": 656
-  },
-  "ATEN (системы управления IT инфраструктурой )": {
-    "action": "existing",
-    "sectionId": 657
-  },
-  "ATEN Серия устройств Altusen": {
-    "action": "existing",
-    "sectionId": 641
-  },
-  "ATEN Профессиональные A/V решения": {
-    "action": "existing",
-    "sectionId": 659
-  },
-  "ATEN Профессиональные A/V решения ПРОМО": {
-    "action": "existing",
-    "sectionId": 659
-  },
-  "!!!ATEN проданное": {
-    "action": "skip"
   }
 }

@@ -181,7 +181,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     : applySelectedFacetKeys(
         getSectionFacets(category.id, {
           search,
-          active: effectiveFilters,
+          // Only pay for facet recompute when filters are actually applied.
+          active: hasActiveFilters(effectiveFilters) ? effectiveFilters : undefined,
         }),
         selectedFilterKeys
       );
