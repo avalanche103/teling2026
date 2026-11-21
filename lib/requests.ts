@@ -29,6 +29,8 @@ export interface ProductRequest {
   items: RequestItem[];
   /** ISO timestamp when an admin opened the request; null/undefined = new */
   seenAt?: string | null;
+  /** ISO timestamp when an admin marked the request as handled */
+  handledAt?: string | null;
 }
 
 export interface SubmitProductRequestInput {
@@ -64,6 +66,7 @@ function readRequests(): ProductRequest[] {
         email: String(r.email ?? ""),
         items: Array.isArray(r.items) ? (r.items as RequestItem[]) : [],
         seenAt: r.seenAt ?? null,
+        handledAt: r.handledAt ?? null,
       };
     });
   } catch {
@@ -131,6 +134,7 @@ export function upsertDraftRequest(
     email: "",
     items,
     seenAt: null,
+    handledAt: null,
   };
   requests.push(request);
   writeRequests(requests);
@@ -162,6 +166,7 @@ export function submitProductRequest(
     updatedAt: now,
     submittedAt: now,
     seenAt: null,
+    handledAt: null,
   };
   writeRequests(requests);
   return requests[idx];
@@ -176,6 +181,44 @@ export function markRequestSeen(id: string): ProductRequest | null {
     writeRequests(requests);
   }
   return requests[idx];
+}
+
+export function setRequestHandled(
+  id: string,
+  handled: boolean
+): ProductRequest | null {
+  const requests = readRequests();
+  const idx = requests.findIndex((r) => r.id === id);
+  if (idx === -1) return null;
+
+  const now = new Date().toISOString();
+  const current = requests[idx];
+  requests[idx] = {
+    ...current,
+    handledAt: handled ? now : null,
+    // Marking handled implies the request was seen.
+    seenAt: handled ? current.seenAt || now : current.seenAt,
+    updatedAt: now,
+  };
+  writeRequests(requests);
+  return requests[idx];
+}
+
+export function deleteRequestById(id: string): boolean {
+  const requests = readRequests();
+  const next = requests.filter((r) => r.id !== id);
+  if (next.length === requests.length) return false;
+  writeRequests(next);
+  return true;
+}
+
+/** Removes all draft (unsubmitted) requests. Returns how many were deleted. */
+export function deleteDraftRequests(): number {
+  const requests = readRequests();
+  const next = requests.filter((r) => r.status !== "draft");
+  const removed = requests.length - next.length;
+  if (removed > 0) writeRequests(next);
+  return removed;
 }
 
 export function countUnseenRequests(): number {

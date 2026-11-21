@@ -26,7 +26,7 @@ interface VisitorInfoPayload {
 interface MessageExt {
   id: string;
   role: "visitor" | "support";
-  type?: "text" | "contact_request" | "contact_response";
+  type?: "text" | "contact_request" | "contact_response" | "system";
   field?: ContactField;
   text: string;
   createdAt: string;
@@ -276,9 +276,17 @@ export function ChatWidget() {
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex ${msg.role === "visitor" ? "justify-end" : "justify-start"}`}
+                className={`flex ${
+                  msg.type === "system"
+                    ? "justify-center"
+                    : msg.role === "visitor"
+                      ? "justify-end"
+                      : "justify-start"
+                }`}
               >
-                {msg.type === "contact_request" && msg.field ? (
+                {msg.type === "system" ? (
+                  <p className="max-w-[90%] text-center text-xs text-slate-400">{msg.text}</p>
+                ) : msg.type === "contact_request" && msg.field ? (
                   <div className="w-full rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm">
                     <p className="font-medium text-blue-700">
                       Пожалуйста, укажите: {CONTACT_FIELD_LABELS[msg.field]}

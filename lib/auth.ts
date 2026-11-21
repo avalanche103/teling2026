@@ -169,6 +169,23 @@ export function listEmployees(): Employee[] {
   return readEmployees().map(toEmployee);
 }
 
+export function getEmployeeById(id: string): Employee | null {
+  const record = readEmployees().find((item) => item.id === id);
+  return record ? toEmployee(record) : null;
+}
+
+/** Active staff for chat transfer (no secrets). */
+export function listChatOperators(): Pick<Employee, "id" | "username" | "name" | "role">[] {
+  return readEmployees()
+    .filter((item) => item.active)
+    .map((item) => ({
+      id: item.id,
+      username: item.username,
+      name: item.name,
+      role: item.role,
+    }));
+}
+
 export function authenticateEmployee(username: string, password: string): Employee | null {
   const normalizedUsername = username.trim().toLowerCase();
   const employee = readEmployees().find((item) => item.username === normalizedUsername && item.active);

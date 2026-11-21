@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ProductRequest, RequestStatus } from "@/lib/requests";
 
-type StatusFilter = "all" | RequestStatus;
+type StatusFilter = "all" | RequestStatus | "handled";
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleString("ru-BY", {
@@ -26,22 +26,26 @@ export function RequestsManager() {
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filter, setFilter] = useState<StatusFilter>("all");
+  const [actionBusy, setActionBusy] = useState(false);
 
   const selected = requests.find((r) => r.id === selectedId) ?? null;
 
   const filtered = useMemo(() => {
     if (filter === "all") return requests;
+    if (filter === "handled") return requests.filter((r) => Boolean(r.handledAt));
     return requests.filter((r) => r.status === filter);
   }, [requests, filter]);
 
   const counts = useMemo(() => {
     let draft = 0;
     let submitted = 0;
+    let handled = 0;
     for (const r of requests) {
       if (r.status === "draft") draft += 1;
       else submitted += 1;
+      if (r.handledAt) handled += 1;
     }
-    return { all: requests.length, draft, submitted };
+    return { all: requests.length, draft, submitted, handled };
   }, [requests]);
 
   const load = useCallback(async () => {
@@ -80,11 +84,73 @@ export function RequestsManager() {
     }
   }
 
+  async function setHandled(id: string, handled: boolean) {
+    setActionBusy(true);
+    try {
+      const res = await fetch(`/api/admin/requests/${id}/handled`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ handled }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const updated: ProductRequest = await res.json();
+      setRequests((prev) => prev.map((r) => (r.id === id ? updated : r)));
+    } catch {
+      setError("Не удалось обновить статус обработки");
+    } finally {
+      setActionBusy(false);
+    }
+  }
+
+  async function deleteRequest(req: ProductRequest) {
+    const confirmed = window.confirm(`Удалить запрос № ${req.number}?`);
+    if (!confirmed) return;
+
+    setActionBusy(true);
+    try {
+      const res = await fetch(`/api/admin/requests/${req.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setRequests((prev) => prev.filter((r) => r.id !== req.id));
+      if (selectedId === req.id) setSelectedId(null);
+    } catch {
+      setError("Не удалось удалить запрос");
+    } finally {
+      setActionBusy(false);
+    }
+  }
+
+  async function clearDrafts() {
+    if (counts.draft <= 0) return;
+    const confirmed = window.confirm(
+      `Удалить все неотправленные запросы (${counts.draft})?\n\nЭто действие нельзя отменить.`
+    );
+    if (!confirmed) return;
+
+    setActionBusy(true);
+    try {
+      const res = await fetch("/api/admin/requests/drafts", { method: "DELETE" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data: { deleted?: number } = await res.json();
+      const next = requests.filter((r) => r.status !== "draft");
+      setRequests(next);
+      if (selectedId && !next.some((r) => r.id === selectedId)) {
+        setSelectedId(null);
+      }
+      if (typeof data.deleted === "number" && data.deleted === 0) {
+        await load();
+      }
+    } catch {
+      setError("Не удалось очистить неотправленные");
+    } finally {
+      setActionBusy(false);
+    }
+  }
+
   if (loading) {
     return <p className="text-sm text-slate-500">Загрузка запросов…</p>;
   }
 
-  if (error) {
+  if (error && requests.length === 0) {
     return (
       <p className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
         {error}
@@ -96,11 +162,18 @@ export function RequestsManager() {
     { id: "all", label: "Все", count: counts.all },
     { id: "draft", label: "Неотправленные", count: counts.draft },
     { id: "submitted", label: "Отправленные", count: counts.submitted },
+    { id: "handled", label: "Обработанные", count: counts.handled },
   ];
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+      {error && (
+        <p className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {error}
+        </p>
+      )}
+
+      <div className="flex flex-wrap items-center gap-2">
         {filters.map((f) => {
           const active = filter === f.id;
           return (
@@ -121,6 +194,17 @@ export function RequestsManager() {
             </button>
           );
         })}
+
+        {counts.draft > 0 && (
+          <button
+            type="button"
+            onClick={clearDrafts}
+            disabled={actionBusy}
+            className="ml-auto rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Очистить неотправленные ({counts.draft})
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.1fr_1fr]">
@@ -138,6 +222,7 @@ export function RequestsManager() {
                 const isActive = req.id === selectedId;
                 const isNew = !req.seenAt;
                 const isDraft = req.status === "draft";
+                const isHandled = Boolean(req.handledAt);
                 return (
                   <li key={req.id}>
                     <button
@@ -162,7 +247,12 @@ export function RequestsManager() {
                               Отправленный
                             </span>
                           )}
-                          {isNew && (
+                          {isHandled && (
+                            <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-700">
+                              Обработан
+                            </span>
+                          )}
+                          {isNew && !isHandled && (
                             <span className="rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
                               Новый
                             </span>
@@ -202,6 +292,7 @@ export function RequestsManager() {
                   <span className="text-slate-500">Статус:</span>{" "}
                   <span className="font-medium text-slate-900">
                     {statusLabel(selected.status)}
+                    {selected.handledAt ? " · обработан" : ""}
                   </span>
                 </p>
                 <p>
@@ -215,6 +306,14 @@ export function RequestsManager() {
                     <span className="text-slate-500">Отправлен:</span>{" "}
                     <span className="font-medium text-slate-900">
                       {formatDate(selected.submittedAt)}
+                    </span>
+                  </p>
+                )}
+                {selected.handledAt && (
+                  <p>
+                    <span className="text-slate-500">Обработан:</span>{" "}
+                    <span className="font-medium text-slate-900">
+                      {formatDate(selected.handledAt)}
                     </span>
                   </p>
                 )}
@@ -293,6 +392,27 @@ export function RequestsManager() {
                   </table>
                 </div>
               )}
+
+              <div className="flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 pt-4">
+                {selected.status === "submitted" && (
+                  <button
+                    type="button"
+                    onClick={() => setHandled(selected.id, !selected.handledAt)}
+                    disabled={actionBusy}
+                    className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {selected.handledAt ? "Вернуть в работу" : "Обработан"}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => deleteRequest(selected)}
+                  disabled={actionBusy}
+                  className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Удалить
+                </button>
+              </div>
             </div>
           )}
         </div>

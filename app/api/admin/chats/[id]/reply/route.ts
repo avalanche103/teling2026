@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { appendMessage, getChatById } from "@/lib/chats";
+import { appendMessage, canReplyToChat, getChatById } from "@/lib/chats";
 import type { ContactField } from "@/lib/chats";
 import { requireApiSession } from "@/lib/auth";
 
@@ -27,8 +27,21 @@ export async function POST(
     return NextResponse.json({ error: "chat not found" }, { status: 404 });
   }
 
-  const msgType =
-    type === "contact_request" ? "contact_request" : "text";
-  const chat = appendMessage(id, "support", text.trim(), msgType, field);
+  if (!canReplyToChat(existing, auth.session.user.id)) {
+    return NextResponse.json(
+      { error: "Можно отвечать только в свои чаты. Возьмите или заберите диалог." },
+      { status: 403 }
+    );
+  }
+
+  const msgType = type === "contact_request" ? "contact_request" : "text";
+  const chat = appendMessage(
+    id,
+    "support",
+    text.trim(),
+    msgType,
+    field,
+    { id: auth.session.user.id, name: auth.session.user.name }
+  );
   return NextResponse.json({ messages: chat!.messages });
 }

@@ -72,5 +72,5 @@ nohup /usr/bin/node scripts/start-next.cjs > next-only.log 2>&1 </dev/null &
 
 ## Microinform cron
 
-`09:30 Europe/Minsk` via `scripts/install-microinform-cron.sh` → `microinform-daily-sync.sh`.
-Fetch/apply only; pending new SKUs stay for admin (no auto-publish).
+`06:30 UTC` (= 09:30 Europe/Minsk) via `scripts/install-microinform-cron.sh` → `microinform-daily-sync.sh`.
+Do not use `CRON_TZ` on this VPS (it was ignored). Fetch/apply only; pending stay for admin.

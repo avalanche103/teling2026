@@ -1,0 +1,4 @@
+[[permission]]
+identifier = "allow-focus-operator-window"
+description = "Allow the operator chat page to bring the desktop window to the foreground"
+commands.allow = ["focus_operator_window"]

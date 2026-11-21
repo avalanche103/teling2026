@@ -1,0 +1,20 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Operator chat window — remote teling.by with tray/autostart helpers",
+  "windows": ["main"],
+  "remote": {
+    "urls": ["https://teling.by/*", "http://localhost:6001/*", "http://127.0.0.1:6001/*"]
+  },
+  "permissions": [
+    "core:default",
+    "autostart:default",
+    "notification:default",
+    "allow-focus-operator-window",
+    "core:window:allow-hide",
+    "core:window:allow-show",
+    "core:window:allow-set-focus",
+    "core:window:allow-unminimize",
+    "core:window:allow-request-user-attention"
+  ]
+}
