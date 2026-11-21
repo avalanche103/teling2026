@@ -14,6 +14,7 @@ import {
   getProductSummaryBySku,
 } from "@/lib/data";
 import { formatPrice, formatPriceValue, hasPrice, normalizeCurrency } from "@/lib/format";
+import { getOfferMerchantPolicies } from "@/lib/merchant-policies";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -149,6 +150,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         priceCurrency: product.currencyCode || product.currency || "BYN",
         price: String(product.price),
         availability: "https://schema.org/InStock",
+        ...getOfferMerchantPolicies(origin),
       }
     : undefined;
 

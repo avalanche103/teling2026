@@ -2,6 +2,10 @@ import Link from "next/link";
 import { CategoryCard } from "@/components/catalog/CategoryCard";
 import { getRootCategories, getSectionProductCount } from "@/lib/data";
 import { getContentBlock } from "@/lib/content";
+import {
+  getMerchantReturnPolicy,
+  getOfferShippingDetails,
+} from "@/lib/merchant-policies";
 import type { ContactsContent } from "@/lib/types";
 
 function getReadableBadgeTextColor(color?: string): string {
@@ -59,7 +63,7 @@ export default async function HomePage() {
   ]);
   const contactsData = contactsBlock?.contacts || CONTACTS;
 
-  // Organization schema for SEO
+  // Organization schema for SEO (+ global merchant shipping/return policies)
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -78,6 +82,8 @@ export default async function HomePage() {
     priceRange: "$$",
     image: `${origin}/og-image.png`,
     areaServed: "BY",
+    hasMerchantReturnPolicy: getMerchantReturnPolicy(origin),
+    shippingDetails: getOfferShippingDetails(origin),
   };
 
   const websiteSchema = {
