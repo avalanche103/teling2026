@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Install / refresh the production cron job for Microinform daily sync.
-# Schedule: 09:30 Europe/Minsk every day (CRON_TZ).
+# Schedule: 09:30 Europe/Minsk = 06:30 UTC (VPS clock is UTC; CRON_TZ unreliable here).
 #
 # Usage on VPS:
 #   bash /opt/teling/scripts/install-microinform-cron.sh
@@ -19,30 +19,29 @@ chmod +x "$WRAPPER" "$ROOT/scripts/install-microinform-cron.sh"
 
 EXISTING="$(crontab -l 2>/dev/null || true)"
 
-# Drop previously managed block: optional CRON_TZ=Europe/Minsk followed by marker line,
-# or a lone marker line.
+# Drop previously managed marker lines and any orphaned CRON_TZ=Europe/Minsk line
+# that only existed for this job.
 FILTERED="$(
   printf '%s\n' "$EXISTING" | awk -v marker="$MARKER" '
     BEGIN { prev="" }
     {
       if ($0 ~ marker) { prev=""; next }
-      if (prev ~ /^CRON_TZ=Europe\/Minsk[[:space:]]*$/ && $0 ~ marker) { prev=""; next }
-      if (prev != "") print prev
+      if (prev != "") {
+        if (prev ~ /^CRON_TZ=Europe\/Minsk[[:space:]]*$/) { prev=$0; next }
+        print prev
+      }
       prev=$0
     }
     END {
-      if (prev != "" && prev !~ marker) print prev
+      if (prev != "" && prev !~ marker && prev !~ /^CRON_TZ=Europe\/Minsk[[:space:]]*$/) print prev
     }
   '
 )"
 
-# Also strip a trailing orphan CRON_TZ=Europe/Minsk left without a following job
-# (only if it was our managed TZ and nothing else uses it — keep if other jobs need it).
-# Safer: always append a fresh CRON_TZ + job pair; remove any line that already has our marker.
-
+# Host clock is UTC. 06:30 UTC == 09:30 Europe/Minsk year-round (no DST).
+# Do not rely on CRON_TZ — on this VPS it was ignored and the job ran at 09:30 UTC.
 BLOCK=$(cat <<EOF
-CRON_TZ=Europe/Minsk
-30 9 * * * $WRAPPER $MARKER
+30 6 * * * $WRAPPER $MARKER
 EOF
 )
 
@@ -55,7 +54,7 @@ TMP="$(mktemp)"
 crontab "$TMP"
 rm -f "$TMP"
 
-echo "Installed Microinform cron (09:30 Europe/Minsk):"
+echo "Installed Microinform cron (06:30 UTC = 09:30 Europe/Minsk):"
 crontab -l
 echo
 echo "Wrapper: $WRAPPER"
