@@ -45,15 +45,23 @@ export function normalizeManufacturerUrl(url: string): string {
     let host = u.hostname.replace(/^www\./i, "").toLowerCase();
     if (host === "d-link.ru" || host === "dlink.by") host = "dlink.ru";
     if (host === "origo-networks.ru" || host === "www.origo-networks.ru") host = "origo-networks.ru";
-    if (host === "aten.ru" || host === "ru.aten.com") host = "aten.com";
+    // Keep official RU distributor (aten.ru) and reseller (atenpro.ru) as-is.
+    // Legacy ru.aten.com productItem.php pages stay on that host when present.
+    if (host === "ru.aten.com") {
+      u.protocol = "https:";
+      u.hostname = "ru.aten.com";
+      u.hash = "";
+      return u.toString();
+    }
     u.protocol = "https:";
-    u.hostname = host;
+    u.hostname = host === "aten.ru" ? "aten.ru" : host;
     // Prefer RU locale pages for D-Link.
     if (host === "dlink.ru") {
       u.pathname = u.pathname.replace(/^\/by\//i, "/ru/");
       u.pathname = u.pathname.replace(/^\/en\//i, "/ru/");
     }
     // aten.com /ru/ru/ is often CloudFront-403 from DC IPs; global/en works.
+    // Do not rewrite aten.ru / atenpro.ru — those are Russian description sources.
     if (host === "aten.com") {
       u.hash = "";
       u.pathname = u.pathname
@@ -64,11 +72,60 @@ export function normalizeManufacturerUrl(url: string): string {
         u.hostname = "www.aten.com";
       }
     }
+    if (host === "atenpro.ru") {
+      u.hostname = "www.atenpro.ru";
+    }
     u.hash = "";
     return u.toString();
   } catch {
     return url.trim();
   }
+}
+
+type AtenRuSource = "aten.ru" | "atenpro.ru";
+
+let atenRuUrlMapCache: Record<string, string> | null = null;
+let atenproUrlMapCache: Record<string, string> | null = null;
+
+function readJsonMap(fileName: string): Record<string, string> {
+  const mapPath = path.join(MICROINFORM_DIR, fileName);
+  if (!existsSync(mapPath)) return {};
+  try {
+    const raw = JSON.parse(readFileSync(mapPath, "utf8")) as Record<string, string>;
+    return raw && typeof raw === "object" ? raw : {};
+  } catch {
+    return {};
+  }
+}
+
+function getAtenRuUrlMap(): Record<string, string> {
+  if (!atenRuUrlMapCache) atenRuUrlMapCache = readJsonMap("aten-ru-url-map.json");
+  return atenRuUrlMapCache;
+}
+
+function getAtenproUrlMap(): Record<string, string> {
+  if (!atenproUrlMapCache) atenproUrlMapCache = readJsonMap("atenpro-url-map.json");
+  return atenproUrlMapCache;
+}
+
+function lookupInUrlMap(map: Record<string, string>, articul: string): string {
+  const norm = normalizeMicroinformArticul("ATEN", articul || "").toUpperCase();
+  if (!norm) return "";
+  const base = norm.split("/")[0] || norm;
+  const compact = norm.replace(/-/g, "");
+  const baseCompact = base.replace(/-/g, "");
+  return map[norm] || map[base] || map[compact] || map[baseCompact] || "";
+}
+
+/** Prefer official aten.ru card; fall back to atenpro.ru product page. */
+export function lookupAtenRussianUrl(
+  articul: string,
+): { url: string; source: AtenRuSource } | null {
+  const ru = lookupInUrlMap(getAtenRuUrlMap(), articul);
+  if (ru) return { url: normalizeManufacturerUrl(ru), source: "aten.ru" };
+  const pro = lookupInUrlMap(getAtenproUrlMap(), articul);
+  if (pro) return { url: normalizeManufacturerUrl(pro), source: "atenpro.ru" };
+  return null;
 }
 
 async function fetchText(url: string): Promise<string> {

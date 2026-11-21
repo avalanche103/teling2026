@@ -106,11 +106,12 @@ ID диалога: ${chat.id}
   });
 }
 
-export async function sendInactiveChatTranscript(chat: Chat): Promise<void> {
+/** @returns true if the message was handed to SMTP */
+export async function sendInactiveChatTranscript(chat: Chat): Promise<boolean> {
   const transport = createTransport();
   if (!transport) {
     console.warn("[email] SMTP не настроен - письмо не отправлено.");
-    return;
+    return false;
   }
 
   const transcript = buildTranscript(chat);
@@ -149,6 +150,7 @@ ID диалога: ${chat.id}
     text,
     html,
   });
+  return true;
 }
 
 /**

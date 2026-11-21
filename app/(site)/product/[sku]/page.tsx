@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductCharacteristics } from "@/components/product/ProductCharacteristics";
+import { ProductViewTracker } from "@/components/product/ProductViewTracker";
 import { ViewedProducts } from "@/components/product/ViewedProducts";
 import { ProductAddToRequest } from "@/components/request/ProductAddToRequest";
 import {
@@ -317,6 +318,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </section>
       )}
 
+      <ProductViewTracker sku={product.sku} />
       <ViewedProducts currentSku={product.sku} />
     </main>
     </>

@@ -6,6 +6,7 @@ import type {
   ProductRaw,
 } from "@/lib/types";
 
+/** @deprecated Prefer NDJSON snapshot paths from product-import-run. Kept for local tooling. */
 export const PRODUCT_IMPORT_TMP_PATH = "data/products.import.tmp.json";
 
 interface StoredProductImportSnapshot {

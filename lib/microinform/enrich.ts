@@ -276,6 +276,20 @@ function pickDescription($: ReturnType<typeof cheerio.load>, pageUrl: string): s
   section.find("h3, h4, .title-block, .title_block").first().remove();
   push(section.html());
 
+  // 3b) Official RU distributor aten.ru product card tabs
+  push($("#description").first().html());
+  // Features list often follows description on aten.ru; keep description tab first.
+
+  // 3c) atenpro.ru product detail
+  for (const sel of [
+    ".detail_text",
+    ".product-item-detail-text",
+    ".bx_item_description",
+    "[itemprop='description'] .detail_text",
+  ]) {
+    push($(sel).first().html());
+  }
+
   // 4) ATEN / generic product pages
   for (const sel of [
     "[itemprop='description']",
@@ -285,6 +299,7 @@ function pickDescription($: ReturnType<typeof cheerio.load>, pageUrl: string): s
     ".overview-content",
     "#overview",
     ".tab-content .description",
+    "#description",
     ".pd-content",
     ".product-detail-content",
     ".Rich-Content-Block-Description",
@@ -338,49 +353,69 @@ function isJunkCharName(name: string): boolean {
   return false;
 }
 
-function pickCharacteristics($: ReturnType<typeof cheerio.load>): ProductCharGroup[] {
-  const root =
-    $("#section2 .sub-content-block, #section2 .sub_content_block").first().length > 0
-      ? $("#section2 .sub-content-block, #section2 .sub_content_block").first()
-      : $("#section2").first();
+function collectCharGroupsFromRoot(
+  $: ReturnType<typeof cheerio.load>,
+  root: { length: number; find: (sel: string) => { each: Function } },
+): ProductCharGroup[] {
   if (!root.length) return [];
 
   const groups: ProductCharGroup[] = [];
   let current: ProductCharGroup = { name: "Характеристики", items: [] };
 
-  root
-    .find("tr")
-    .each((_, el) => {
-      const $row = $(el);
-      const cells = $row.find("td, th");
-      if (!cells.length) return;
+  root.find("tr").each((_, el) => {
+    const $row = $(el);
+    const cells = $row.find("td, th");
+    if (!cells.length) return;
 
-      const first = cells.first();
-      const colspan = Number(first.attr("colspan") || 1);
-      if (colspan >= 2 || cells.length === 1) {
-        const groupName = cleanCharText(first.text()).replace(/\s+/g, " ");
-        if (!groupName) return;
-        if (current.items.length) groups.push(current);
-        current = { name: groupName.slice(0, 80), items: [] };
-        return;
-      }
+    const first = cells.first();
+    const colspan = Number(first.attr("colspan") || 1);
+    if (colspan >= 2 || cells.length === 1) {
+      const groupName = cleanCharText(first.text()).replace(/\s+/g, " ");
+      if (!groupName) return;
+      if (current.items.length) groups.push(current);
+      current = { name: groupName.slice(0, 80), items: [] };
+      return;
+    }
 
-      if (cells.length < 2) return;
-      const name = cleanCharText($(cells[0]).text()).replace(/\s+/g, " ");
-      const value = cleanCharText($(cells[1]).text())
-        .replace(/\n/g, " • ")
-        .replace(/(?:•\s*){2,}/g, "• ")
-        .replace(/\s+•/g, " •")
-        .trim();
-      if (isJunkCharName(name) || !value || value.length < 1) return;
-      // Skip dense MCS rate matrices.
-      if (name.length <= 3 && /\d/.test(name) && value.split(/\s+/).length > 8) return;
-      if (current.items.length >= 40) return;
-      current.items.push({ name: name.slice(0, 100), value: value.slice(0, 500) });
-    });
+    if (cells.length < 2) return;
+    const name = cleanCharText($(cells[0]).text()).replace(/\s+/g, " ");
+    const value = cleanCharText($(cells[1]).text())
+      .replace(/\n/g, " • ")
+      .replace(/(?:•\s*){2,}/g, "• ")
+      .replace(/\s+•/g, " •")
+      .trim();
+    if (isJunkCharName(name) || !value || value.length < 1) return;
+    // Skip dense MCS rate matrices.
+    if (name.length <= 3 && /\d/.test(name) && value.split(/\s+/).length > 8) return;
+    if (current.items.length >= 40) return;
+    current.items.push({ name: name.slice(0, 100), value: value.slice(0, 500) });
+  });
 
   if (current.items.length) groups.push(current);
   return groups.filter((g) => g.items.length > 0).slice(0, 12);
+}
+
+function pickCharacteristics($: ReturnType<typeof cheerio.load>): ProductCharGroup[] {
+  // aten.ru specification tab
+  const atenSpec = collectCharGroupsFromRoot($, $("#spec").first());
+  if (atenSpec.length) return atenSpec;
+
+  // atenpro.ru / Bitrix property tables
+  const atenpro = collectCharGroupsFromRoot(
+    $,
+    $(".product-item-detail-properties, .bx_item_detail_props, .detail_chars").first(),
+  );
+  if (atenpro.length) return atenpro;
+
+  const root =
+    $("#section2 .sub-content-block, #section2 .sub_content_block").first().length > 0
+      ? $("#section2 .sub-content-block, #section2 .sub_content_block").first()
+      : $("#section2").first();
+  return collectCharGroupsFromRoot($, root);
+}
+
+function hasCyrillic(text: string): boolean {
+  return /[А-Яа-яЁё]/.test(text);
 }
 
 function mergeCharGroups(
@@ -549,7 +584,17 @@ function extensionFromUrl(url: string): string {
   return ".jpg";
 }
 
-export async function enrichProduct(product: ProductRaw): Promise<{
+export async function enrichProduct(
+  product: ProductRaw,
+  options?: {
+    /** Fetch this URL instead of metadata.url (e.g. RU description source). */
+    pageUrl?: string;
+    /** Update description/chars only; keep existing pictures/documents. */
+    descriptionOnly?: boolean;
+    /** Require Cyrillic in extracted description (for RU re-enrich). */
+    requireCyrillic?: boolean;
+  },
+): Promise<{
   product: ProductRaw;
   ok: boolean;
   error?: string;
@@ -557,7 +602,7 @@ export async function enrichProduct(product: ProductRaw): Promise<{
   descriptionChars: number;
   charCount: number;
 }> {
-  const pageUrl = product.metadata?.url?.trim();
+  const pageUrl = (options?.pageUrl || product.metadata?.url || "").trim();
   if (!pageUrl || !/^https?:\/\//i.test(pageUrl)) {
     return {
       product,
@@ -581,6 +626,45 @@ export async function enrichProduct(product: ProductRaw): Promise<{
       /* index optional for enrich */
     }
     const extracted = extractFromHtml(pageUrl, html, { listingImage });
+
+    const extractedDesc = extracted.description.trim();
+    const extractedText = extractedDesc
+      ? cheerio.load(extractedDesc).text().replace(/\s+/g, " ").trim()
+      : "";
+    if (options?.requireCyrillic && (!extractedText || !hasCyrillic(extractedText))) {
+      return {
+        product,
+        ok: false,
+        error: "no-cyrillic-description",
+        imagesDownloaded: 0,
+        descriptionChars: 0,
+        charCount: 0,
+      };
+    }
+
+    if (options?.descriptionOnly) {
+      const nextDescription = extractedDesc || product.metadata.description || "";
+      let nextChars = product.metadata.chars || [];
+      if (extracted.charGroups.length) {
+        nextChars = mergeCharGroups(product.metadata.chars, extracted.charGroups);
+      }
+      const next: ProductRaw = {
+        ...product,
+        metadata: {
+          ...product.metadata,
+          description: nextDescription,
+          chars: nextChars,
+        },
+      };
+      return {
+        product: next,
+        ok: Boolean(extractedDesc),
+        error: extractedDesc ? undefined : "no-description",
+        imagesDownloaded: 0,
+        descriptionChars: nextDescription.length,
+        charCount: nextChars.reduce((sum, g) => sum + g.items.length, 0),
+      };
+    }
 
     if (!existsSync(PUBLIC_IMAGES_DIR)) {
       mkdirSync(PUBLIC_IMAGES_DIR, { recursive: true });
@@ -621,7 +705,7 @@ export async function enrichProduct(product: ProductRaw): Promise<{
     }
 
     const nextDescription =
-      extracted.description.trim() ||
+      extractedDesc ||
       product.metadata.description ||
       "";
     let nextChars = mergeCharGroups(product.metadata.chars, extracted.charGroups);

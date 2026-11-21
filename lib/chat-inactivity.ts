@@ -10,8 +10,10 @@ export async function processInactiveChatsEmail(): Promise<void> {
     const lastMessage = chat.messages[chat.messages.length - 1];
     if (!lastMessage) continue;
     try {
-      await sendInactiveChatTranscript(chat);
-      markInactivityEmailSent(chat.id, lastMessage.id);
+      const sent = await sendInactiveChatTranscript(chat);
+      if (sent) {
+        markInactivityEmailSent(chat.id, lastMessage.id);
+      }
     } catch (err) {
       console.error("[email] Ошибка отправки письма по неактивному диалогу:", err);
     }

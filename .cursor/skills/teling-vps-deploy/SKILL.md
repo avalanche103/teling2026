@@ -17,8 +17,10 @@ Do not deploy/restart production unless the user explicitly asks.
 
 ## Preferred path (avoid OOM)
 
-VPS has ~1 GB RAM. **Do not** run `npm run build` or `start-production.sh` on the
-server unless 2G+ swap is enabled.
+VPS has ~1 GB RAM and ~2 GB swap (`/swapfile` + `/swapfile2`). Large product
+import uses `scripts/product-import-worker.mjs` (out-of-process streaming) —
+do not parse ~100 MB JSON inside Next. **Do not** run `npm run build` or
+`start-production.sh` on the server unless 2G+ swap is enabled.
 
 ```powershell
 npm run build

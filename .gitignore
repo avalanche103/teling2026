@@ -45,9 +45,20 @@ next-env.d.ts
 /public/images/
 /data/products.import.tmp.json
 /data/products.import.upload.json
+/data/products.import.ndjson
+/data/products.import.meta.json
+/data/products.import.preview.json
+/data/products.import.actions.json
+/data/products.import.result.json
+/data/products.json.tmp
 /data/auth-secret.txt
 /data/microinform/price-cache.xls
 /data/microinform/price-parsed.json
+/data/microinform/sync-log.json
+/data/microinform/sync-task-*.log
+/data/product-views.json
+/NUL
+NUL
 /_tmp/
 
 # local diagnostics

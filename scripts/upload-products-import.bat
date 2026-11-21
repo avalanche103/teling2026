@@ -21,5 +21,6 @@ if errorlevel 1 (
 )
 
 echo [*] Done. Open https://teling.by/admin/products and click "Анализ файла на сервере"
+echo [*] Analysis runs in a separate worker process (streaming); Next.js should stay up.
 pause
 endlocal

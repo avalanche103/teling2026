@@ -21,7 +21,7 @@ async function readApiJson<T>(res: Response): Promise<T> {
     }
     if (res.status === 502 || res.status === 504) {
       throw new Error(
-        "Сервер упал при разборе большого JSON (мало RAM). Загрузите файл по SCP в data/products.import.upload.json и нажмите «Анализ файла на сервере».",
+        "Сервер не ответил во время импорта (502/504). Повторите «Анализ файла на сервере» после SCP; разбор идёт в отдельном процессе и не должен ронять сайт.",
       );
     }
     throw new Error(
@@ -205,8 +205,8 @@ export function ProductsImportManager() {
       <div>
         <h2 className="text-lg font-bold text-slate-900">Импорт товаров из JSON</h2>
         <p className="mt-1 text-sm text-slate-500">
-          Большой каталог (~100 MB) лучше загружать по SCP на сервер — браузерная загрузка на VPS с 1 ГБ RAM часто
-          роняет процесс (HTTP 502).
+          Большой каталог (~100 MB) на VPS с 1 ГБ RAM лучше грузить по SCP: анализ идёт в отдельном worker-процессе
+          со streaming-разбором, сайт при этом не должен падать.
         </p>
       </div>
 
@@ -219,7 +219,7 @@ export function ProductsImportManager() {
               scp data\products.json user@134.17.16.134:/opt/teling/data/products.import.upload.json
             </code>
           </li>
-          <li>Нажмите кнопку «Анализ файла на сервере» ниже</li>
+          <li>Нажмите «Анализ файла на сервере» — разбор выполняется вне процесса Next.js</li>
         </ol>
         <button
           type="button"

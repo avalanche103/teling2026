@@ -17,7 +17,10 @@ from __future__ import annotations
 
 import os
 import sys
+import tarfile
+import tempfile
 import time
+from pathlib import Path
 
 try:
     import paramiko
@@ -33,7 +36,11 @@ LOCAL = os.environ.get(
     os.path.join(os.environ.get("TEMP", "/tmp"), "teling-next-build.tar.gz"),
 )
 REMOTE_TAR = "/tmp/teling-next-build.tar.gz"
+REMOTE_IMPORT_TAR = "/tmp/teling-import-worker.tar.gz"
 APP = os.environ.get("VPS_APP", "/opt/teling")
+ROOT = Path(__file__).resolve().parent.parent
+WORKER_LOCAL = ROOT / "scripts" / "product-import-worker.mjs"
+IMPORT_DEPS = ("stream-json", "stream-chain")
 
 
 def connect(retries: int = 24, delay: float = 90.0) -> paramiko.SSHClient:
@@ -88,11 +95,32 @@ def run(client: paramiko.SSHClient, cmd: str, timeout: int = 240) -> int:
     return code
 
 
+def pack_import_worker_bundle() -> str:
+    """Tar worker script + stream-json deps so .next-only deploys can import on 1GB VPS."""
+    if not WORKER_LOCAL.is_file():
+        raise SystemExit(f"missing worker: {WORKER_LOCAL}")
+    for name in IMPORT_DEPS:
+        if not (ROOT / "node_modules" / name).is_dir():
+            raise SystemExit(f"missing node_modules/{name} — run npm install")
+
+    fd, path = tempfile.mkstemp(prefix="teling-import-worker-", suffix=".tar.gz")
+    os.close(fd)
+    with tarfile.open(path, "w:gz") as tar:
+        tar.add(WORKER_LOCAL, arcname="scripts/product-import-worker.mjs")
+        for name in IMPORT_DEPS:
+            tar.add(ROOT / "node_modules" / name, arcname=f"node_modules/{name}")
+    return path
+
+
 def main() -> None:
     if not os.path.isfile(LOCAL):
         raise SystemExit(f"missing archive: {LOCAL} — run scripts/pack-next-build.ps1")
     size_mb = os.path.getsize(LOCAL) / (1024 * 1024)
     print(f"local archive {LOCAL} ({size_mb:.1f} MB)", flush=True)
+
+    import_bundle = pack_import_worker_bundle()
+    import_mb = os.path.getsize(import_bundle) / (1024 * 1024)
+    print(f"import worker bundle {import_bundle} ({import_mb:.1f} MB)", flush=True)
 
     client = connect()
     try:
@@ -114,6 +142,7 @@ def main() -> None:
                     print(f"  {pct}%", flush=True)
 
             sftp.put(LOCAL, REMOTE_TAR, callback=cb)
+            sftp.put(import_bundle, REMOTE_IMPORT_TAR)
         finally:
             sftp.close()
         print(f"upload done in {time.time() - t0:.1f}s", flush=True)
@@ -122,15 +151,19 @@ def main() -> None:
 set -e
 cd {APP}
 test -f {REMOTE_TAR}
-ls -lh {REMOTE_TAR}
+test -f {REMOTE_IMPORT_TAR}
+ls -lh {REMOTE_TAR} {REMOTE_IMPORT_TAR}
 pids=$(ss -ltnp 2>/dev/null | sed -n 's/.*:10024.*pid=\\([0-9]*\\).*/\\1/p' | sort -u)
 if [ -n "$pids" ]; then kill $pids || true; sleep 2; fi
 rm -rf .next.bak
 if [ -d .next ]; then mv .next .next.bak; fi
 tar -xzf {REMOTE_TAR} -C {APP}
+tar -xzf {REMOTE_IMPORT_TAR} -C {APP}
 test -f .next/BUILD_ID
+test -f scripts/product-import-worker.mjs
+test -d node_modules/stream-json
 echo BUILD_ID=$(cat .next/BUILD_ID)
-rm -f {REMOTE_TAR}
+rm -f {REMOTE_TAR} {REMOTE_IMPORT_TAR}
 nohup /usr/bin/node scripts/start-next.cjs > next-only.log 2>&1 </dev/null &
 sleep 6
 ss -ltnp | grep 10024 || true
@@ -143,6 +176,10 @@ tail -n 40 next-only.log || true
         print("OK", flush=True)
     finally:
         client.close()
+        try:
+            os.remove(import_bundle)
+        except OSError:
+            pass
 
 
 if __name__ == "__main__":

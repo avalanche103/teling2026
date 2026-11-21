@@ -19,6 +19,7 @@ import {
   normalizeCharValue,
   normalizeColorValue,
 } from "./normalize-color";
+import { getProductViewCount } from "./product-views";
 
 // ---- Module-level lazy caches ----
 
@@ -231,8 +232,8 @@ function getProductThumbnailUrlFast(product: ProductRaw): string | null {
   return externalImages[0] ?? null;
 }
 
-function scoreProductPopularity(product: ProductRaw, thumbnail: string | null): number {
-  if (!thumbnail) return Number.NEGATIVE_INFINITY;
+/** Heuristic used as tiebreaker / cold-start when view counts are zero. */
+function scoreProductHeuristic(product: ProductRaw): number {
   let score = 1000;
   if (product.price > 0) score += 200;
   const delivery = (product.metadata?.timeDelivery || "").toLowerCase();
@@ -244,6 +245,13 @@ function scoreProductPopularity(product: ProductRaw, thumbnail: string | null): 
   const picCount = product.metadata?.pictures?.length || 0;
   score += Math.min(picCount, 5) * 10;
   return score;
+}
+
+function scoreProductPopularity(product: ProductRaw, thumbnail: string | null): number {
+  if (!thumbnail) return Number.NEGATIVE_INFINITY;
+  const views = getProductViewCount(product.sku);
+  // Views dominate; heuristic stays in a small range so it only breaks ties.
+  return views * 10_000 + scoreProductHeuristic(product);
 }
 
 /** One pass over products → best image per direct section_id. */
