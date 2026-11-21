@@ -1,7 +1,11 @@
-# Register a daily Windows Task Scheduler job for Microinform price sync at 09:30.
+﻿# Register a daily Windows Task Scheduler job for Microinform price sync at 09:30.
+# Local/dev only. Production uses Linux cron:
+#   bash scripts/install-microinform-cron.sh   # on VPS → 09:30 Europe/Minsk
 # Assumes the machine clock is Europe/Minsk (or UTC+3). Run once from an elevated PowerShell:
 #   powershell -ExecutionPolicy Bypass -File .\scripts\register-microinform-sync-task.ps1
 #
+# Protocol (same as prod): fetch XLS → apply prices/delivery → hide absent →
+# new SKUs stay pending (no auto-enrich / no auto-publish).
 # Manual run:  npm run microinform:sync
 
 $ErrorActionPreference = "Stop"

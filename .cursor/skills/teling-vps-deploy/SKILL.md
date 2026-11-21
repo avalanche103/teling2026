@@ -69,3 +69,8 @@ nohup /usr/bin/node scripts/start-next.cjs > next-only.log 2>&1 </dev/null &
 
 - `https://teling.by/` → 200
 - Local on VPS: `curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:10024/`
+
+## Microinform cron
+
+`09:30 Europe/Minsk` via `scripts/install-microinform-cron.sh` → `microinform-daily-sync.sh`.
+Fetch/apply only; pending new SKUs stay for admin (no auto-publish).
