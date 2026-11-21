@@ -28,6 +28,33 @@ function stripHtml(input: string): string {
   return input.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
+/** Google Merchant listings: description max 5000; name practical max ~150. */
+const SCHEMA_DESCRIPTION_MAX = 5000;
+const SCHEMA_NAME_MAX = 150;
+
+function truncatePlain(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const sliced = text.slice(0, max - 1);
+  const breakAt = Math.max(sliced.lastIndexOf(" "), sliced.lastIndexOf("."), sliced.lastIndexOf(","));
+  const base = breakAt > max * 0.6 ? sliced.slice(0, breakAt) : sliced;
+  return `${base.trimEnd()}…`;
+}
+
+function schemaProductDescription(productName: string, sku: string, rawHtml: string): string {
+  const plain = stripHtml(rawHtml || "");
+  if (plain.length >= 30) return truncatePlain(plain, SCHEMA_DESCRIPTION_MAX);
+  // Too short / empty → fallback (GSC flags empty and tiny description values).
+  return truncatePlain(
+    `Товар ${productName} (артикул ${sku}) в каталоге телекоммуникационного оборудования Teling.by.`,
+    SCHEMA_DESCRIPTION_MAX,
+  );
+}
+
+function schemaProductName(name: string): string {
+  const plain = name.replace(/\s+/g, " ").trim();
+  return truncatePlain(plain, SCHEMA_NAME_MAX);
+}
+
 function getSiteOrigin(): string {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.SITE_URL?.trim() || "https://teling.by";
   try {
@@ -125,18 +152,23 @@ export default async function ProductPage({ params }: ProductPageProps) {
       }
     : undefined;
 
-  // Build JSON-LD structured data
+  const schemaImage = toAbsoluteUrl(
+    product.thumbnail || product.localImages?.[0] || product.externalImages?.[0] || "",
+    origin,
+  );
+
+  // Build JSON-LD structured data (Merchant listings limits: description ≤5000, name ≤150).
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product.name,
+    name: schemaProductName(product.name),
     sku: product.sku,
     brand: {
       "@type": "Brand",
       name: product.brand || "Unknown",
     },
-    description: stripHtml(product.description || ""),
-    image: toAbsoluteUrl(product.thumbnail || product.localImages?.[0] || product.externalImages?.[0] || "", origin),
+    description: schemaProductDescription(product.name, product.sku, product.description || ""),
+    ...(schemaImage ? { image: schemaImage } : {}),
     ...(offerSchema ? { offers: offerSchema } : {}),
   };
 
