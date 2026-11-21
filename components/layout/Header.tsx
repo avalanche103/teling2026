@@ -113,12 +113,13 @@ export function Header({ catalogNav = [] }: HeaderProps) {
         <div className="flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <Image
-              src="/teling-circle.jpg"
+              src="/teling-circle.webp"
               alt="Логотип ТЕЛИНГ ГРУПП"
               width={36}
               height={36}
               className="h-9 w-9 rounded-full object-cover"
               priority
+              sizes="36px"
             />
             <span className="text-xl font-black tracking-wide text-black">
               ТЕЛИНГ ГРУПП
@@ -245,7 +246,7 @@ export function Header({ catalogNav = [] }: HeaderProps) {
                 <Link
                   href="/catalog"
                   onClick={() => setMenuOpen(false)}
-                  className="text-xs font-medium text-black/50 hover:text-black"
+                  className="text-xs font-medium text-slate-600 hover:text-black"
                 >
                   Все разделы →
                 </Link>
@@ -265,7 +266,7 @@ export function Header({ catalogNav = [] }: HeaderProps) {
                       {root.children.length > 0 ? (
                         <button
                           type="button"
-                          className="mt-1 rounded-lg p-2 text-black/50 hover:bg-slate-100 hover:text-black"
+                          className="mt-1 rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-black"
                           aria-expanded={expanded}
                           aria-label={
                             expanded

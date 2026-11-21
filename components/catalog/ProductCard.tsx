@@ -49,7 +49,7 @@ export function ProductCard({ product }: ProductCardProps) {
         ) : null}
 
         {product.highlights && product.highlights.length > 0 ? (
-          <ul className="space-y-0.5 text-xs text-black/55">
+          <ul className="space-y-0.5 text-xs text-slate-600">
             {product.highlights.map((line) => (
               <li key={line} className="truncate" title={line}>
                 {line}

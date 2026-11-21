@@ -1,6 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { CookieConsent } from "@/components/layout/CookieConsent";
-import { ChatWidget } from "@/components/chat/ChatWidget";
+import { LazyChatWidget } from "@/components/chat/LazyChatWidget";
 import { RequestCartProvider } from "@/components/request/RequestCartProvider";
 import { getCatalogNavTree } from "@/lib/data";
 import type { ReactNode } from "react";
@@ -16,7 +16,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
     <RequestCartProvider>
       <Header catalogNav={catalogNav} />
       {children}
-      <ChatWidget />
+      <LazyChatWidget />
       <CookieConsent />
     </RequestCartProvider>
   );

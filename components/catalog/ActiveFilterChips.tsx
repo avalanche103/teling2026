@@ -109,7 +109,7 @@ export function ActiveFilterChips({
           onClick={() =>
             push({ brands: [], priceMin: null, priceMax: null, charFilters: {} }, "")
           }
-          className="text-xs font-medium text-black/50 hover:text-black"
+          className="text-xs font-medium text-slate-600 hover:text-black"
         >
           Сбросить всё
         </button>

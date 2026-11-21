@@ -153,7 +153,7 @@ export function CatalogMegaMenuPanel({
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-black/50">
+                  <p className="text-sm text-slate-600">
                     В этом разделе пока нет подкатегорий.
                   </p>
                 )}

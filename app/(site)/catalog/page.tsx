@@ -172,7 +172,7 @@ export default async function CatalogIndexPage({ searchParams }: CatalogIndexPag
 
             {sectionHints.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                <span className="text-sm text-black/50">Искать в разделе:</span>
+                <span className="text-sm text-slate-600">Искать в разделе:</span>
                 {sectionHints.map((hint) => (
                   <Link
                     key={hint.slug}

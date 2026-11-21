@@ -100,7 +100,7 @@ export function CategoryFilters({
       {activeCount > 0 && (
         <button
           onClick={clearAll}
-          className="mb-4 flex items-center gap-1.5 text-xs font-medium text-black/50 hover:text-black"
+          className="mb-4 flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-black"
         >
           <X className="h-3 w-3" />
           Сбросить все фильтры
@@ -199,7 +199,7 @@ export function CategoryFilters({
             {activeCount > 0 && (
               <button
                 onClick={clearAll}
-                className="text-xs text-black/50 hover:text-black"
+                className="text-xs text-slate-600 hover:text-black"
               >
                 Сбросить
               </button>
@@ -269,7 +269,7 @@ function FacetGroup({ title, open, onToggle, items }: FacetGroupProps) {
             <li>
               <button
                 onClick={() => setShowAll(true)}
-                className="text-xs text-black/50 hover:text-black"
+                className="text-xs text-slate-600 hover:text-black"
               >
                 Ещё {hiddenCount}…
               </button>

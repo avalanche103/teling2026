@@ -37,7 +37,7 @@ export function ProductLayoutToggle({ value }: ProductLayoutToggleProps) {
         className={
           value === "grid"
             ? "rounded-md bg-slate-900 p-2 text-white"
-            : "rounded-md p-2 text-black/50 hover:text-black"
+            : "rounded-md p-2 text-slate-600 hover:text-black"
         }
       >
         <LayoutGrid className="h-4 w-4" />
@@ -50,7 +50,7 @@ export function ProductLayoutToggle({ value }: ProductLayoutToggleProps) {
         className={
           value === "list"
             ? "rounded-md bg-slate-900 p-2 text-white"
-            : "rounded-md p-2 text-black/50 hover:text-black"
+            : "rounded-md p-2 text-slate-600 hover:text-black"
         }
       >
         <List className="h-4 w-4" />

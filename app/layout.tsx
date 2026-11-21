@@ -5,7 +5,8 @@ import "./generated-globals.css";
 
 const onest = Onest({
   subsets: ["cyrillic", "latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  // 500 rarely needed; font-medium falls back to nearest loaded weight.
+  weight: ["400", "600", "700", "800"],
   variable: "--font-onest",
   display: "swap",
 });
@@ -46,9 +47,12 @@ export const metadata: Metadata = {
       "Каталог оборудования для ЛВС, ВОЛС, видеонаблюдения, кабельного ТВ и мультимедийных систем.",
   },
   icons: {
-    icon: [{ url: "/favicon.ico", type: "image/x-icon" }],
-    shortcut: ["/favicon.ico"],
-    apple: [{ url: "/teling-circle.jpg", type: "image/jpeg" }],
+    icon: [
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon.ico", type: "image/x-icon" },
+    ],
+    shortcut: ["/favicon-32.png"],
+    apple: [{ url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
   },
 };
 

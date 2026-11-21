@@ -218,7 +218,7 @@ export function RequestPageClient() {
                   <p className="mt-1 text-sm text-black/80">
                     {formatPrice(product.price, product.currency)}
                     {hasPrice(product.price) ? (
-                      <span className="ml-1 text-xs text-black/50">с НДС</span>
+                      <span className="ml-1 text-xs text-slate-600">с НДС</span>
                     ) : null}
                   </p>
                 )}

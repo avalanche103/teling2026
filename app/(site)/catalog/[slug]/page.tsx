@@ -326,7 +326,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             <h1 className="text-2xl font-black tracking-tight text-black sm:text-3xl">
               {category.name}
             </h1>
-            <p className="mt-1 text-sm text-black/55">
+            <p className="mt-1 text-sm text-slate-600">
               {sectionTotal.toLocaleString("ru-RU")} позиций в разделе
             </p>
           </div>
@@ -392,7 +392,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                     ) : null}
                   </h2>
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="shrink-0 text-sm text-black/50">
+                    <span className="shrink-0 text-sm text-slate-600">
                       {total.toLocaleString("ru-RU")} позиций
                     </span>
                     <Suspense fallback={null}>

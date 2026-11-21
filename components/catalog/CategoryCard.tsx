@@ -1,9 +1,6 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import type { Category } from "@/lib/types";
+import { CategoryCardImage } from "@/components/catalog/CategoryCardImage";
 
 interface CategoryCardProps {
   category: Category;
@@ -27,8 +24,6 @@ function formatProductCountLabel(count: number): string {
 export function CategoryCard({ category, productCount }: CategoryCardProps) {
   const initial = category.imageUrl?.trim() || null;
   const fallback = category.fallbackImageUrl?.trim() || null;
-  const [src, setSrc] = useState<string | null>(initial);
-  const [failed, setFailed] = useState(false);
 
   return (
     <Link
@@ -41,33 +36,18 @@ export function CategoryCard({ category, productCount }: CategoryCardProps) {
           {category.name}
         </h3>
         {typeof productCount === "number" && (
-          <p className="mt-1 text-xs text-black/50">
+          <p className="mt-1 text-xs text-slate-600">
             {formatProductCountLabel(productCount)}
           </p>
         )}
       </div>
 
       <div className="relative mt-auto h-40 overflow-hidden rounded-xl bg-slate-100">
-        {src && !failed ? (
-          <Image
-            src={src}
-            alt={category.name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
-            className="object-contain object-bottom transition duration-300 group-hover:scale-105"
-            onError={() => {
-              if (fallback && src !== fallback) {
-                setSrc(fallback);
-                return;
-              }
-              setFailed(true);
-            }}
-          />
-        ) : (
-          <div className="flex h-full items-end justify-center pb-3 text-sm text-slate-400">
-            Категория
-          </div>
-        )}
+        <CategoryCardImage
+          initialSrc={initial}
+          fallbackSrc={fallback}
+          alt={category.name}
+        />
       </div>
     </Link>
   );
