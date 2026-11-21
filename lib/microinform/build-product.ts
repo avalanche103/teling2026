@@ -21,6 +21,24 @@ function isUrlDescription(raw: string): boolean {
   return /^https?:\/\//i.test(raw.trim());
 }
 
+function hasCyrillic(text: string): boolean {
+  return /[А-Яа-яЁё]/.test(text);
+}
+
+/**
+ * Choose description for price apply.
+ * Keep previous manufacturer/site enrich when the XLS only has English (or a URL).
+ */
+function pickDescription(priceRaw: string, previous: string): string {
+  const fromPrice =
+    priceRaw && !isUrlDescription(priceRaw) ? priceRaw.trim() : "";
+  const prev = (previous || "").trim();
+  if (!fromPrice) return prev;
+  if (!prev) return fromPrice;
+  if (hasCyrillic(prev) && !hasCyrillic(fromPrice)) return prev;
+  return fromPrice;
+}
+
 /** Map Microinform "склад" markers to site delivery text. */
 export function stockToTimeDelivery(stock: string): string {
   const value = String(stock || "").trim();
@@ -62,10 +80,12 @@ export function buildMicroinformProduct(params: {
     previous?.metadata?.chars,
   );
 
-  const descriptionFromPrice =
-    row.descriptionRaw && !isUrlDescription(row.descriptionRaw)
-      ? row.descriptionRaw
-      : previous?.metadata?.description || "";
+  // Prefer enriched Cyrillic description over English/Latin text from the XLS.
+  // Daily sync must not wipe aten.ru / manufacturer enrich with price-list English.
+  const descriptionFromPrice = pickDescription(
+    row.descriptionRaw || "",
+    previous?.metadata?.description || "",
+  );
 
   const sourceUrl = row.sourceUrl || previous?.metadata?.url || "";
   const isNew = !previous;
