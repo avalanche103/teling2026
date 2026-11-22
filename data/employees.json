@@ -2,7 +2,7 @@
   {
     "id": "seed-admin",
     "username": "admin",
-    "name": "Главный администратор",
+    "name": "Антон",
     "role": "admin",
     "passwordSalt": "52d0f775d99122f12dab0ff30bb8dfab",
     "passwordHash": "f60d36c1a584fb80b3635e7555c372e80d832f09066cbcd0591eb2db43dff066ee4fe7e46cb7110671a59e3e939ed5f7099a129ecae48f90a29a6c396fafd69d",

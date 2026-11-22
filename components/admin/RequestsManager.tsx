@@ -232,19 +232,19 @@ export function RequestsManager() {
                         isActive ? "bg-slate-100" : ""
                       }`}
                     >
-                      <div className="flex items-center justify-between gap-2">
+                      <div className="flex flex-col gap-1.5">
                         <span className="truncate text-sm font-semibold text-slate-900">
                           № {req.number}
                           {req.organization ? ` · ${req.organization}` : ""}
                         </span>
-                        <span className="flex shrink-0 items-center gap-1.5">
+                        <span className="flex flex-wrap items-center gap-1.5">
                           {isDraft ? (
                             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-800">
-                              Неотправленный
+                              Черновик
                             </span>
                           ) : (
                             <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-800">
-                              Отправленный
+                              Отправлен
                             </span>
                           )}
                           {isHandled && (

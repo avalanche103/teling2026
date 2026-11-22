@@ -28,6 +28,15 @@ const MODULE_MARKERS = [
   "Исполнение",
 ];
 
+const DAC_MARKERS = [
+  "Тип",
+  "Форм-фактор",
+  "Скорость",
+  "Разъем",
+  "Дальность",
+  "Исполнение",
+];
+
 const MEDIA_MARKERS = [
   "Тип",
   "Скорость",
@@ -37,6 +46,19 @@ const MEDIA_MARKERS = [
   "Дальность",
   "Слоты",
 ];
+
+function isDacHay(hay: string, articul = ""): boolean {
+  const a = articul.toUpperCase().replace(/\/.*$/, "");
+  if (/^DEM-CB/.test(a) || /^OFM-CB/.test(a)) return true;
+  return has(
+    hay,
+    "dac",
+    "twinax",
+    "direct attach",
+    "прямого подключ",
+    "stacking cable",
+  );
+}
 
 function moduleSpeed(hay: string): string | null {
   // Prefer explicit rate tokens; avoid matching "25" inside "1,25 Гбит/с".
@@ -65,20 +87,21 @@ export function buildModuleCharItems(input: CharInput): CharItem[] {
   const hay = `${blobOf(input)}\n${formFactorRaw}\n${speedRaw}\n${fiberRaw}\n${connectorRaw}\n${distanceRaw}\n${iface}`;
 
   const items: CharItem[] = [];
+  const dac = isDacHay(hay, input.articul);
   pushUnique(
     items,
     "Тип",
-    has(hay, "dac", "twinax", "кабел") && has(hay, "sfp", "qsfp", "dac")
-      ? has(hay, "dac", "twinax")
-        ? "DAC-кабель"
-        : "Трансивер"
-      : has(hay, "кабел") && !has(hay, "трансивер", "sfp", "qsfp")
+    dac
+      ? "DAC-кабель"
+      : has(hay, "кабел") && has(hay, "sfp", "qsfp")
         ? "Кабель"
-        : "Трансивер",
+        : has(hay, "кабел") && !has(hay, "трансивер", "sfp", "qsfp")
+          ? "Кабель"
+          : "Трансивер",
   );
   pushUnique(items, "Форм-фактор", formFactorFromText(hay) || formFactorRaw.replace(/^•\s*/, "") || null);
   pushUnique(items, "Скорость", moduleSpeed(hay) || ethernetSpeedFromText(hay));
-  pushUnique(items, "Среда", fiberMedium(hay));
+  pushUnique(items, "Среда", dac ? "Медь" : fiberMedium(hay));
   const connector =
     has(connectorRaw, "lc")
       ? "LC"
@@ -88,7 +111,7 @@ export function buildModuleCharItems(input: CharInput): CharItem[] {
           ? "SC"
           : has(connectorRaw, "rj-45", "rj45")
             ? "RJ-45"
-            : has(hay, "dac")
+            : dac
               ? "DAC"
               : connectorFromText(`${connectorRaw} ${iface} ${input.name}`);
   pushUnique(items, "Разъем", connector);
@@ -103,6 +126,61 @@ export function buildModuleCharItems(input: CharInput): CharItem[] {
   return items;
 }
 
+export function buildDacCharItems(input: CharInput): CharItem[] {
+  const groups = input.enrichedGroups;
+  const formFactorRaw = cleanValue(findAnyValue(groups, "Тип форм-фактора"));
+  const speedRaw = cleanValue(findAnyValue(groups, "Скорость передачи данных"));
+  const distanceRaw = cleanValue(findAnyValue(groups, "Расстояние передачи данных"));
+  const iface = cleanValue(findAnyValue(groups, "Интерфейсы"));
+  const hay = `${blobOf(input)}\n${formFactorRaw}\n${speedRaw}\n${distanceRaw}\n${iface}`;
+
+  const items: CharItem[] = [];
+  pushUnique(items, "Тип", "DAC-кабель");
+  pushUnique(
+    items,
+    "Форм-фактор",
+    formFactorFromText(hay) ||
+      (has(hay, "qsfp") ? "QSFP+" : has(hay, "sfp+") ? "SFP+" : has(hay, "sfp") ? "SFP" : null) ||
+      formFactorRaw.replace(/^•\s*/, "") ||
+      null,
+  );
+  pushUnique(items, "Скорость", moduleSpeed(hay) || ethernetSpeedFromText(hay) || "10 Гбит/с");
+  pushUnique(items, "Разъем", "DAC");
+  pushUnique(items, "Дальность", dacLengthBucket(`${distanceRaw} ${hay}`) || distanceBucket(`${distanceRaw} ${hay}`));
+  pushUnique(
+    items,
+    "Исполнение",
+    has(hay, "промышлен", "industrial", "i-temp", "ind.") ? "Промышленное" : "Обычное",
+  );
+  return items;
+}
+
+/** DAC lengths are usually short metres: 1m, 3 м, (7M), DEM-CB300S → 3 m. */
+function dacLengthBucket(text: string): string | null {
+  const fromName = text.match(/(\d+(?:[.,]\d+)?)\s*(?:м|m)(?![а-яa-z])/i);
+  if (fromName) {
+    const n = Number(String(fromName[1]).replace(",", "."));
+    if (n > 0 && n <= 100) {
+      if (n <= 1) return "1 м";
+      if (n <= 2) return "2 м";
+      if (n <= 3) return "3 м";
+      if (n <= 5) return "5 м";
+      if (n <= 7) return "7 м";
+      return "до 100 м";
+    }
+  }
+  const fromSku = text.match(/(?:DEM-CB|OFM-CB)(\d{2,3})/i);
+  if (fromSku) {
+    const code = Number(fromSku[1]);
+    // D-Link/Origo: CB100≈1m, CB300≈3m, CB700≈7m.
+    if (code === 100 || code === 101) return "1 м";
+    if (code === 300) return "3 м";
+    if (code === 500) return "5 м";
+    if (code === 700) return "7 м";
+  }
+  return null;
+}
+
 export function refineModuleCharGroups(
   sectionTitle: string,
   name: string,
@@ -113,6 +191,19 @@ export function refineModuleCharGroups(
     chars,
     buildModuleCharItems({ sectionTitle, name, articul, enrichedGroups: chars }),
     MODULE_MARKERS,
+  );
+}
+
+export function refineDacCharGroups(
+  sectionTitle: string,
+  name: string,
+  articul: string,
+  chars: ProductCharGroup[] | undefined,
+): ProductCharGroup[] {
+  return applySyntheticItems(
+    chars,
+    buildDacCharItems({ sectionTitle, name, articul, enrichedGroups: chars }),
+    DAC_MARKERS,
   );
 }
 
@@ -180,4 +271,5 @@ export function refineMediaConverterCharGroups(
 }
 
 export const MODULE_SELECTED_FILTERS = filtersFor(...MODULE_MARKERS);
+export const DAC_SELECTED_FILTERS = filtersFor(...DAC_MARKERS);
 export const MEDIA_CONVERTER_SELECTED_FILTERS = filtersFor(...MEDIA_MARKERS);

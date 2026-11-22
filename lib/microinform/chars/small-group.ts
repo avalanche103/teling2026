@@ -244,10 +244,18 @@ export function buildSoftwareCharItems(input: CharInput): CharItem[] {
   const hay = `${blobOf(input)}\n${arch}\n${langs}\n${discovery}\n${os}`;
 
   const items: CharItem[] = [];
-  pushUnique(items, "Продукт", has(hay, "d-view", "dv-700") ? "D-View" : null);
+  pushUnique(
+    items,
+    "Продукт",
+    has(hay, "d-view", "dv-700") ? "D-View" : has(hay, "лицензи") ? "Лицензия ПО" : null,
+  );
   pushUnique(items, "Версия", has(hay, "d-view 7", "dv-700", " view 7") ? "7" : null);
   const nodes = hay.match(/(\d+)\s*узл/i);
-  pushUnique(items, "Лицензия", nodes ? `${nodes[1]} узлов` : null);
+  pushUnique(
+    items,
+    "Лицензия",
+    nodes ? `${nodes[1]} узлов` : has(hay, "обновлен") ? "Обновление ПО" : has(hay, "лицензи") ? "Лицензия" : null,
+  );
   pushUnique(items, "Архитектура", has(arch || hay, "клиент-сервер") ? "Клиент-сервер" : null);
   if (has(os || hay, "windows server")) pushUnique(items, "Платформа", "Windows Server");
   else if (has(os || hay, "windows")) pushUnique(items, "Платформа", "Windows");

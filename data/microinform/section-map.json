@@ -162,5 +162,85 @@
   "Док-станции и USB концентраторы Origo": {
     "action": "existing",
     "sectionId": 640
+  },
+  "(1) INFORMIX (источники бесперебойного питания)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "INFORMIX Back UPS (линейно-интерактивные)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "INFORMIX Онлайн (стоечные)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "INFORMIX Онлайн 3Ф (стоечные)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "INFROMIX Онлайн (напольные)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "(4) Systeme Electric": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "SVC new серия V-R (напольные, AVR, управление)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "SVC U-серия (AVR, много розеток)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "SVC W-серия (AVR, чистая синусоида, LCD)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "SVC Smart-UPS (Стоечные)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "SVC PTS-серия (Онлайн, AVR, 1Ф-1Ф)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "SVC RTS-серия (Онлайн, AVR, 1Ф-1Ф)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "SVC RT-серия (Онлайн, AVR, 1Ф-1Ф)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "SVC TRX11-серия (Онлайн, AVR, 1Ф-1Ф)": {
+    "action": "existing",
+    "sectionId": 519
+  },
+  "SVC Батарейные блоки": {
+    "action": "existing",
+    "sectionId": 520
+  },
+  "SVC Инверторы": {
+    "action": "existing",
+    "sectionId": 665
+  },
+  "SVC Модули управления": {
+    "action": "existing",
+    "sectionId": 667
+  },
+  "SVC Монтажные комплекты": {
+    "action": "existing",
+    "sectionId": 668
+  },
+  "SVC Опции": {
+    "action": "existing",
+    "sectionId": 666
+  },
+  "SVC Распределители питания (PDU)": {
+    "action": "existing",
+    "sectionId": 508
   }
 }

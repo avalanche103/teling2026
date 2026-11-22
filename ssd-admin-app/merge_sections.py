@@ -24,9 +24,13 @@ from catalog_utils import (
 
 SITE_SECTIONS_PATH = PROJECT_ROOT / "data" / "sections.json"
 
-# Microinform-created leaf ids under #293 (see lib/microinform/section-hints.ts).
-# SSD sections 517/518 are intentionally NOT in this set.
-MICROINFORM_OWNED_IDS = frozenset(range(632, 645))
+# Microinform-created leaf ids (see lib/microinform/section-hints.ts).
+# SSD shared leaves 517/518/508/519/520 are intentionally NOT in this set.
+MICROINFORM_OWNED_IDS = frozenset(
+    list(range(632, 645))  # active network / software
+    + list(range(653, 665))  # ATEN KVM parent + A/V tree
+    + list(range(665, 669))  # UPS accessories under #292
+)
 
 
 def load_json_list(path: Path) -> list[dict[str, Any]]:

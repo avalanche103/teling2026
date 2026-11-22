@@ -66,6 +66,11 @@ export async function POST(request: NextRequest) {
   const id = typeof body.id === "string" && body.id.trim() ? body.id.trim() : null;
   const draft = upsertDraftRequest(id, items);
 
+  if (!draft) {
+    // Stale/deleted id with empty cart (or refused empty create).
+    return NextResponse.json({ ok: true, gone: true });
+  }
+
   return NextResponse.json({
     ok: true,
     id: draft.id,

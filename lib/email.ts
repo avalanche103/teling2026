@@ -153,6 +153,58 @@ ID диалога: ${chat.id}
   return true;
 }
 
+/** AI handed chat to operators (order request or human demanded). */
+export async function sendAiEscalationNotification(
+  chat: Chat,
+  reason: "order" | "human"
+): Promise<void> {
+  const transport = createTransport();
+  if (!transport) {
+    console.warn("[email] SMTP не настроен — эскалация AI не отправлена.");
+    return;
+  }
+
+  const visitor = buildVisitorSummary(chat);
+  const started = formatDate(chat.createdAt);
+  const lastVisitor =
+    [...chat.messages]
+      .reverse()
+      .find((m) => m.role === "visitor" && m.type !== "system")?.text ?? "";
+  const why =
+    reason === "order"
+      ? "Посетитель хочет оформить заказ / КП"
+      : "Посетитель просит оператора";
+
+  const text = `Эскалация чата (ИИ): ${why}
+Начало: ${started}
+
+Последнее сообщение посетителя:
+"${lastVisitor}"
+
+--- Данные посетителя ---
+${visitor}
+
+---
+ID диалога: ${chat.id}
+`;
+
+  const html = `<h2>🚨 ${why}</h2>
+<p><b>Начало:</b> ${started}</p>
+<p><b>Последнее сообщение:</b></p>
+<blockquote style="border-left:4px solid #e11;padding:4px 12px;margin:8px 0">${lastVisitor}</blockquote>
+<h3>Данные посетителя</h3>
+<pre style="background:#f5f5f5;padding:8px;border-radius:4px">${visitor}</pre>
+<p style="color:#888;font-size:12px">ID: ${chat.id}</p>`;
+
+  await transport.sendMail({
+    from: process.env.SMTP_FROM ?? `"Teling Chat" <${process.env.SMTP_USER}>`,
+    to: NOTIFY_TO,
+    subject: `🚨 Чат → оператор: ${why}`,
+    text,
+    html,
+  });
+}
+
 /**
  * Отправляет уведомление о пропущенном обращении (оператор был офлайн).
  */

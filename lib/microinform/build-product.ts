@@ -125,9 +125,13 @@ export function buildMicroinformProduct(params: {
       type:
         group === "switches"
           ? "Коммутатор"
-          : group === "skip" || group === "mixed"
-            ? previous?.metadata?.type || ""
-            : previous?.metadata?.type || section.name,
+          : group === "modules"
+            ? "Трансиверы"
+            : group === "dac"
+              ? "DAC кабели"
+              : group === "skip" || group === "mixed"
+                ? previous?.metadata?.type || ""
+                : section.name,
       url: sourceUrl,
       ...(group !== "skip" ? { price_section: row.sectionTitle } : {}),
       sections: [section.id],
@@ -147,6 +151,10 @@ export function buildMicroinformProduct(params: {
       soputst: [],
       chars,
       description: descriptionFromPrice,
+      cost_price:
+        row.priceB != null && Number.isFinite(row.priceB) && row.priceB > 0
+          ? row.priceB
+          : (previous?.metadata?.cost_price ?? null),
       ...(pendingNew ? { import_status: "new" as const } : {}),
     },
   };

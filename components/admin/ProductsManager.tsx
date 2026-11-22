@@ -457,7 +457,7 @@ export function ProductsManager() {
             if (e.key === "Enter") applyFilters();
           }}
           placeholder="Поиск по SKU, названию, бренду или ID…"
-          className="h-9 w-80 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none ring-blue-400 transition focus:ring-2"
+          className="h-9 w-full max-w-md rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none ring-blue-400 transition focus:ring-2"
         />
         <select
           value={sectionId}
@@ -702,7 +702,7 @@ export function ProductsManager() {
       ) : (
         <>
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-            <div className="overflow-x-auto">
+            <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
               <table className="min-w-full divide-y divide-slate-200 text-sm">
                 <thead className="bg-slate-50 text-left text-slate-500">
                   <tr>

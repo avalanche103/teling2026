@@ -4,6 +4,9 @@
   "enabledVendors": [
     "D-Link",
     "Origo",
-    "ATEN"
+    "ATEN",
+    "SVC",
+    "INFORMIX",
+    "Systeme Electric"
   ]
 }

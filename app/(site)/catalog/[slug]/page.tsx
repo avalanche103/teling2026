@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import { CategoryCard } from "@/components/catalog/CategoryCard";
 import { ProductCard } from "@/components/catalog/ProductCard";
@@ -11,6 +11,7 @@ import { CategorySearchForm } from "@/components/catalog/CategorySearchForm";
 import { ActiveFilterChips } from "@/components/catalog/ActiveFilterChips";
 import { CatalogSortSelect } from "@/components/catalog/CatalogSortSelect";
 import { CatalogPagination } from "@/components/catalog/CatalogPagination";
+import { SeoLandingTags } from "@/components/catalog/SeoLandingTags";
 import {
   getCategoryAncestors,
   getCategoryBySlug,
@@ -21,11 +22,13 @@ import {
 } from "@/lib/data";
 import {
   buildCatalogHref,
+  buildCatalogNavHref,
   hasActiveFilters,
   parseActiveFilters,
   parseLayout,
   parseSort,
 } from "@/lib/catalog-query";
+import { getBrandSeoHrefMap, listSeoLandingTags } from "@/lib/seo-landings";
 import type { ActiveFilters, SectionFacets } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -161,6 +164,33 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const viewAll = stringifyFirst(query.view) === "all";
 
   const activeFilters = parseActiveFilters(query);
+  const brandSeoHrefs = getBrandSeoHrefMap(slug);
+  const seoTags = listSeoLandingTags(slug);
+
+  // Single-brand Tier SEO landing and no other SEO-significant filters → canonical path.
+  const seoRedirect = buildCatalogNavHref(
+    slug,
+    {
+      q: search,
+      page,
+      sort,
+      layout,
+      view: viewAll ? "all" : undefined,
+      filters: activeFilters,
+    },
+    brandSeoHrefs
+  );
+  if (
+    activeFilters.brands.length === 1 &&
+    seoRedirect.startsWith(`/catalog/${slug}/`) &&
+    !search &&
+    activeFilters.priceMin == null &&
+    activeFilters.priceMax == null &&
+    Object.keys(activeFilters.charFilters).length === 0
+  ) {
+    redirect(seoRedirect);
+  }
+
   const selectedFilterKeys = getSectionSelectedFilters(category.id);
   const effectiveFilters = applySelectedFilterKeysToActive(
     activeFilters,
@@ -342,6 +372,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           )}
         </div>
 
+        {!isHub && <SeoLandingTags tags={seoTags} />}
+
         {category.children.length > 0 && (
           <section className="mb-8">
             <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
@@ -377,6 +409,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                 sort={sort}
                 layout={layout}
                 viewAll={viewAll || category.children.length > 0}
+                categorySlug={slug}
+                brandSeoHrefs={brandSeoHrefs}
               />
             )}
 
@@ -410,6 +444,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                   sort={sort}
                   layout={layout}
                   viewAll={viewAll || category.children.length > 0}
+                  categorySlug={slug}
+                  brandSeoHrefs={brandSeoHrefs}
                 />
 
                 {products.length === 0 ? (

@@ -1,6 +1,1798 @@
 {
-  "builtAt": "2026-11-21T04:06:30.427Z",
+  "builtAt": "2026-11-22T09:27:07.339Z",
   "entries": [
+    {
+      "vendor": "D-Link",
+      "model": "DMS-3130-30PS",
+      "url": "https://dlink.ru/ru/products/1/2697.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 16 портами 100/1000/2.5GBase-T, 8 портами 5GBase-T, 2 портами 10GBase-T и 4 портами 25GBase-X SFP28 (16 портов PoE 802.3af/at, 8 портов PoE 802.3bt, PoE-бюджет 740 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-3130-30PS_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-3130-30TS",
+      "url": "https://dlink.ru/ru/products/1/2698.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 24 портами 100/1000/2.5GBase-T, 2 портами 10GBase-T и 4 портами 25GBase-X SFP28",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-3130-30TS_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-1250-12TP",
+      "url": "https://dlink.ru/ru/products/1/2726.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000/2.5GBase-T, 2 портами 10GBase-T и 2 портами 10GBase-X SFP+ (8 портов PoE 802.3af/at, PoE-бюджет 240 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-1250-12TP_A1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-1250-10SP",
+      "url": "https://dlink.ru/ru/products/1/2724.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000/2.5GBase-T и 2 портами 10GBase-X SFP+ (8 портов PoE 802.3af/at, PoE-бюджет 240 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-1250-10SP_A1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-1250-10SPL",
+      "url": "https://dlink.ru/ru/products/1/2727.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000/2.5GBase-T и 2 портами 10GBase-X SFP+ (порты 1-8 PoE 802.3af/at, порты 1-2 PoE 802.3bt, PoE-бюджет 120 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-1250-10SPL_A1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-1250-10S",
+      "url": "https://dlink.ru/ru/products/1/2725.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000/2.5GBase-T и 2 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-1250-10S_A1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-1100-10TP",
+      "url": "https://dlink.ru/ru/products/1/2277.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000/2.5GBase-T и 2 портами 10GBase-X SFP+ (8 портов PoE 802.3af/at, PoE‑бюджет 240 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-1100-10TP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-1100-10TS",
+      "url": "https://dlink.ru/ru/products/1/2276.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000/2.5GBase-T и 2 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-1100-10TS_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-109X",
+      "url": "https://dlink.ru/ru/products/1/2800.html",
+      "subtitle": "Коммутатор с 8 портами 10/100/1000/2.5GBase-T и 1 портом 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-109X_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-108P",
+      "url": "https://dlink.ru/ru/products/1/2737.html",
+      "subtitle": "Коммутатор с 8 портами 10/100/1000/2.5GBase-T (8 портов PoE 802.3af/at/bt, PoE-бюджет 230 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-108P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-108",
+      "url": "https://dlink.ru/ru/products/1/2738.html",
+      "subtitle": "Коммутатор с 8 портами 10/100/1000/2.5GBase-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-108_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-107",
+      "url": "https://dlink.ru/ru/products/1/2739.html",
+      "subtitle": "Коммутатор с 5 портами 10/100/1000Base-T и 2 портами 10/100/1000/2.5GBase-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-107_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-106XT",
+      "url": "https://dlink.ru/ru/products/1/2742.html",
+      "subtitle": "Конфигурируемый коммутатор с 5 портами 100/1000/2.5GBase-T, 1 портом 10GBase-T и DIP-переключателем",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-106XT_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DMS-105",
+      "url": "https://dlink.ru/ru/products/1/2740.html",
+      "subtitle": "Коммутатор с 5 портами 10/100/1000/2.5GBase-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DMS-105_A1_A2_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-100E-05",
+      "url": "https://dlink.ru/ru/products/1/2777.html",
+      "subtitle": "Промышленный коммутатор с 5 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-100E-05_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-100E-5W",
+      "url": "https://dlink.ru/ru/products/1/2361.html",
+      "subtitle": "Промышленный конфигурируемый коммутатор с 5 портами 10/100Base-TX и DIP-переключателем",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-100G-5W_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-100E-8W",
+      "url": "https://dlink.ru/ru/products/1/2362.html",
+      "subtitle": "Промышленный конфигурируемый коммутатор с 8 портами 10/100Base-TX и DIP-переключателем",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-100E-8W_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-100G-06",
+      "url": "https://dlink.ru/ru/products/1/2779.html",
+      "subtitle": "Промышленный коммутатор с 4 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-100G-06_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-100G-06P",
+      "url": "https://dlink.ru/ru/products/1/2778.html",
+      "subtitle": "Промышленный коммутатор с 4 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (4 порта PoE 802.3af/at, PoE-бюджет 120 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-100G-06P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-100G-5PSW",
+      "url": "https://dlink.ru/ru/products/1/2324.html",
+      "subtitle": "Промышленный конфигурируемый коммутатор с 4 портами 10/100/1000Base-T, 1 портом 1000Base-X SFP и DIP-переключателем (4 порта PoE 802.3af/at, PoE-бюджет до 120 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-100G-5PSW_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-100G-10",
+      "url": "https://dlink.ru/ru/products/1/2798.html",
+      "subtitle": "Промышленный коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-100G-10_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-100G-10P",
+      "url": "https://dlink.ru/ru/products/1/2797.html",
+      "subtitle": "Промышленный конфигурируемый коммутатор с 8 портами 10/100/1000Base-T, 2 портами 1000Base-X SFP и DIP-переключателем (8 портов PoE 802.3af/at, PoE-бюджет 240 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-100G-10P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-200G-12S",
+      "url": "https://dlink.ru/ru/products/1/2215.html",
+      "subtitle": "Промышленный управляемый L2 коммутатор с 10 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-200G-12S_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-200G-12PS",
+      "url": "https://dlink.ru/ru/products/1/2216.html",
+      "subtitle": "Промышленный управляемый L2 коммутатор с 10 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (8 портов PoE 802.3af/at, PoE‑бюджет до 240 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-200G-12PS_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-200G-12PSW",
+      "url": "https://dlink.ru/ru/products/1/2807.html",
+      "subtitle": "Промышленный управляемый L2 коммутатор с 10 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (8 портов PoE 802.3af/at, PoE-бюджет до 240 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-200G-12PSW.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-210G-06",
+      "url": "https://dlink.ru/ru/products/1/2788.html",
+      "subtitle": "Промышленный управляемый L2 коммутатор с 4 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-210G-06_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-210G-06P",
+      "url": "https://dlink.ru/ru/products/1/2789.html",
+      "subtitle": "Промышленный управляемый L2 коммутатор с 4 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (4 порта PoE 802.3af/at, PoE-бюджет 120 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-210G-06P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-210G-12",
+      "url": "https://dlink.ru/ru/products/1/2790.html",
+      "subtitle": "Промышленный управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-210G-12_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-210G-12UP",
+      "url": "https://dlink.ru/ru/products/1/2787.html",
+      "subtitle": "Промышленный управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP (порты 1-8 PoE 802.3af/at, порты 1-2 PoE 802.3bt, PoE-бюджет 240 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-210G-12UP_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-210G-12P",
+      "url": "https://dlink.ru/ru/products/1/2791.html",
+      "subtitle": "Промышленный управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP (8 портов PoE 802.3af/at, PoE-бюджет 240 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-210G-12P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-310G-24X",
+      "url": "https://dlink.ru/ru/products/1/2792.html",
+      "subtitle": "Промышленный управляемый L3 коммутатор с 16 портами 10/100/1000Base-T, 4 портами 1000Base-X SFP и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-310G-24X_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-RK200G",
+      "url": "https://dlink.ru/ru/products/1/2333.html",
+      "subtitle": "Комплект для монтажа коммутаторов серии DIS-200G в 19\" стойку",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-RK200G_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1005C",
+      "url": "https://dlink.ru/ru/products/1/2767.html",
+      "subtitle": "Коммутатор с 5 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1005C_%D0%A12_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1005C/F6",
+      "url": "https://dlink.ru/ru/products/1/2747.html",
+      "subtitle": "Коммутатор с 5 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1005C_F6_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1005C-CN",
+      "url": "https://dlink.ru/ru/products/1/2751.html",
+      "subtitle": "Коммутатор с 5 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1005C-CN_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1008C/С",
+      "url": "https://dlink.ru/ru/products/1/2793.html",
+      "subtitle": "Коммутатор с 8 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1008C_C1A_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1008C/F6",
+      "url": "https://dlink.ru/ru/products/1/2748.html",
+      "subtitle": "Коммутатор с 8 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1008C_F6_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1008C-CN",
+      "url": "https://dlink.ru/ru/products/1/2752.html",
+      "subtitle": "Коммутатор с 8 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1008C-CN_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1008D",
+      "url": "https://dlink.ru/ru/products/1/1950.html",
+      "subtitle": "Коммутатор с 8 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1008D_L2_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1016A",
+      "url": "https://dlink.ru/ru/products/1/1914.html",
+      "subtitle": "Коммутатор с 16 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1016A_C1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1024A",
+      "url": "https://dlink.ru/ru/products/1/1984.html",
+      "subtitle": "Коммутатор с 24 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1024A_C1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1005A",
+      "url": "https://dlink.ru/ru/products/1/2709.html",
+      "subtitle": "Коммутатор с 5 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1005A_G1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1005D",
+      "url": "https://dlink.ru/ru/products/1/2765.html",
+      "subtitle": "Коммутатор с 5 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1005D_S_pr.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1005P",
+      "url": "https://dlink.ru/ru/products/1/2335.html",
+      "subtitle": "Коммутатор с 5 портами 10/100/1000Base-T (4 порта PoE 802.3af/at, PoE‑бюджет 60 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1005P_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1008A",
+      "url": "https://dlink.ru/ru/products/1/2466.html",
+      "subtitle": "Коммутатор с 8 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1008A_E1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1008D",
+      "url": "https://dlink.ru/ru/products/1/2764.html",
+      "subtitle": "Коммутатор с 8 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1008D_S_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1008P",
+      "url": "https://dlink.ru/ru/products/1/2496.html",
+      "subtitle": "Коммутатор с 8 портами 10/100/1000Base-T (4 порта PoE 802.3af/at, PoE-бюджет 60/80 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1008P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1016D",
+      "url": "https://dlink.ru/ru/products/1/2731.html",
+      "subtitle": "Коммутатор с 16 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1016D_I1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1024D",
+      "url": "https://dlink.ru/ru/products/1/2730.html",
+      "subtitle": "Коммутатор с 24 портами 10/100Base-TX",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1024D_H_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1008MP",
+      "url": "https://dlink.ru/ru/products/1/2399.html",
+      "subtitle": "Коммутатор с 8 портами 10/100/1000Base-T с поддержкой PoE 802.3af/at (PoE‑бюджет 125 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1008MP_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1010MP",
+      "url": "https://dlink.ru/ru/products/1/2346.html",
+      "subtitle": "Коммутатор с 9 портами 10/100/1000Base-T и 1 портом 1000Base-X SFP (8 портов PoE 802.3af/at, PoE‑бюджет 125 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1010MP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1024C",
+      "url": "https://dlink.ru/ru/products/1/2122.html",
+      "subtitle": "Коммутатор с 24 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1024C_B2_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1024C/F6",
+      "url": "https://dlink.ru/ru/products/1/2749.html",
+      "subtitle": "Коммутатор с 24 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1024C_F6_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1026MP",
+      "url": "https://dlink.ru/ru/products/1/2154.html",
+      "subtitle": "Коммутатор с 24 портами 10/100/1000Base-T и 2 комбо-портами 1000Base-T/SFP (24 порта PoE 802.3af/at, PoE-бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1026MP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1052",
+      "url": "https://dlink.ru/ru/products/1/2455.html",
+      "subtitle": "Коммутатор с 48 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1052_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1010P",
+      "url": "https://dlink.ru/ru/products/1/2763.html",
+      "subtitle": "Конфигурируемый коммутатор с 8 портами 10/100/1000Base-T, 2 портами 1000Base-X SFP и DIP-переключателем (8 портов PoE 802.3af/at, PoE-бюджет 125 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1010P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1016D",
+      "url": "https://dlink.ru/ru/products/1/2723.html",
+      "subtitle": "Конфигурируемый коммутатор с 16 портами 10/100/1000Base-T и DIP-переключателем",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1016D_K-prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1018P",
+      "url": "https://dlink.ru/ru/products/1/2750.html",
+      "subtitle": "Конфигурируемый коммутатор с 16 портами 10/100/1000Base-T, 2 портами 1000Base-X SFP и DIP-переключателем (16 портов PoE 802.3af/at, PoE-бюджет 240 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1018P_B1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1024D",
+      "url": "https://dlink.ru/ru/products/1/2721.html",
+      "subtitle": "Конфигурируемый коммутатор с 24 портами 10/100/1000Base-T и DIP-переключателем",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210D_J1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1026P",
+      "url": "https://dlink.ru/ru/products/1/2761.html",
+      "subtitle": "Конфигурируемый коммутатор с 24 портами 10/100/1000Base-T, 2 портами 1000Base-X SFP и DIP-переключателем (24 порта PoE 802.3af/at, PoE-бюджет 240 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1026P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-05PDV2",
+      "url": "https://dlink.ru/ru/products/1/2536.html",
+      "subtitle": "Управляемый L2 коммутатор с 5 портами 10/100/1000Base-T (2 порта PoE 802.3af, PoE-бюджет 18 Вт (802.3at) или 8 Вт (802.3af), 1 порт для питания коммутатора по PoE)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-05PDV2_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-05V2",
+      "url": "https://dlink.ru/ru/products/1/2517.html",
+      "subtitle": "Управляемый L2 коммутатор с 5 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-05V2_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-08PLV2",
+      "url": "https://dlink.ru/ru/products/1/2518.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T (4 порта PoE 802.3af/at, PoE-бюджет 80 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-08PLV2_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-08PV2",
+      "url": "https://dlink.ru/ru/products/1/2710.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T (8 портов PoE 802.3af/at, PoE-бюджет 64 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-08PV2_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-08V2",
+      "url": "https://dlink.ru/ru/products/1/2516.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-08V2_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-10MPPV2",
+      "url": "https://dlink.ru/ru/products/1/2664.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 100/1000Base-X SFP (порты 1-8 PoE 802.3af/at, порты 7-8 PoE 802.3bt, PoE-бюджет 242 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-10MPPV2_A3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-10MPV2",
+      "url": "https://dlink.ru/ru/products/1/2666.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 100/1000Base-X SFP (8 портов PoE 802.3af/at, PoE-бюджет 130 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-10MPV2_A3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-16V2",
+      "url": "https://dlink.ru/ru/products/1/2476.html",
+      "subtitle": "Управляемый L2 коммутатор c 16 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-16V2_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-18PV2",
+      "url": "https://dlink.ru/ru/products/1/2673.html",
+      "subtitle": "Управляемый L2 коммутатор с 16 портами 10/100/1000Base-T и 2 комбо-портами 1000Base-T/SFP (16 портов PoE 802.3af/at, PoE-бюджет 130 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-18PV2_A3A_min.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-24PV2",
+      "url": "https://dlink.ru/ru/products/1/2462.html",
+      "subtitle": "Управляемый L2 коммутатор c 24 портами 10/100/1000Base-T (12 портов РоЕ 802.3af/at, PoE-бюджет 100 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-24PV2_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-24V2",
+      "url": "https://dlink.ru/ru/products/1/2463.html",
+      "subtitle": "Управляемый L2 коммутатор c 24 портами 10/100/1000Base-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-24V2_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-26MPPV2",
+      "url": "https://dlink.ru/ru/products/1/2665.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 2 комбо-портами 1000Base-T/SFP (порты 1-24 PoE 802.3af/at, порты 21-24 PoE 802.3bt, PoE-бюджет 525 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-26MPPV2_A3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-26MPV2",
+      "url": "https://dlink.ru/ru/products/1/2668.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 2 комбо-портами 1000Base-T/SFP (24 порта PoE 802.3af/at, PoE-бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-26MPV2_A3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DSS-200G-10MP",
+      "url": "https://dlink.ru/ru/products/1/2690.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T, 2 портами 1000Base-X SFP и DIP-переключателем (8 портов PoE 802.3af/at, PoE-бюджет 130 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DSS-200G-10MP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DSS-200G-10MPP",
+      "url": "https://dlink.ru/ru/products/1/2691.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T, 2 портами 1000Base-X SFP и DIP-переключателем (8 портов PoE 802.3af/at/bt, PoE-бюджет 242 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DSS-200G-10MPP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DSS-200G-28MP",
+      "url": "https://dlink.ru/ru/products/1/2692.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T, 4 комбо-портами 100/1000Base-T/SFP и DIP-переключателем (24 порта PoE 802.3af/at, PoE-бюджет 370 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DSS-200G-28MP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DSS-200G-28MPP",
+      "url": "https://dlink.ru/ru/products/1/2693.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T, 4 комбо-портами 100/1000Base-T/SFP и DIP-переключателем (порты 1-24 PoE 802.3af/at, порты 1-8 PoE 802.3bt, PoE-бюджет 518 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DSS-200G-28MPP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-08P",
+      "url": "https://dlink.ru/ru/products/1/2720.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (8 портов PoE 802.3af/at, PoE-бюджет 65 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-08P_G_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10",
+      "url": "https://dlink.ru/ru/products/1/2011.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10_F1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10MP",
+      "url": "https://dlink.ru/ru/products/1/2702.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (8 портов PoE 802.3af/at, PoE-бюджет 130 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10MP_F3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10P",
+      "url": "https://dlink.ru/ru/products/1/2683.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (8 портов PoE 802.3af/at, PoE-бюджет 65 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10P_F3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-16",
+      "url": "https://dlink.ru/ru/products/1/2719.html",
+      "subtitle": "Управляемый L2 коммутатор с 16 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-16_G1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-20",
+      "url": "https://dlink.ru/ru/products/1/2636.html",
+      "subtitle": "Управляемый L2 коммутатор с 16 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-20_F2_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-26",
+      "url": "https://dlink.ru/ru/products/1/2637.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-26_F3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28",
+      "url": "https://dlink.ru/ru/products/1/2641.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28_F3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28MP",
+      "url": "https://dlink.ru/ru/products/1/2638.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP (24 порта PoE 802.3af/at, PoE-бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28MP_F3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28P",
+      "url": "https://dlink.ru/ru/products/1/2649.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP (24 порта PoE 802.3af/at, PoE-бюджет 193 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28P_F3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-52",
+      "url": "https://dlink.ru/ru/products/1/2640.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-52_F3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-52MP",
+      "url": "https://dlink.ru/ru/products/1/2657.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP (48 портов PoE 802.3af/at, PoE-бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-52MP_F3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-52MPP",
+      "url": "https://dlink.ru/ru/products/1/2172.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP (порты 1-48 PoE 802.3af/at, PoE-бюджет 740 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-52MPP_E2_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-1210-10TS",
+      "url": "https://dlink.ru/ru/products/1/2679.html",
+      "subtitle": "Управляемый L2+ коммутатор с 8 портами 10GBase-T и 2 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-1210-10TS_B_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-1210-12SC",
+      "url": "https://dlink.ru/ru/products/1/2680.html",
+      "subtitle": "Управляемый L2+ коммутатор с 10 портами 10GBase-X SFP+ и 2 комбо-портами 10GBase-T/SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-1210-12SC_B1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-1210-12TC",
+      "url": "https://dlink.ru/ru/products/1/2678.html",
+      "subtitle": "Управляемый L2+ коммутатор с 8 портами 10GBase-T, 2 портами 10GBase-X SFP+ и 2 комбо-портами 10GBase-T/SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-1210-12TC_B1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-1210-16TC",
+      "url": "https://dlink.ru/ru/products/1/2708.html",
+      "subtitle": "Управляемый L2+ коммутатор с 12 портами 10GBase-T, 2 портами 10GBase-X SFP+ и 2 комбо-портами 10GBase-T/SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-1210-16TC_B1_B2_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-1210-28S",
+      "url": "https://dlink.ru/ru/products/1/2479.html",
+      "subtitle": "Управляемый L2+ коммутатор с 24 портами 10GBase-X SFP+ и 4 портами 10GBase-T",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-1210-28S_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-1210-28T",
+      "url": "https://dlink.ru/ru/products/1/2480.html",
+      "subtitle": "Управляемый L2+ коммутатор с 24 портами 10GBase-T и 4 портами 25GBase-X SFP28",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-1210-28T_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-3200-28",
+      "url": "https://dlink.ru/ru/products/1/1587.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100Base-TX, 2 портами 100/1000Base-X SFP и 2 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-3200-28_C1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1100-10/ME",
+      "url": "https://dlink.ru/ru/products/1/1976.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1100-10ME_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10/ME",
+      "url": "https://dlink.ru/ru/products/1/2794.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10ME_B2_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10P/FL",
+      "url": "https://dlink.ru/ru/products/1/2387.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (8 портов PoE 802.3af/at, PoE бюджет 65 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10P_FL.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10MP/FL",
+      "url": "https://dlink.ru/ru/products/1/2385.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (8 портов PoE 802.3af/at, PoE-бюджет 130 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10MP_FL.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10MP/RU/FL",
+      "url": "https://dlink.ru/ru/products/1/2796.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-Х SFP (8 портов PoE 802.3af/at, PoE-бюджет 130 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10MP_RU_FL_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10P/ME",
+      "url": "https://dlink.ru/ru/products/1/2049.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 1000Base-X SFP (8 портов PoE 802.3af/at, PoE-бюджет 78 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10PME_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10X/ME/C",
+      "url": "https://dlink.ru/ru/products/1/2754.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10XME_C1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10XP/ME/C",
+      "url": "https://dlink.ru/ru/products/1/2755.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 10/100/1000Base-T и 2 портами 10GBase-X SFP+ (8 портов PoE 802.3af/at, PoE-бюджет 240 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10XPME_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-10XS/ME/C",
+      "url": "https://dlink.ru/ru/products/1/2753.html",
+      "subtitle": "Управляемый L2 коммутатор с 8 портами 100/1000Base-X SFP и 2 комбо-портами 10GBase-T/SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-10XSME_C1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-20/FL",
+      "url": "https://dlink.ru/ru/products/1/2388.html",
+      "subtitle": "Управляемый L2 коммутатор с 16 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-20_FL_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-20/ME",
+      "url": "https://dlink.ru/ru/products/1/1981.html",
+      "subtitle": "Управляемый L2 коммутатор с 16 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-20ME_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28/RU",
+      "url": "https://dlink.ru/ru/products/1/2783.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28_RU_F3_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28/FL",
+      "url": "https://dlink.ru/ru/products/1/2390.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28_FL_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28/RU/FL",
+      "url": "https://dlink.ru/ru/products/1/2784.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28_RU_FL2A_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28P/FL",
+      "url": "https://dlink.ru/ru/products/1/2391.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP (24 порта PoE 802.3af/at, РоЕ-бюджет 193 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28P_FL_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28MP/FL",
+      "url": "https://dlink.ru/ru/products/1/2392.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP (24 порта PoE 802.3af/at, РоЕ-бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28MP_FL_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28/ME",
+      "url": "https://dlink.ru/ru/products/1/2046.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28ME_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28P/ME",
+      "url": "https://dlink.ru/ru/products/1/2044.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP (24 порта PoE 802.3af/at, PoE‑бюджет 193 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28PME_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28X/ME/C",
+      "url": "https://dlink.ru/ru/products/1/2758.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28XME-C1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28XS/ME",
+      "url": "https://dlink.ru/ru/products/1/2088.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 100/1000Base-X SFP и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28XSME_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-28XS/ME/C",
+      "url": "https://dlink.ru/ru/products/1/2759.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 100/1000Base-X SFP и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-28XSME_C1__prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-52MP/FL",
+      "url": "https://dlink.ru/ru/products/1/2394.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP (48 портов PoE 802.3af/at, PoE-бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-52MP_FL_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-52/ME",
+      "url": "https://dlink.ru/ru/products/1/2045.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-52ME_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-52P/ME",
+      "url": "https://dlink.ru/ru/products/1/2227.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP (порты 1-8 PoE 802.3af/at, порты 9-24 PoE 802.3af, PoE‑бюджет 193 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-52PME_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-52MP/ME",
+      "url": "https://dlink.ru/ru/products/1/2581.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP (порты 1-8 PoE 802.3af/at, порты 9-48 PoE 802.3af, PoE‑бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-52MPPME_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-52MPP/ME",
+      "url": "https://dlink.ru/ru/products/1/2193.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP (48 портов PoE 802.3af/at, PoE‑бюджет 740 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-52MPPME_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1210-52X/ME/C",
+      "url": "https://dlink.ru/ru/products/1/2756.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1210-52XME_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1250-28X",
+      "url": "https://dlink.ru/ru/products/1/2422.html",
+      "subtitle": "Управляемый L2 коммутатор c 24 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1250-28X_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1250-28XMP",
+      "url": "https://dlink.ru/ru/products/1/2423.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+ (24 порта PoE 802.3af/at, PoE‑бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1250-28XMP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1250-52X",
+      "url": "https://dlink.ru/ru/products/1/2424.html",
+      "subtitle": "Управляемый L2 коммутатор c 48 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1250-52X_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1250-52XMP",
+      "url": "https://dlink.ru/ru/products/1/2425.html",
+      "subtitle": "Управляемый L2 коммутатор с 48 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+ (48 портов PoE 802.3af/at, PoE‑бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1250-52XMP_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3000-28L",
+      "url": "https://dlink.ru/ru/products/1/2314.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 портами 1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3000-28L_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3000-28XMP",
+      "url": "https://dlink.ru/ru/products/1/2317.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+ (24 порта PoE 802.3af/at, PoE-бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3000-28XMP_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3000-28XS",
+      "url": "https://dlink.ru/ru/products/1/2318.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 1000Base-X SFP и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3000-28XS_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1250-28X/RU",
+      "url": "https://dlink.ru/ru/products/1/2775.html",
+      "subtitle": "Управляемый L3 коммутатор c 24 портами 10/100/1000Base-T и 4 портами 10GBase X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1250-28X_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1250-28XMP/RU",
+      "url": "https://dlink.ru/ru/products/1/2780.html",
+      "subtitle": "Управляемый L3 коммутатор c 24 портами 10/100/1000Base-T и 4 портами 10GBase X SFP+ (24 порта PoE 802.3af/at, PoE бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1250-28XMP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1250-52X/RU",
+      "url": "https://dlink.ru/ru/products/1/2776.html",
+      "subtitle": "Управляемый L3 коммутатор c 48 портами 10/100/1000Base-T и 4 портами 10GBase X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1250-52X_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1250-52XMP/RU",
+      "url": "https://dlink.ru/ru/products/1/2781.html",
+      "subtitle": "Управляемый L3 коммутатор с 48 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+ (48 портов PoE 802.3af/at, PoE бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1250-52XMP_x_ru.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1510-28X",
+      "url": "https://dlink.ru/ru/products/1/1956.html",
+      "subtitle": "Управляемый L2+ стекируемый коммутатор с 24 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1510-28X_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1510-28XMP",
+      "url": "https://dlink.ru/ru/products/1/2057.html",
+      "subtitle": "Управляемый L2+ стекируемый коммутатор с 24 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+ (24 порта PoE 802.3af/at, PoE-бюджет 370 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1510-28XMP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1510-28P",
+      "url": "https://dlink.ru/ru/products/1/1900.html",
+      "subtitle": "Управляемый L2+ стекируемый коммутатор с 24 портами 10/100/1000Base-T, 2 портами 1000Base-X SFP и 2 портами 10GBase-X SFP+ (24 порта PoE 802.3af/at, PoE-бюджет 193 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1510-28P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1510-52X",
+      "url": "https://dlink.ru/ru/products/1/1957.html",
+      "subtitle": "Управляемый L2+ стекируемый коммутатор с 48 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1510-52X_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1510-52XMP",
+      "url": "https://dlink.ru/ru/products/1/2289.html",
+      "subtitle": "Управляемый L2+ стекируемый коммутатор с 48 портами 10/100/1000Base-T и 4 портами 10GBase-X SFP+ (48 портов PoE 802.3af/at, PoE‑бюджет 370 Вт; 740 Вт с DPS‑700)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1510-52XMP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3000-28SC",
+      "url": "https://dlink.ru/ru/products/1/2001.html",
+      "subtitle": "Управляемый L2 стекируемый коммутатор с 20 портами 100/1000Base-X SFP, 4 комбо-портами 100/1000Base-T/SFP и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3000-28SC_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1520-28",
+      "url": "https://dlink.ru/ru/products/1/2621.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 24 портами 10/100/1000Base-T, 2 портами 10GBase-T и 2 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1520-28_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1520-28MP",
+      "url": "https://dlink.ru/ru/products/1/2620.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 20 портами 10/100/1000Base-T, 4 портами 100/1000/2.5GBase-T, 2 портами 10GBase-T и 2 портами 10GBase-X SFP+ (24 порта PoE 802.3af/at, PoE-бюджет 370 Вт; 740 Вт с DPS-700)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1520-28MP_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1520-52",
+      "url": "https://dlink.ru/ru/products/1/2622.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 48 портами 10/100/1000Base-T, 2 портами 10GBase-T и 2 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1520-52_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-1520-52MP",
+      "url": "https://dlink.ru/ru/products/1/2623.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 44 портами 10/100/1000Base-T, 4 портами 100/1000/2.5GBase-T, 2 портами 10GBase-T и 2 портами 10GBase-X SFP+ (48 портов PoE 802.3af/at, PoE-бюджет 370 Вт; 740 Вт с DPS-700)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-1520-52MP_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3130-30PS",
+      "url": "https://dlink.ru/ru/products/1/2627.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 24 портами 10/100/1000Base-T, 2 портами 10GBase-T и 4 портами 10GBase-X SFP+ (24 порта PoE 802.3af/at, PoE-бюджет 370 Вт; 740 Вт с DPS-700)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3130-30PS_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3130-30S",
+      "url": "https://dlink.ru/ru/products/1/2600.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 24 портами 1000Base-X SFP, 2 портами 10GBase-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3130-30S_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3130-30TS",
+      "url": "https://dlink.ru/ru/products/1/2308.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 24 портами 10/100/1000Base-T, 2 портами 10GBase-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3130-30TS_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3130-54S",
+      "url": "https://dlink.ru/ru/products/1/2310.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 48 портами 1000Base-X SFP, 2 портами 10GBase-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3130-54S_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3130-54S/B",
+      "url": "https://dlink.ru/ru/products/1/2699.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 48 портами 1000Base-X SFP, 2 портами 10GBase-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3130-54S_B1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3130-54PS",
+      "url": "https://dlink.ru/ru/products/1/2674.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 48 портами 10/100/1000Base-T, 2 портами 10GBase-T и 4 портами 10GBase-X SFP+ (48 портов PoE 802.3af/at, PoE-бюджет 370 Вт; 740 Вт с DPS-700)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3130-54PS_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3130-54TS",
+      "url": "https://dlink.ru/ru/products/1/2547.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 48 портами 10/100/1000Base-T, 2 портами 10GBase-T и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3130-54TS_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3630-28PC",
+      "url": "https://dlink.ru/ru/products/1/2299.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 20 портами 10/100/1000Base-T, 4 комбо‑портами 100/1000Base-T/SFP и 4 портами 10GBase-X SFP+ (24 порта PoE 802.3af/at, PoE‑бюджет 370 Вт; 740 Вт с DPS‑700)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3630-28PC_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3630-28SC",
+      "url": "https://dlink.ru/ru/products/1/2163.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 20 портами 1000Base-X SFP, 4 комбо‑портами 100/1000Base-T/SFP и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3630_28SC_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3630-28TC",
+      "url": "https://dlink.ru/ru/products/1/2164.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 20 портами 10/100/1000Base-T, 4 комбо‑портами 100/1000Base-T/SFP и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3630_28TC_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3630-52PC",
+      "url": "https://dlink.ru/ru/products/1/2795.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 44 портами 10/100/1000Base-T, 4 комбо-портами 100/1000Base-T/SFP и 4 портами 10GBase-X SFP+ (48 портов PoE 802.3af/at, PoE-бюджет 370 Вт; 740 Вт с DPS-700)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3630_52PC_A_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-3630-52TC",
+      "url": "https://dlink.ru/ru/products/1/2165.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 44 портами 10/100/1000Base-T, 4 комбо‑портами 100/1000Base-T/SFP и 4 портами 10GBase-X SFP+",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-3630_52TC_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-3130-32S",
+      "url": "https://dlink.ru/ru/products/1/2770.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 28 портами 10GBase-X SFP+ и 4 портами 25GBase-X SFP28",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-3130-32S_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-3130-28",
+      "url": "https://dlink.ru/ru/products/1/2769.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 24 портами 10GBase-T и 4 портами 25GBase-X SFP28",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-3130-28_A1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-3130-28P",
+      "url": "https://dlink.ru/ru/products/1/2771.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 24 портами 10GBase-T и 4 портами 25GBase-X SFP28 (24 порта PoE 802.3af/at/bt, PoE-бюджет 790 Вт; 1440 Вт с 2 источниками питания)",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-3130-28P_.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DPS-PWR1200AC",
+      "url": "https://dlink.ru/ru/products/1/2772.html",
+      "subtitle": "Источник питания AC (1200 Вт) с вентилятором для коммутатора DXS-3130-28P",
+      "listingImage": "https://dlink.ru/up/prod/min/DPS-PWR1200AC_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DPS-PWR1200DC",
+      "url": "https://dlink.ru/ru/products/1/2773.html",
+      "subtitle": "Источник питания DC (1200 Вт) с вентилятором для коммутатора DXS-3130-28P",
+      "listingImage": "https://dlink.ru/up/prod/min/DPS-PWR1200DC_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-3410-32SY",
+      "url": "https://dlink.ru/ru/products/1/2728.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 28 портами 10GBase-X SFP+ и 4 портами 25GBase-X SFP28",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-3410-32SY_A1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-3410-32XY",
+      "url": "https://dlink.ru/ru/products/1/2729.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 24 портами 10GBase-T, 4 портами 10GBase-X SFP+ и 4 портами 25GBase-X SFP28",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-3410-32XY_A1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-3400-24TC",
+      "url": "https://dlink.ru/ru/products/1/2116.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 20 портами 10GBase-T, 4 комбо-портами 10GBase-T/SFP+, источником питания AC и 3 вентиляторами",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-3400-24TC_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-FAN100",
+      "url": "https://dlink.ru/ru/products/1/2134.html",
+      "subtitle": "Модуль вентиляторный (направление воздушного потока от передней панели к задней) для коммутаторов DXS-3400",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-FAN100_x.png"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-PWR300DC",
+      "url": "https://dlink.ru/ru/products/1/2182.html",
+      "subtitle": "Источник питания DC (300 Вт) с вентилятором для коммутаторов DXS-3400 и DXS-3600",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-PWR300DC_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-PWR300AC",
+      "url": "https://dlink.ru/ru/products/1/2181.html",
+      "subtitle": "Источник питания AC (300 Вт) с вентилятором для коммутаторов DXS-3400 и DXS-3600",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-PWR300AC_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-3610-54S",
+      "url": "https://dlink.ru/ru/products/1/2498.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 48 портами 10GBase-X SFP+, 6 портами 40/100GBase-X QSFP28, 2 источниками питания AC и 5 вентиляторами",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-3610-54S_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-3610-54T",
+      "url": "https://dlink.ru/ru/products/1/2499.html",
+      "subtitle": "Управляемый L3 стекируемый коммутатор с 48 портами 10GBase-T, 6 портами 40/100GBase-X QSFP28, 2 источниками питания AC и 5 вентиляторами",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-3610-54T_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-FAN200",
+      "url": "https://dlink.ru/ru/products/1/2529.html",
+      "subtitle": "Модуль вентиляторный (направление воздушного потока от передней панели к задней) для коммутаторов DXS-3610",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-FAN200_A1_x.png"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-PWR1000DC",
+      "url": "https://dlink.ru/ru/products/1/2527.html",
+      "subtitle": "Источник питания DC (1100 Вт) с вентилятором для коммутаторов DXS-3610",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-PWR1000DC_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-PWR700AC",
+      "url": "https://dlink.ru/ru/products/1/2528.html",
+      "subtitle": "Источник питания AC (770 Вт) с вентилятором для коммутаторов DXS-3610",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-PWR700AC_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DQS-5000-32Q28",
+      "url": "https://dlink.ru/ru/products/1/2670.html",
+      "subtitle": "Управляемый L3 коммутатор с 32 портами 100GBase-X QSFP28, 2 источниками питания AC и 4 вентиляторами",
+      "listingImage": "https://dlink.ru/up/prod/min/DQS-5000-32Q28_A1_min.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DQS-5000-32S",
+      "url": "https://dlink.ru/ru/products/1/2669.html",
+      "subtitle": "Управляемый L3 коммутатор с 32 портами 40GBase-X QSFP+, 2 источниками питания AC и 4 вентиляторами",
+      "listingImage": "https://dlink.ru/up/prod/min/DQS-5000-32S_A1_min.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DQS-5000-54SQ28",
+      "url": "https://dlink.ru/ru/products/1/2671.html",
+      "subtitle": "Управляемый L3 коммутатор с 48 портами 25GBase-X SFP28, 6 портами 100GBase-X QSFP28, 2 источниками питания AC и 4 вентиляторами",
+      "listingImage": "https://dlink.ru/up/prod/min/DQS-5000-54SQ28_A1_min.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DQS-5000-56ZS",
+      "url": "https://dlink.ru/ru/products/1/2782.html",
+      "subtitle": "Управляемый L3 коммутатор с 48 портами 25GBase-X SFP28, 8 портами 40/100GBase-X QSFP28, 2 источниками питания AC и 5 вентиляторами",
+      "listingImage": "https://dlink.ru/up/prod/min/DQS-5000-56ZS_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-5000-54S",
+      "url": "https://dlink.ru/ru/products/1/2672.html",
+      "subtitle": "Управляемый L3 коммутатор с 48 портами 10GBase-X SFP+, 6 портами 40GBase-X QSFP+, 2 источниками питания AC и 4 вентиляторами",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-5000-54S_A1_min.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-FAN5K",
+      "url": "https://dlink.ru/ru/products/1/2675.html",
+      "subtitle": "Модуль вентиляторный (направление воздушного потока от передней панели к задней) для коммутаторов серии 5000",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-FAN5K_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DXS-PWR550AC",
+      "url": "https://dlink.ru/ru/products/1/2676.html",
+      "subtitle": "Источник питания AC (550 Вт) с вентилятором для коммутаторов серии 5000",
+      "listingImage": "https://dlink.ru/up/prod/min/DXS-PWR500AC_F_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6604",
+      "url": "https://dlink.ru/ru/products/1/1420.html",
+      "subtitle": "Шасси коммутатора L3 серии 6600, 4 слота расширения",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6604_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6608",
+      "url": "https://dlink.ru/ru/products/1/1773.html",
+      "subtitle": "Шасси коммутатора L3 серии DGS-6600, 8 слотов расширения",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6608_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-CM-II",
+      "url": "https://dlink.ru/ru/products/1/1880.html",
+      "subtitle": "Управляющий модуль для шасси DGS‑6604/6608",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600-CM-II_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-24SC2XS",
+      "url": "https://dlink.ru/ru/products/1/1493.html",
+      "subtitle": "Модуль с 12 портами 100/1000Base-X SFP, 12 комбо-портами 100/1000Base-T/SFP и 2 портами 10GBase-X SFP+ для шасси DGS-6604",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600-24SC2XS-C_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-24SC2XS-C",
+      "url": "https://dlink.ru/ru/products/1/1945.html",
+      "subtitle": "Модуль с 12 портами 100/1000Base-X SFP, 12 комбо-портами 100/1000Base-T/SFP, 2 портами 10GBase-X SFP+ и поддержкой MPLS для шасси DGS-6604/6608",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600-24SC2XS-C_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-48S",
+      "url": "https://dlink.ru/ru/products/1/1458.html",
+      "subtitle": "Модуль с 48 портами 100/1000Base-X SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600_48S_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-48S-C",
+      "url": "https://dlink.ru/ru/products/1/1946.html",
+      "subtitle": "Модуль с 48 портами 100/1000Base-X SFP и поддержкой MPLS для шасси DGS-6604/6608",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600_48S_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-48T",
+      "url": "https://dlink.ru/ru/products/1/1457.html",
+      "subtitle": "Модуль с 48 портами 10/100/1000Base-T для шасси DGS-6604/6608",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600_48T_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-48TS",
+      "url": "https://dlink.ru/ru/products/1/1460.html",
+      "subtitle": "Модуль с 24 портами 100/1000Base-T и 24 портами 100/1000Base-X SFP для шасси DGS-6604/6608",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600_48TS_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-FAN",
+      "url": "https://dlink.ru/ru/products/1/1500.html",
+      "subtitle": "Модуль вентиляторный для DGS-6604",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600-FAN_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-FAN-II",
+      "url": "https://dlink.ru/ru/products/1/1988.html",
+      "subtitle": "Модуль вентиляторный для DGS-6608",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600-FAN-II_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-PWR",
+      "url": "https://dlink.ru/ru/products/1/1456.html",
+      "subtitle": "Резервный источник питания AC для шасси DGS-6604/6608 (850 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600-PWR_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-6600-PWRDC",
+      "url": "https://dlink.ru/ru/products/1/1924.html",
+      "subtitle": "Резервный источник питания DC для шасси DGS-6604/6608 (300 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-6600-PWRDC_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-410X",
+      "url": "https://dlink.ru/ru/products/1/600.html",
+      "subtitle": "Модуль для коммутаторов серии DGS-3400 и DGS-3600 с 1 портом 10GBase-X XFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-410X_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-410CX",
+      "url": "https://dlink.ru/ru/products/1/599.html",
+      "subtitle": "Модуль для коммутаторов DGS-3400 и DGS-3600 с 1 портом 10GBase-CX4",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-410CX_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-412CX",
+      "url": "https://dlink.ru/ru/products/1/1070.html",
+      "subtitle": "Модуль для стекирования коммутаторов серии DGS-3610 с 1 портом 10GBase-CX4",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-412CX_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-210",
+      "url": "https://dlink.ru/ru/products/1/1618.html",
+      "subtitle": "SFP-трансивер с 1 портом 100Base-LX для одномодового оптического кабеля (до 15 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-210_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-310GT",
+      "url": "https://dlink.ru/ru/products/1/2553.html",
+      "subtitle": "SFP-трансивер с 1 портом 1000Base-LX для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-DEM-310GT_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-311GT",
+      "url": "https://dlink.ru/ru/products/1/2574.html",
+      "subtitle": "SFP-трансивер с 1 портом 1000Base-SX для многомодового оптического кабеля (до 550 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-311GT_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-312GT2",
+      "url": "https://dlink.ru/ru/products/1/2555.html",
+      "subtitle": "SFP-трансивер с 1 портом 1000Base-SX+ для многомодового оптического кабеля (до 2 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-312GT2_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-330R",
+      "url": "https://dlink.ru/ru/products/1/2576.html",
+      "subtitle": "WDM SFP-трансивер с 1 портом 1000Base-BX-U (Tx:1310 нм, Rx:1550 нм) для одномодового оптического кабеля (до 3/10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-330R_10km_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-330T",
+      "url": "https://dlink.ru/ru/products/1/2575.html",
+      "subtitle": "WDM SFP-трансивер с 1 портом 1000Base-BX-D (Tx:1550 нм, Rx:1310 нм) для одномодового оптического кабеля (до 3/10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-330T_10km_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-331R",
+      "url": "https://dlink.ru/ru/products/1/2561.html",
+      "subtitle": "WDM SFP-трансивер с 1 портом 1000Base-BX-U (Tx:1310 нм, Rx:1550 нм) для одномодового оптического кабеля (до 20/40 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-331R_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-331T",
+      "url": "https://dlink.ru/ru/products/1/2562.html",
+      "subtitle": "WDM SFP-трансивер с 1 портом 1000Base-BX-D (Tx:1550 нм, Rx:1310 нм) для одномодового оптического кабеля (до 20/40 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-331T_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-410T",
+      "url": "https://dlink.ru/ru/products/1/2689.html",
+      "subtitle": "Трансивер SFP+ с 1 портом 10GBase-T (до 30 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-410T_A2_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-431XT",
+      "url": "https://dlink.ru/ru/products/1/2577.html",
+      "subtitle": "Трансивер SFP+ с 1 портом 10GBase-SR для многомодового оптического кабеля (до 300 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-431XT_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-432XT",
+      "url": "https://dlink.ru/ru/products/1/2584.html",
+      "subtitle": "Трансивер SFP+ с 1 портом 10GBase-LR для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-432XT_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-433XT",
+      "url": "https://dlink.ru/ru/products/1/2558.html",
+      "subtitle": "Трансивер SFP+ с 1 портом 10GBase-ER для одномодового оптического кабеля (до 40 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-433XT_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-434XT",
+      "url": "https://dlink.ru/ru/products/1/2586.html",
+      "subtitle": "Трансивер SFP+ с 1 портом 10GBase-ZR для одномодового оптического кабеля (до 80 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-434XT_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-435XT",
+      "url": "https://dlink.ru/ru/products/1/2559.html",
+      "subtitle": "Трансивер SFP+ с 1 портом 10GBase-LRM для многомодового оптического кабеля (до 200 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-435XT_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-436XT-BXD",
+      "url": "https://dlink.ru/ru/products/1/2368.html",
+      "subtitle": "WDM трансивер SFP+ с 1 портом 10GBase-BX-D (Tx:1330 нм, Rx:1270 нм) для одномодового оптического кабеля (до 40 км / 20 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-436XT-BXD_B1_40km_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-436XT-BXU",
+      "url": "https://dlink.ru/ru/products/1/2369.html",
+      "subtitle": "WDM трансивер SFP+ с 1 портом 10GBase-BX-U (Tx:1270 нм, Rx:1330 нм) для одномодового оптического кабеля (до 40 км / 20 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-436XT-BXU_B1_40km_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-703",
+      "url": "https://dlink.ru/ru/products/1/2703.html",
+      "subtitle": "GBIC-трансивер с 1 портом 1000Base-LX для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-703-C_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-707",
+      "url": "https://dlink.ru/ru/products/1/2704.html",
+      "subtitle": "GBIC-трансивер с 1 портом 1000Base-SX для многомодового оптического кабеля (до 550 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-703-C_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DGS-712",
+      "url": "https://dlink.ru/ru/products/1/2573.html",
+      "subtitle": "SFP-трансивер с 1 портом 1000Base-T (до 100 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DGS-712_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S301SX",
+      "url": "https://dlink.ru/ru/products/1/2590.html",
+      "subtitle": "Промышленный SFP-трансивер с 1 портом 1000Base-SX для многомодового оптического кабеля (до 550 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S301SX_B1A_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S302SX",
+      "url": "https://dlink.ru/ru/products/1/2585.html",
+      "subtitle": "Промышленный SFP-трансивер с 1 портом 1000Base-SX+ для многомодового оптического кабеля (до 2 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S302SX%20_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S310LX",
+      "url": "https://dlink.ru/ru/products/1/2589.html",
+      "subtitle": "Промышленный SFP-трансивер с 1 портом 1000Base-LX для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S310LX_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S310R",
+      "url": "https://dlink.ru/ru/products/1/2301.html",
+      "subtitle": "Промышленный WDM SFP-трансивер с 1 портом 1000Base-BX-U (Tx:1310 нм, Rx:1550 нм) для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S310R_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S310T",
+      "url": "https://dlink.ru/ru/products/1/2302.html",
+      "subtitle": "Промышленный WDM SFP-трансивер с 1 портом 1000Base-BX-D (Tx:1550 нм, Rx:1310 нм) для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S310T_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S330LH",
+      "url": "https://dlink.ru/ru/products/1/2303.html",
+      "subtitle": "Промышленный SFP-трансивер с 1 портом 1000Base-LH для одномодового оптического кабеля (до 30 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S330LH_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S330R",
+      "url": "https://dlink.ru/ru/products/1/2304.html",
+      "subtitle": "Промышленный WDM SFP-трансивер с 1 портом 1000Base-BX-U (Tx:1310 нм, Rx:1550 нм) для одномодового оптического кабеля (до 30 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S330R_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S330T",
+      "url": "https://dlink.ru/ru/products/1/2305.html",
+      "subtitle": "Промышленный WDM SFP-трансивер с 1 портом 1000Base-BX-D (Tx:1550 нм, Rx:1310 нм) для одномодового оптического кабеля (до 30 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S330T_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S350LHX",
+      "url": "https://dlink.ru/ru/products/1/2287.html",
+      "subtitle": "Промышленный SFP-трансивер с 1 портом 1000Base-LHX для одномодового оптического кабеля (до 50 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S350LHX_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DIS-S380ZX",
+      "url": "https://dlink.ru/ru/products/1/2288.html",
+      "subtitle": "Промышленный SFP-трансивер с 1 портом 1000Base-ZX для одномодового оптического кабеля (до 80 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DIS-S380ZX_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-422XT",
+      "url": "https://dlink.ru/ru/products/1/2578.html",
+      "subtitle": "XFP-трансивер с 1 портом 10GBase-LR для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min_DEM-422XT_A1.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-423XT",
+      "url": "https://dlink.ru/ru/products/1/2582.html",
+      "subtitle": "XFP-трансивер с 1 портом 10GBase-ER для одномодового оптического кабеля (до 40 км)",
+      "listingImage": "https://dlink.ru/up/prod/min_DEM-423XT_A1.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-424XT",
+      "url": "https://dlink.ru/ru/products/1/2583.html",
+      "subtitle": "XFP-трансивер с 1 портом 10GBase-ZR для одномодового оптического кабеля (до 80 км)",
+      "listingImage": "https://dlink.ru/up/prod/min_DEM-424XT_A1-.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-S2801SR",
+      "url": "https://dlink.ru/ru/products/1/2538.html",
+      "subtitle": "Трансивер SFP28 с 1 портом 25GBase-SR для многомодового оптического кабеля OM3 (до 70 м) / OM4 (до 100 м)",
+      "listingImage": "https://dlink.ru/up/prod/min_DEM-S2801SR_A1.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-S2810LR",
+      "url": "https://dlink.ru/ru/products/1/2539.html",
+      "subtitle": "Трансивер SFP28 с 1 портом 25GBase-LR для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min_DEM-S2810LR_A1.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-QX01Q-SR4",
+      "url": "https://dlink.ru/ru/products/1/2652.html",
+      "subtitle": "Трансивер QSFP+ с 1 портом 40GBase-SR4 для многомодового оптического кабеля OM3 (до 100 м) / OM4 (до 150 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-QX01Q-SR4_B1_320x280.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-QX10Q-LR4",
+      "url": "https://dlink.ru/ru/products/1/2659.html",
+      "subtitle": "Трансивер QSFP+ с 1 портом 40GBase-LR4 для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-QX10Q-LR4_B1_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-Q2801Q-SR4",
+      "url": "https://dlink.ru/ru/products/1/2530.html",
+      "subtitle": "Трансивер QSFP28 с 1 портом 100GBase-SR4 для многомодового оптического кабеля OM3 (до 70 м) / OM4 (до 100 м)",
+      "listingImage": "https://dlink.ru/up/prod/min_DEM-Q2801Q-SR4_A1.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-Q2810Q-LR4",
+      "url": "https://dlink.ru/ru/products/1/2531.html",
+      "subtitle": "Трансивер QSFP28 с 1 портом 100GBase-LR4 для одномодового оптического кабеля (до 10 км)",
+      "listingImage": "https://dlink.ru/up/prod/min_DEM-Q2810Q-LR4_A1.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-CB100Q28",
+      "url": "https://dlink.ru/ru/products/1/2532.html",
+      "subtitle": "Пассивный кабель 100G QSFP28 длиной 1 м с 2 разъемами QSFP28 для прямого подключения коммутаторов DXS-3610",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-CB100Q28_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-CB100QXS-4XS",
+      "url": "https://dlink.ru/ru/products/1/2609.html",
+      "subtitle": "Пассивный кабель 40G QSFP+ длиной 1 м с 1 разъемом QSFP+ и 4 разъемами 10GBase-X SFP+ для подключения серверов и коммутаторов",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-CB100QXS-4XS_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-CB300QXS",
+      "url": "https://dlink.ru/ru/products/1/1765.html",
+      "subtitle": "Пассивный кабель 40GBase-X QSFP+ длиной 3 м с 2 разъемами QSFP+ для прямого подключения коммутаторов DXS-3600 и DXS-3610",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-CB300QXS_C1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-CB700S",
+      "url": "https://dlink.ru/ru/products/1/2706.html",
+      "subtitle": "Пассивный кабель 10GBase-X SFP+ длиной 7 м для прямого подключения",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-CB700S_D1_p.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-CB300S",
+      "url": "https://dlink.ru/ru/products/1/1722.html",
+      "subtitle": "Пассивный кабель 10GBase-X SFP+ длиной 3 м для прямого подключения",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-CB300S_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-CB100S",
+      "url": "https://dlink.ru/ru/products/1/1721.html",
+      "subtitle": "Пассивный кабель 10GBase-X SFP+ длиной 1 м для прямого подключения",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-CB100S_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DEM-CB50",
+      "url": "https://dlink.ru/ru/products/1/1793.html",
+      "subtitle": "Пассивный кабель 10GBase-CX4 длиной 50 см для прямого подключения",
+      "listingImage": "https://dlink.ru/up/prod/min/DEM-CB50_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DPS-800",
+      "url": "https://dlink.ru/ru/products/1/1565.html",
+      "subtitle": "Шасси для резервных источников питания с 2 слотами",
+      "listingImage": "https://dlink.ru/up/prod/min/DPS-800_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DPS-500A",
+      "url": "https://dlink.ru/ru/products/1/1995.html",
+      "subtitle": "Резервный источник питания для коммутаторов (140 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DPS-500A_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DPS-500DC/B",
+      "url": "https://dlink.ru/ru/products/1/1570.html",
+      "subtitle": "Резервный источник питания DC для коммутаторов (140 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DPS-500DC_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DPS-520",
+      "url": "https://dlink.ru/ru/products/1/2524.html",
+      "subtitle": "Резервный источник питания с 4 портами 10/100/1000Base-T с поддержкой PoE для коммутаторов (180 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DPS-520_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DPS-700",
+      "url": "https://dlink.ru/ru/products/1/2685.html",
+      "subtitle": "Резервный источник питания для коммутаторов (589 Вт)",
+      "listingImage": "https://dlink.ru/up/prod/min/DPS-700_A3_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DPS-CB150-2PS",
+      "url": "https://dlink.ru/ru/products/1/1989.html",
+      "subtitle": "Кабель питания длиной 1,5 м для подключения резервного источника питания к коммутаторам",
+      "listingImage": "https://dlink.ru/up/prod/min/DPS-CB150-2PS_B1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "D-View 8",
+      "url": "https://dlink.ru/ru/products/1/2684.html",
+      "subtitle": "Программное обеспечение D-View 8 для удаленного комплексного управления проводными и беспроводными устройствами",
+      "listingImage": "https://dlink.ru/up/prod/min/Preview_D-View8_320x280.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1210-28/ME_RFB",
+      "url": "https://dlink.ru/ru/products/1/2505.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100Base-TX, 2 портами 100/1000Base-X SFP и 2 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1210-28ME_RFB_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1228/ME_RFB",
+      "url": "https://dlink.ru/ru/products/1/1281.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100Base-TX, 2 портами 100/1000Base-X SFP и 2 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1228ME_RFB_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-3026_RFB",
+      "url": "https://dlink.ru/ru/products/1/522.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100Base-TX и 2 слотами расширения",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-3026_RFB_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-3028G_RFB",
+      "url": "https://dlink.ru/ru/products/1/1132.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100Base-TX и 4 комбо-портами 10/100/1000BASE-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-3028G_RFB_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-3028_RFB",
+      "url": "https://dlink.ru/ru/products/1/2501.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100Base-TX, 2 портами 1000BASE-T и 2 комбо-портами 1000BASE-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-3028_RFB_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-3200-28_RFB",
+      "url": "https://dlink.ru/ru/products/1/2504.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100Base-TX, 2 портами 100/1000Base-X SFP и 2 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-3200-28_RFB_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-3526_RFB",
+      "url": "https://dlink.ru/ru/products/1/407.html",
+      "subtitle": "Управляемый L2 коммутатор с 24 портами 10/100Base-TX и 2 комбо-портами 1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-3526_RFB_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-3528_RFB",
+      "url": "https://dlink.ru/ru/products/1/1054.html",
+      "subtitle": "Управляемый L2 стекируемый коммутатор с 24 портами 10/100Base-TX, 2 портами 10/100/1000Base-T и 2 комбо-портами 100/1000Base-T/SFP",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-3528_RFB_x.jpg"
+    },
     {
       "vendor": "D-Link",
       "model": "DNH-3000",

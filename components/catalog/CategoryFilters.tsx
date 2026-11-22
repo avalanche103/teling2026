@@ -4,7 +4,11 @@ import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import { SlidersHorizontal, X, ChevronDown, ChevronUp } from "lucide-react";
 import type { SectionFacets, ActiveFilters, ProductSort } from "@/lib/types";
-import { buildCatalogHref, type CatalogLayout } from "@/lib/catalog-query";
+import {
+  buildCatalogHref,
+  buildCatalogNavHref,
+  type CatalogLayout,
+} from "@/lib/catalog-query";
 
 export type { ActiveFilters };
 
@@ -16,6 +20,10 @@ interface Props {
   sort?: ProductSort;
   layout?: CatalogLayout;
   viewAll?: boolean;
+  /** Category external_id — enables SEO brand path navigation. */
+  categorySlug?: string;
+  /** Exact brand name → `/catalog/{slug}/{landing}` for Tier SEO pages. */
+  brandSeoHrefs?: Record<string, string>;
 }
 
 export function CategoryFilters({
@@ -25,6 +33,8 @@ export function CategoryFilters({
   sort = "relevance",
   layout = "grid",
   viewAll = false,
+  categorySlug,
+  brandSeoHrefs = {},
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -40,16 +50,20 @@ export function CategoryFilters({
     active.priceMax !== null ? String(active.priceMax) : ""
   );
 
-  const navigate = (next: ActiveFilters) =>
-    router.push(
-      buildCatalogHref(pathname, {
-        q: searchQuery,
-        sort,
-        layout,
-        view: viewAll ? "all" : undefined,
-        filters: next,
-      })
-    );
+  const navigate = (next: ActiveFilters) => {
+    const state = {
+      q: searchQuery,
+      sort,
+      layout,
+      view: viewAll ? ("all" as const) : undefined,
+      filters: next,
+    };
+    if (categorySlug) {
+      router.push(buildCatalogNavHref(categorySlug, state, brandSeoHrefs));
+      return;
+    }
+    router.push(buildCatalogHref(pathname, state));
+  };
 
   const toggleBrand = (brand: string) => {
     const brands = active.brands.includes(brand)

@@ -1,0 +1,9 @@
+{
+  "ups": 519,
+  "batteries": 520,
+  "pdu": 508,
+  "inverters": 665,
+  "bypass": 666,
+  "mgmt": 667,
+  "mounts": 668
+}

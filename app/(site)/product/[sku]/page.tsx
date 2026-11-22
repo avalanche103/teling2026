@@ -25,8 +25,55 @@ interface ProductPageProps {
   }>;
 }
 
+function decodeBasicEntities(input: string): string {
+  return input
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#(\d+);/g, (_, code) => {
+      const n = Number(code);
+      return Number.isFinite(n) && n >= 0 && n <= 0x10ffff ? String.fromCodePoint(n) : _;
+    })
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => {
+      const n = Number.parseInt(hex, 16);
+      return Number.isFinite(n) && n >= 0 && n <= 0x10ffff ? String.fromCodePoint(n) : _;
+    });
+}
+
 function stripHtml(input: string): string {
-  return input.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return decodeBasicEntities(input)
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function schemaProductImages(
+  product: {
+    thumbnail?: string | null;
+    localImages?: string[];
+    externalImages?: string[];
+  },
+  origin: string,
+): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of [
+    product.thumbnail,
+    ...(product.localImages || []),
+    ...(product.externalImages || []),
+  ]) {
+    if (!raw) continue;
+    const abs = toAbsoluteUrl(raw, origin);
+    if (!abs || seen.has(abs)) continue;
+    seen.add(abs);
+    out.push(abs);
+  }
+  return out;
 }
 
 /** Google Merchant listings: description max 5000; name practical max ~150. */
@@ -154,25 +201,31 @@ export default async function ProductPage({ params }: ProductPageProps) {
       }
     : undefined;
 
-  const schemaImage = toAbsoluteUrl(
-    product.thumbnail || product.localImages?.[0] || product.externalImages?.[0] || "",
-    origin,
-  );
+  const schemaImages = schemaProductImages(product, origin);
+  const brandName = (product.brand || "").trim();
+  const schemaBrand =
+    brandName && !/^unknown$/i.test(brandName) && !/^noname$/i.test(brandName)
+      ? { "@type": "Brand" as const, name: brandName }
+      : undefined;
 
-  // Build JSON-LD structured data (Merchant listings limits: description ≤5000, name ≤150).
-  const productSchema = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: schemaProductName(product.name),
-    sku: product.sku,
-    brand: {
-      "@type": "Brand",
-      name: product.brand || "Unknown",
-    },
-    description: schemaProductDescription(product.name, product.sku, product.description || ""),
-    ...(schemaImage ? { image: schemaImage } : {}),
-    ...(offerSchema ? { offers: offerSchema } : {}),
-  };
+  // Merchant listings require image — omit Product JSON-LD when none (keeps BreadcrumbList).
+  const productSchema =
+    schemaImages.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: schemaProductName(product.name),
+          sku: product.sku,
+          ...(schemaBrand ? { brand: schemaBrand } : {}),
+          description: schemaProductDescription(
+            product.name,
+            product.sku,
+            product.description || "",
+          ),
+          image: schemaImages.length === 1 ? schemaImages[0] : schemaImages,
+          ...(offerSchema ? { offers: offerSchema } : {}),
+        }
+      : null;
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -207,11 +260,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-        suppressHydrationWarning
-      />
+      {productSchema ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+          suppressHydrationWarning
+        />
+      ) : null}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}

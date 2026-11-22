@@ -14,9 +14,9 @@ Windows-приложение на **Tauri 2**: отдельное окно то�
 
 ## Установка на рабочий ПК
 
-1. Соберите установщик (см. ниже) или возьмите готовый файл из `src-tauri/target/release/bundle/`.
-2. Запустите **NSIS** (`.exe`) или **MSI** (`.msi`).
-3. Откройте **Teling Chat**, войдите логином оператора.
+1. Откройте [Releases → Latest](https://github.com/avalanche103/teling2026/releases/latest) (нужен GitHub-аккаунт с доступом к репозиторию).
+2. Скачайте **`Teling Chat_*_x64-setup.exe`** (NSIS). Для корпоративной установки можно взять `.msi`.
+3. Запустите установщик, откройте **Teling Chat**, войдите логином оператора.
 4. Автозапуск включается при первом старте. После перезагрузки Windows приложение поднимается в трее (`--hidden`).
 
 ### Трей
@@ -48,6 +48,17 @@ npm run build
 
 - `src-tauri/target/release/bundle/nsis/Teling Chat_*_x64-setup.exe`
 - `src-tauri/target/release/bundle/msi/Teling Chat_*_x64_en-US.msi`
+- копии удобно класть в `dist/` (папка в `.gitignore`)
+
+### Публикация в GitHub Releases
+
+Нужен [GitHub CLI](https://cli.github.com/) (`gh auth login`).
+
+1. Поднимите `version` в `src-tauri/tauri.conf.json` (и при необходимости в `Cargo.toml` / `package.json`).
+2. `.\build.ps1`
+3. `.\publish-release.ps1` — создаст тег `operator-v{version}` и загрузит NSIS + MSI.
+
+Офис ставит с [releases/latest](https://github.com/avalanche103/teling2026/releases/latest).
 
 Для быстрой проверки без установщика (тоже нужен MSVC в PATH):
 

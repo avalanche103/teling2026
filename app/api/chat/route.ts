@@ -6,11 +6,46 @@ import {
   getChatById,
   updateVisitorInfo,
 } from "@/lib/chats";
+import type { Chat } from "@/lib/chats";
 import type { ContactField } from "@/lib/chats";
 import type { VisitorInfo } from "@/lib/chats";
 import { isOperatorOnline } from "@/lib/operator-status";
 import { sendMissedChatNotification } from "@/lib/email";
 import { processInactiveChatsEmail } from "@/lib/chat-inactivity";
+import { maybeReplyWithChatBot, shouldRunChatBot } from "@/lib/ai/chat-bot";
+import { messagesForVisitor } from "@/lib/chat-public";
+
+type MsgType = "text" | "contact_response";
+
+/** Resume existing chat for visitor or create a new one. Returns Response on block. */
+function resumeOrCreateByVisitor(
+  visitorId: string,
+  text: string,
+  msgType: MsgType,
+  field: ContactField | undefined,
+  mergedVisitorInfo: Partial<VisitorInfo>
+): Chat | NextResponse {
+  const existingByVisitor = getChatByVisitorId(visitorId);
+  if (existingByVisitor) {
+    if (existingByVisitor.blocked) {
+      return NextResponse.json({ error: "blocked" }, { status: 403 });
+    }
+    updateVisitorInfo(existingByVisitor.id, mergedVisitorInfo);
+    const chat = appendMessage(existingByVisitor.id, "visitor", text, msgType, field);
+    if (msgType === "contact_response" && field) {
+      updateVisitorInfo(existingByVisitor.id, { [field]: text });
+    }
+    return chat!;
+  }
+
+  const chat = createChat(visitorId, text, mergedVisitorInfo);
+  if (!isOperatorOnline()) {
+    sendMissedChatNotification(chat).catch((err) => {
+      console.error("[email] Ошибка отправки уведомления о пропущенном чате:", err);
+    });
+  }
+  return chat;
+}
 
 // POST /api/chat  — visitor sends a message
 export async function POST(req: NextRequest) {
@@ -32,7 +67,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "visitorId is required" }, { status: 400 });
   }
 
-  const msgType = type === "contact_response" ? "contact_response" : "text";
+  const msgType: MsgType = type === "contact_response" ? "contact_response" : "text";
+  const trimmed = text.trim();
 
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
@@ -45,43 +81,44 @@ export async function POST(req: NextRequest) {
     userAgent: userAgent ?? visitorInfo?.userAgent,
   };
 
-  let chat;
+  let chat: Chat | null = null;
+
   if (chatId) {
     const existingById = getChatById(chatId);
-    if (!existingById) {
-      return NextResponse.json({ error: "chat not found" }, { status: 404 });
-    }
-    if (existingById.blocked) {
-      return NextResponse.json({ error: "blocked" }, { status: 403 });
-    }
-    updateVisitorInfo(chatId, mergedVisitorInfo);
-    chat = appendMessage(chatId, "visitor", text.trim(), msgType, field);
-    if (msgType === "contact_response" && field) {
-      updateVisitorInfo(chatId, { [field]: text.trim() });
-    }
-  } else {
-    const existingByVisitor = getChatByVisitorId(visitorId);
-    if (existingByVisitor) {
-      if (existingByVisitor.blocked) {
+    if (existingById) {
+      if (existingById.blocked) {
         return NextResponse.json({ error: "blocked" }, { status: 403 });
       }
-      updateVisitorInfo(existingByVisitor.id, mergedVisitorInfo);
-      chat = appendMessage(existingByVisitor.id, "visitor", text.trim(), msgType, field);
+      updateVisitorInfo(chatId, mergedVisitorInfo);
+      chat = appendMessage(chatId, "visitor", trimmed, msgType, field);
       if (msgType === "contact_response" && field) {
-        updateVisitorInfo(existingByVisitor.id, { [field]: text.trim() });
-      }
-    } else {
-      chat = createChat(visitorId, text.trim(), mergedVisitorInfo);
-      // Notify by email if operator is offline (missed chat)
-      if (!isOperatorOnline()) {
-        sendMissedChatNotification(chat).catch((err) => {
-          console.error("[email] Ошибка отправки уведомления о пропущенном чате:", err);
-        });
+        updateVisitorInfo(chatId, { [field]: trimmed });
       }
     }
+    // Deleted chat: fall through and start/resume a fresh dialog
   }
 
-  return NextResponse.json({ chatId: chat!.id, messages: chat!.messages });
+  if (!chat) {
+    const result = resumeOrCreateByVisitor(
+      visitorId,
+      trimmed,
+      msgType,
+      field,
+      mergedVisitorInfo
+    );
+    if (result instanceof NextResponse) return result;
+    chat = result;
+  }
+
+  if (shouldRunChatBot(chat, msgType)) {
+    const withBot = await maybeReplyWithChatBot(chat.id);
+    if (withBot) chat = withBot;
+  }
+
+  return NextResponse.json({
+    chatId: chat.id,
+    messages: messagesForVisitor(chat.messages),
+  });
 }
 
 // GET /api/chat?chatId=... — visitor polls messages
@@ -93,7 +130,11 @@ export async function GET(req: NextRequest) {
   }
   const chat = getChatById(chatId);
   if (!chat) {
-    return NextResponse.json({ error: "not found" }, { status: 404 });
+    // Signal widget to clear stale localStorage chat_id (e.g. after admin delete)
+    return NextResponse.json({ messages: [], gone: true });
   }
-  return NextResponse.json({ messages: chat.messages, blocked: chat.blocked });
+  return NextResponse.json({
+    messages: messagesForVisitor(chat.messages),
+    blocked: chat.blocked,
+  });
 }

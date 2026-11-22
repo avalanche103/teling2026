@@ -2660,7 +2660,13 @@
       "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/stoyki-i-shkafy-dlya-krossovogo-aktivnogo-energeticheskogo-i-klimaticheskogo-oborudovaniya/bloki_rozetok/",
       "level": 3,
       "parent_id": 258,
-      "picture": "https://ssd.ru/upload/resta.ssd/1a3/ppunwr12uh3yosvlv116wcpdmqcdrgdj/01.webp"
+      "picture": "https://ssd.ru/upload/resta.ssd/1a3/ppunwr12uh3yosvlv116wcpdmqcdrgdj/01.webp",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Монтаж"
+      ]
     }
   },
   {
@@ -2804,6 +2810,33 @@
     }
   },
   {
+    "id": 669,
+    "name": "DAC кабели",
+    "parent": 293,
+    "external_id": "dac_kabeli",
+    "metadata": {
+      "id": 669,
+      "name": "DAC кабели",
+      "sort": 1002,
+      "code": "dac_kabeli",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Форм-фактор",
+        "char:Скорость",
+        "char:Разъем",
+        "char:Дальность",
+        "char:Исполнение"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
     "id": 518,
     "name": "Медиаконвертеры",
     "parent": 293,
@@ -2843,7 +2876,15 @@
       "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/istochniki-pitaniya/istochniki_bespereboynogo_pitaniya/",
       "level": 3,
       "parent_id": 292,
-      "picture": "https://ssd.ru/upload/resta.ssd/e92/xjoshsqkky27e53ah5w9i7uj1ha13n32/110804_08213.webp"
+      "picture": "https://ssd.ru/upload/resta.ssd/e92/xjoshsqkky27e53ah5w9i7uj1ha13n32/110804_08213.webp",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Мощность",
+        "char:Фазы",
+        "char:Форм-фактор"
+      ]
     }
   },
   {
@@ -2859,7 +2900,13 @@
       "url": "https://ssd.ru/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov/istochniki-pitaniya/akkumulyatornye_batarei/",
       "level": 3,
       "parent_id": 292,
-      "picture": "https://ssd.ru/upload/resta.ssd/804/76fo15dgxfcejtv6ktwn8nivso5uxm2x/GP_12_7.webp"
+      "picture": "https://ssd.ru/upload/resta.ssd/804/76fo15dgxfcejtv6ktwn8nivso5uxm2x/GP_12_7.webp",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Монтаж"
+      ]
     }
   },
   {
@@ -4138,6 +4185,98 @@
         "char:Видео",
         "char:Разрешение",
         "char:Длина"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 665,
+    "name": "Инверторы",
+    "parent": 292,
+    "external_id": "invertory",
+    "metadata": {
+      "id": 665,
+      "name": "Инверторы",
+      "sort": 1100,
+      "code": "invertory",
+      "url": "",
+      "level": 3,
+      "parent_id": 292,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Монтаж"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 666,
+    "name": "Байпасные панели",
+    "parent": 292,
+    "external_id": "baypasnye-paneli",
+    "metadata": {
+      "id": 666,
+      "name": "Байпасные панели",
+      "sort": 1200,
+      "code": "baypasnye-paneli",
+      "url": "",
+      "level": 3,
+      "parent_id": 292,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Монтаж"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 667,
+    "name": "Модули управления ИБП",
+    "parent": 292,
+    "external_id": "moduli-upravleniya-ibp",
+    "metadata": {
+      "id": 667,
+      "name": "Модули управления ИБП",
+      "sort": 1300,
+      "code": "moduli-upravleniya-ibp",
+      "url": "",
+      "level": 3,
+      "parent_id": 292,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Монтаж"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 668,
+    "name": "Монтажные комплекты ИБП",
+    "parent": 292,
+    "external_id": "montazhnye-komplekty-ibp",
+    "metadata": {
+      "id": 668,
+      "name": "Монтажные комплекты ИБП",
+      "sort": 1400,
+      "code": "montazhnye-komplekty-ibp",
+      "url": "",
+      "level": 3,
+      "parent_id": 292,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Монтаж"
       ],
       "source": "microinform"
     }

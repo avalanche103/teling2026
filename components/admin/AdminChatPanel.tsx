@@ -19,6 +19,9 @@ interface Chat {
   blocked: boolean;
   assignedToId: string | null;
   assignedToName?: string;
+  needsHuman?: boolean;
+  needsHumanAt?: string;
+  needsHumanReason?: "order" | "human";
   visitorInfo: {
     userAgent?: string;
     ip?: string;
@@ -186,6 +189,10 @@ export function AdminChatPanel({
     [scope]
   );
 
+  const notifiedEscalationsRef = useRef<Set<string>>(new Set());
+  /** Only suppress a specific escalation instance (chatId + needsHumanAt). */
+  const dismissedEscalationsRef = useRef<Set<string>>(new Set());
+
   const pollQueueOffers = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/chats?scope=queue");
@@ -193,21 +200,56 @@ export function AdminChatPanel({
       const queue: Chat[] = await res.json();
       const queueIds = new Set(queue.map((c) => c.id));
 
-      // Drop offer if someone else already claimed it; refresh preview if still waiting.
+      // Drop offer if someone else already claimed it.
       if (activeOfferIdRef.current && !queueIds.has(activeOfferIdRef.current)) {
         activeOfferIdRef.current = null;
         setIncomingOffer(null);
-      } else if (activeOfferIdRef.current) {
-        const updated = queue.find((c) => c.id === activeOfferIdRef.current);
-        if (updated) setIncomingOffer(updated);
       }
 
       if (knownQueueIdsRef.current === null) {
         knownQueueIdsRef.current = new Set(queueIds);
+        for (const c of queue) {
+          if (c.needsHuman && c.needsHumanAt) {
+            notifiedEscalationsRef.current.add(`${c.id}:${c.needsHumanAt}`);
+          }
+        }
         return;
       }
 
-      if (activeOfferIdRef.current) return;
+      // AI escalation (order / human) — highest priority: raise desktop even if
+      // the operator earlier hid the plain "new chat" offer for this dialog.
+      const escalated = queue
+        .filter((c) => {
+          if (!c.needsHuman || !c.needsHumanAt) return false;
+          const key = `${c.id}:${c.needsHumanAt}`;
+          if (notifiedEscalationsRef.current.has(key)) return false;
+          if (dismissedEscalationsRef.current.has(key)) return false;
+          return true;
+        })
+        .sort(
+          (a, b) =>
+            new Date(b.needsHumanAt!).getTime() -
+            new Date(a.needsHumanAt!).getTime()
+        );
+      if (escalated.length > 0) {
+        const chat = escalated[0];
+        const key = `${chat.id}:${chat.needsHumanAt}`;
+        notifiedEscalationsRef.current.add(key);
+        knownQueueIdsRef.current.add(chat.id);
+        // Allow re-offer after a prior "Скрыть" on the same chat.
+        dismissedOffersRef.current.delete(chat.id);
+        activeOfferIdRef.current = chat.id;
+        setIncomingOffer(chat);
+        focusDesktopWindow();
+        return;
+      }
+
+      // Refresh preview for the current non-escalation offer.
+      if (activeOfferIdRef.current) {
+        const updated = queue.find((c) => c.id === activeOfferIdRef.current);
+        if (updated) setIncomingOffer(updated);
+        return;
+      }
 
       const fresh = queue
         .filter(
@@ -226,6 +268,7 @@ export function AdminChatPanel({
       knownQueueIdsRef.current.add(newest.id);
       activeOfferIdRef.current = newest.id;
       setIncomingOffer(newest);
+      focusDesktopWindow();
     } catch {
       // ignore
     }
@@ -292,15 +335,23 @@ export function AdminChatPanel({
 
   useEffect(() => {
     if (!incomingOffer) return;
-    if (lastNotifiedOfferRef.current === incomingOffer.id) return;
-    lastNotifiedOfferRef.current = incomingOffer.id;
+    const notifyKey = incomingOffer.needsHuman
+      ? `esc:${incomingOffer.id}:${incomingOffer.needsHumanAt ?? ""}`
+      : `new:${incomingOffer.id}`;
+    if (lastNotifiedOfferRef.current === notifyKey) return;
+    lastNotifiedOfferRef.current = notifyKey;
     setOfferError(null);
     focusDesktopWindow();
     const preview =
       incomingOffer.messages.find((m) => m.role === "visitor" && m.type !== "system")
         ?.text ?? "Новый диалог в очереди";
+    const title = incomingOffer.needsHuman
+      ? incomingOffer.needsHumanReason === "order"
+        ? "Чат: заказ / КП — нужен оператор"
+        : "Чат: посетитель просит оператора"
+      : "Новый чат — заберите диалог";
     sendBrowserNotification(
-      "Новый чат — заберите диалог",
+      title,
       preview.length > 80 ? preview.slice(0, 80) + "…" : preview
     );
   }, [incomingOffer]);
@@ -613,7 +664,13 @@ export function AdminChatPanel({
 
   function dismissIncomingOffer() {
     if (!incomingOffer) return;
-    dismissedOffersRef.current.add(incomingOffer.id);
+    if (incomingOffer.needsHuman && incomingOffer.needsHumanAt) {
+      dismissedEscalationsRef.current.add(
+        `${incomingOffer.id}:${incomingOffer.needsHumanAt}`
+      );
+    } else {
+      dismissedOffersRef.current.add(incomingOffer.id);
+    }
     activeOfferIdRef.current = null;
     setIncomingOffer(null);
     setOfferError(null);
@@ -702,11 +759,11 @@ export function AdminChatPanel({
   ];
 
   return (
-    <div className="flex h-[calc(100vh-10rem)] gap-4">
+    <div className="flex h-[calc(100dvh-7.5rem)] gap-4 md:h-[calc(100vh-10rem)]">
       <aside
-        className={`flex flex-col rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden ${
-          isAdmin ? "w-80" : "w-72"
-        }`}
+        className={`flex min-h-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm ${
+          selected ? "hidden lg:flex" : "flex w-full"
+        } ${isAdmin ? "lg:w-80" : "lg:w-72"}`}
       >
         <div className="border-b border-slate-100 px-3 py-2">
           <div className="flex items-center justify-between gap-2 px-1 py-1">
@@ -807,7 +864,9 @@ export function AdminChatPanel({
                   </div>
                   <p className="mt-0.5 truncate text-[11px] text-slate-500">
                     {!chat.assignedToId
-                      ? "В очереди"
+                      ? chat.needsHuman
+                        ? "Нужен оператор"
+                        : "В очереди"
                       : chat.assignedToId === me?.id
                         ? "Мой"
                         : chat.assignedToName ?? "Оператор"}
@@ -834,17 +893,34 @@ export function AdminChatPanel({
         </div>
       </aside>
 
-      <div className="flex flex-1 gap-3 overflow-hidden">
-        <div className="flex flex-1 flex-col rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div
+        className={`min-h-0 min-w-0 flex-1 gap-3 overflow-hidden ${
+          selected ? "flex" : "hidden lg:flex"
+        }`}
+      >
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           {!selected ? (
             <div className="flex flex-1 items-center justify-center text-sm text-slate-400">
               Выберите диалог
             </div>
           ) : (
             <>
-              <div className="border-b border-slate-100 px-5 py-3">
+              <div className="border-b border-slate-100 px-4 py-3 sm:px-5">
+                <div className="mb-2 lg:hidden">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedId(null);
+                      setActionError(null);
+                      setTransferToId("");
+                    }}
+                    className="rounded-md px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
+                  >
+                    ← К списку
+                  </button>
+                </div>
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm font-semibold text-slate-700">
                       Диалог с посетителем
                       {selected.blocked && (
@@ -862,7 +938,7 @@ export function AdminChatPanel({
                         </span>
                       )}
                     </p>
-                    <p className="text-xs text-slate-400">ID: {selected.visitorId}</p>
+                    <p className="truncate text-xs text-slate-400">ID: {selected.visitorId}</p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     {isQueue && (
@@ -944,9 +1020,18 @@ export function AdminChatPanel({
                 {actionError && (
                   <p className="mt-2 text-xs text-red-600">{actionError}</p>
                 )}
+
+                <details className="mt-3 rounded-lg border border-slate-200 bg-slate-50 lg:hidden">
+                  <summary className="cursor-pointer px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Данные посетителя
+                  </summary>
+                  <div className="space-y-2 border-t border-slate-200 px-3 py-3 text-xs">
+                    <ChatVisitorFields chat={selected} formatTime={formatTime} />
+                  </div>
+                </details>
               </div>
 
-              <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-4">
+              <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-3 sm:p-4">
                 {selected.messages.map((msg) => (
                   <div
                     key={msg.id}
@@ -968,7 +1053,7 @@ export function AdminChatPanel({
                       </div>
                     ) : (
                       <div
-                        className={`max-w-[70%] rounded-2xl px-3 py-2 text-sm leading-snug ${
+                        className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-snug sm:max-w-[70%] ${
                           msg.role === "support"
                             ? "bg-blue-600 text-white rounded-br-sm"
                             : "bg-slate-100 text-slate-800 rounded-bl-sm"
@@ -1016,20 +1101,20 @@ export function AdminChatPanel({
                         </button>
                       ))}
                     </div>
-                    <div className="flex items-end gap-3">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:gap-3">
                       <textarea
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         onKeyDown={handleKeyDown}
                         rows={2}
                         placeholder="Ответ посетителю…"
-                        className="flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:bg-white transition-colors"
+                        className="w-full flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none transition-colors focus:border-blue-400 focus:bg-white"
                       />
                       <button
                         type="button"
                         onClick={sendReply}
                         disabled={!replyText.trim() || sending}
-                        className="flex h-10 items-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-40 transition-colors"
+                        className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-40 sm:w-auto"
                       >
                         Ответить
                       </button>
@@ -1046,139 +1131,14 @@ export function AdminChatPanel({
       </div>
 
       {selected && (
-        <aside className="flex w-56 flex-col rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <aside className="hidden w-56 shrink-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm lg:flex">
           <div className="border-b border-slate-100 px-4 py-3">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Данные посетителя
             </h3>
           </div>
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs">
-            {selected.assignedToName && (
-              <div>
-                <p className="text-slate-400">Оператор</p>
-                <p className="font-medium text-slate-700">{selected.assignedToName}</p>
-              </div>
-            )}
-            {selected.visitorInfo?.ip && (
-              <div>
-                <p className="text-slate-400">IP-адрес</p>
-                <p className="font-medium text-slate-700">{selected.visitorInfo.ip}</p>
-              </div>
-            )}
-            {selected.visitorInfo?.firstSeenAt && (
-              <div>
-                <p className="text-slate-400">Первое обращение</p>
-                <p className="font-medium text-slate-700">
-                  {formatTime(selected.visitorInfo.firstSeenAt)}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.phone && (
-              <div>
-                <p className="text-slate-400">Телефон</p>
-                <p className="font-medium text-slate-700">{selected.visitorInfo.phone}</p>
-              </div>
-            )}
-            {selected.visitorInfo?.email && (
-              <div>
-                <p className="text-slate-400">Email</p>
-                <p className="font-medium text-slate-700 break-all">
-                  {selected.visitorInfo.email}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.organization && (
-              <div>
-                <p className="text-slate-400">Организация</p>
-                <p className="font-medium text-slate-700">
-                  {selected.visitorInfo.organization}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.userAgent && (
-              <div>
-                <p className="text-slate-400">Браузер</p>
-                <p className="text-slate-600 break-all leading-tight">
-                  {selected.visitorInfo.userAgent}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.deviceType && (
-              <div>
-                <p className="text-slate-400">Устройство</p>
-                <p className="font-medium text-slate-700">
-                  {selected.visitorInfo.deviceType}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.platform && (
-              <div>
-                <p className="text-slate-400">Платформа</p>
-                <p className="font-medium text-slate-700">
-                  {selected.visitorInfo.platform}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.timeZone && (
-              <div>
-                <p className="text-slate-400">Место (часовой пояс)</p>
-                <p className="font-medium text-slate-700">
-                  {selected.visitorInfo.timeZone}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.locale && (
-              <div>
-                <p className="text-slate-400">Локаль</p>
-                <p className="font-medium text-slate-700">{selected.visitorInfo.locale}</p>
-              </div>
-            )}
-            {selected.visitorInfo?.language && (
-              <div>
-                <p className="text-slate-400">Язык браузера</p>
-                <p className="font-medium text-slate-700">
-                  {selected.visitorInfo.language}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.viewport && (
-              <div>
-                <p className="text-slate-400">Viewport</p>
-                <p className="font-medium text-slate-700">
-                  {selected.visitorInfo.viewport}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.screen && (
-              <div>
-                <p className="text-slate-400">Экран</p>
-                <p className="font-medium text-slate-700">{selected.visitorInfo.screen}</p>
-              </div>
-            )}
-            {selected.visitorInfo?.colorScheme && (
-              <div>
-                <p className="text-slate-400">Тема</p>
-                <p className="font-medium text-slate-700">
-                  {selected.visitorInfo.colorScheme}
-                </p>
-              </div>
-            )}
-            {selected.visitorInfo?.referrer && (
-              <div>
-                <p className="text-slate-400">Referrer</p>
-                <p className="text-slate-600 break-all leading-tight">
-                  {selected.visitorInfo.referrer}
-                </p>
-              </div>
-            )}
-            {!selected.visitorInfo?.phone &&
-              !selected.visitorInfo?.email &&
-              !selected.visitorInfo?.organization &&
-              !selected.visitorInfo?.ip &&
-              !selected.visitorInfo?.timeZone &&
-              !selected.visitorInfo?.deviceType && (
-                <p className="text-slate-400">Нет данных</p>
-              )}
+          <div className="flex-1 space-y-2 overflow-y-auto px-4 py-3 text-xs">
+            <ChatVisitorFields chat={selected} formatTime={formatTime} />
           </div>
         </aside>
       )}
@@ -1191,16 +1151,25 @@ export function AdminChatPanel({
             aria-labelledby="incoming-chat-title"
             className="flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
           >
-            <div className="border-b border-slate-100 bg-amber-50 px-5 py-4">
+            <div
+              className={`border-b border-slate-100 px-5 py-4 ${
+                incomingOffer.needsHuman ? "bg-red-50" : "bg-amber-50"
+              }`}
+            >
               <p
                 id="incoming-chat-title"
                 className="text-base font-bold text-slate-900"
               >
-                Новый чат в очереди
+                {incomingOffer.needsHuman
+                  ? incomingOffer.needsHumanReason === "order"
+                    ? "Нужен оператор: заказ / КП"
+                    : "Нужен оператор: посетитель просит человека"
+                  : "Новый чат в очереди"}
               </p>
               <p className="mt-1 text-xs text-slate-500">
-                Все онлайн-операторы видят начало диалога. Кто первый заберёт —
-                тот ведёт дальше.
+                {incomingOffer.needsHuman
+                  ? "Бот передал диалог. Заберите его, чтобы ответить посетителю."
+                  : "Все онлайн-операторы видят начало диалога. Кто первый заберёт — тот ведёт дальше."}
               </p>
             </div>
 
@@ -1330,5 +1299,124 @@ export function AdminChatPanel({
         </div>
       )}
     </div>
+  );
+}
+
+function ChatVisitorFields({
+  chat,
+  formatTime,
+}: {
+  chat: Chat;
+  formatTime: (iso: string) => string;
+}) {
+  const info = chat.visitorInfo;
+  return (
+    <>
+      {chat.assignedToName && (
+        <div>
+          <p className="text-slate-400">Оператор</p>
+          <p className="font-medium text-slate-700">{chat.assignedToName}</p>
+        </div>
+      )}
+      {info?.ip && (
+        <div>
+          <p className="text-slate-400">IP-адрес</p>
+          <p className="font-medium text-slate-700">{info.ip}</p>
+        </div>
+      )}
+      {info?.firstSeenAt && (
+        <div>
+          <p className="text-slate-400">Первое обращение</p>
+          <p className="font-medium text-slate-700">{formatTime(info.firstSeenAt)}</p>
+        </div>
+      )}
+      {info?.phone && (
+        <div>
+          <p className="text-slate-400">Телефон</p>
+          <p className="font-medium text-slate-700">{info.phone}</p>
+        </div>
+      )}
+      {info?.email && (
+        <div>
+          <p className="text-slate-400">Email</p>
+          <p className="break-all font-medium text-slate-700">{info.email}</p>
+        </div>
+      )}
+      {info?.organization && (
+        <div>
+          <p className="text-slate-400">Организация</p>
+          <p className="font-medium text-slate-700">{info.organization}</p>
+        </div>
+      )}
+      {info?.userAgent && (
+        <div>
+          <p className="text-slate-400">Браузер</p>
+          <p className="break-all leading-tight text-slate-600">{info.userAgent}</p>
+        </div>
+      )}
+      {info?.deviceType && (
+        <div>
+          <p className="text-slate-400">Устройство</p>
+          <p className="font-medium text-slate-700">{info.deviceType}</p>
+        </div>
+      )}
+      {info?.platform && (
+        <div>
+          <p className="text-slate-400">Платформа</p>
+          <p className="font-medium text-slate-700">{info.platform}</p>
+        </div>
+      )}
+      {info?.timeZone && (
+        <div>
+          <p className="text-slate-400">Место (часовой пояс)</p>
+          <p className="font-medium text-slate-700">{info.timeZone}</p>
+        </div>
+      )}
+      {info?.locale && (
+        <div>
+          <p className="text-slate-400">Локаль</p>
+          <p className="font-medium text-slate-700">{info.locale}</p>
+        </div>
+      )}
+      {info?.language && (
+        <div>
+          <p className="text-slate-400">Язык браузера</p>
+          <p className="font-medium text-slate-700">{info.language}</p>
+        </div>
+      )}
+      {info?.viewport && (
+        <div>
+          <p className="text-slate-400">Viewport</p>
+          <p className="font-medium text-slate-700">{info.viewport}</p>
+        </div>
+      )}
+      {info?.screen && (
+        <div>
+          <p className="text-slate-400">Экран</p>
+          <p className="font-medium text-slate-700">{info.screen}</p>
+        </div>
+      )}
+      {info?.colorScheme && (
+        <div>
+          <p className="text-slate-400">Тема</p>
+          <p className="font-medium text-slate-700">{info.colorScheme}</p>
+        </div>
+      )}
+      {info?.referrer && (
+        <div>
+          <p className="text-slate-400">Referrer</p>
+          <p className="break-all leading-tight text-slate-600">{info.referrer}</p>
+        </div>
+      )}
+      {!info?.phone &&
+        !info?.email &&
+        !info?.organization &&
+        !info?.ip &&
+        !info?.timeZone &&
+        !info?.deviceType &&
+        !chat.assignedToName && (
+          <p className="text-slate-400">Нет данных</p>
+        )}
+    </>
   );
 }

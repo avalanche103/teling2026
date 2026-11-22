@@ -540,7 +540,7 @@ export function MicroinformManager() {
         {pending.length === 0 ? (
           <p className="px-5 py-6 text-sm text-slate-500">Очередь пуста — новых товаров нет.</p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <table className="min-w-full text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                 <tr>
@@ -590,7 +590,7 @@ export function MicroinformManager() {
                     </td>
                     <td className="px-4 py-3">
                       <select
-                        className="w-full min-w-[200px] rounded-lg border border-slate-300 px-2 py-1.5"
+                        className="w-full min-w-0 rounded-lg border border-slate-300 px-2 py-1.5 sm:min-w-[200px]"
                         value={pendingSections[product.id] ?? product.section_id}
                         onChange={(e) =>
                           setPendingSections((prev) => ({
@@ -622,7 +622,7 @@ export function MicroinformManager() {
               Разделы как на dlink.ru. Маршрутизаторы (DIR/DWR/…) выделяются из беспроводного по SKU.
             </p>
           </div>
-          <div className="overflow-x-auto">
+          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <table className="min-w-full text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                 <tr>
@@ -644,7 +644,7 @@ export function MicroinformManager() {
                       <td className="px-4 py-3 text-slate-600">{section.group}</td>
                       <td className="px-4 py-3">
                         <select
-                          className="w-full min-w-[220px] rounded-lg border border-slate-300 px-2 py-1.5"
+                          className="w-full min-w-0 rounded-lg border border-slate-300 px-2 py-1.5 sm:min-w-[220px]"
                           value={mappingToSelectValue(mapping)}
                           onChange={(e) =>
                             updateSectionMapping(section.title, e.target.value, section)

@@ -99,6 +99,48 @@ export function buildCatalogHref(
   return qs ? `${pathname}?${qs}` : pathname;
 }
 
+/**
+ * Catalog navigation that prefers Tier SEO brand paths when exactly one brand
+ * is selected and no other listing filters/search are active.
+ * `brandSeoHrefs` maps exact brand display names → `/catalog/{slug}/{landing}`.
+ */
+export function buildCatalogNavHref(
+  categorySlug: string,
+  state: CatalogQueryState,
+  brandSeoHrefs: Record<string, string> = {}
+): string {
+  const categoryPath = `/catalog/${categorySlug}`;
+  const filters = state.filters;
+  const brands = filters?.brands ?? [];
+  const hasExtraFilters = Boolean(
+    (filters?.priceMin != null) ||
+      (filters?.priceMax != null) ||
+      (filters && Object.keys(filters.charFilters).length > 0)
+  );
+  const hasSearch = Boolean(state.q?.trim());
+  const seoHref =
+    brands.length === 1 && !hasExtraFilters && !hasSearch
+      ? brandSeoHrefs[brands[0]!] || null
+      : null;
+
+  if (seoHref) {
+    return buildCatalogHref(seoHref, {
+      page: state.page,
+      sort: state.sort,
+      layout: state.layout,
+      // brand is encoded in the path — do not repeat as ?brand=
+      filters: {
+        brands: [],
+        priceMin: null,
+        priceMax: null,
+        charFilters: {},
+      },
+    });
+  }
+
+  return buildCatalogHref(categoryPath, state);
+}
+
 export function getPaginationItems(
   current: number,
   total: number

@@ -94,11 +94,15 @@ export function getRequestById(id: string): ProductRequest | undefined {
   return readRequests().find((r) => r.id === id);
 }
 
-/** Create a new draft or update an existing draft's items. */
+/**
+ * Create a new draft or update an existing draft's items.
+ * Returns null when a stale/missing id would otherwise resurrect an empty draft
+ * (client should treat this as `gone` and clear local state).
+ */
 export function upsertDraftRequest(
   id: string | null | undefined,
   items: RequestItem[]
-): ProductRequest {
+): ProductRequest | null {
   const requests = readRequests();
   const now = new Date().toISOString();
 
@@ -119,7 +123,15 @@ export function upsertDraftRequest(
         writeRequests(requests);
         return requests[idx];
       }
+    } else if (items.length === 0) {
+      // Admin deleted this draft; do not recreate an empty one.
+      return null;
     }
+  }
+
+  // Never create a brand-new draft with no items.
+  if (items.length === 0) {
+    return null;
   }
 
   const request: ProductRequest = {

@@ -1,0 +1,187 @@
+{
+  "minProducts": 5,
+  "landings": [
+    {
+      "categorySlug": "kommutatory",
+      "slug": "d-link",
+      "type": "brand",
+      "brand": "D-Link",
+      "h1": "Коммутаторы D-Link",
+      "title": "Коммутаторы D-Link - Каталог"
+    },
+    {
+      "categorySlug": "kommutatory",
+      "slug": "origo",
+      "type": "brand",
+      "brand": "Origo",
+      "h1": "Коммутаторы Origo",
+      "title": "Коммутаторы Origo - Каталог"
+    },
+    {
+      "categorySlug": "sfp_moduli",
+      "slug": "d-link",
+      "type": "brand",
+      "brand": "D-Link",
+      "h1": "SFP модули D-Link",
+      "title": "SFP модули D-Link - Каталог"
+    },
+    {
+      "categorySlug": "sfp_moduli",
+      "slug": "origo",
+      "type": "brand",
+      "brand": "Origo",
+      "h1": "SFP модули Origo",
+      "title": "SFP модули Origo - Каталог"
+    },
+    {
+      "categorySlug": "pereklyuchateli-kvm",
+      "slug": "aten",
+      "type": "brand",
+      "brand": "ATEN",
+      "h1": "KVM ATEN",
+      "title": "KVM ATEN - Каталог"
+    },
+    {
+      "categorySlug": "opticheskie-kabeli-svyazi",
+      "slug": "inkab",
+      "type": "brand",
+      "brand": "Инкаб",
+      "h1": "Оптический кабель Инкаб",
+      "title": "Оптический кабель Инкаб - Каталог"
+    },
+    {
+      "categorySlug": "opticheskie-kabeli-svyazi",
+      "slug": "okey-kabel",
+      "type": "brand",
+      "brand": "Окей-кабель",
+      "h1": "Оптический кабель Окей-кабель",
+      "title": "Оптический кабель Окей-кабель - Каталог"
+    },
+    {
+      "categorySlug": "mufty_opticheskie",
+      "slug": "ssd",
+      "type": "brand",
+      "brand": "ССД",
+      "h1": "Муфты ССД",
+      "title": "Муфты ССД - Каталог"
+    },
+    {
+      "categorySlug": "mufty_opticheskie",
+      "slug": "mtok",
+      "type": "series",
+      "displayName": "МТОК",
+      "h1": "Муфты МТОК",
+      "title": "Муфты МТОК - Каталог",
+      "match": { "nameIncludes": ["МТОК"] }
+    },
+    {
+      "categorySlug": "mufty_opticheskie",
+      "slug": "mog",
+      "type": "series",
+      "displayName": "МОГ",
+      "h1": "Муфты МОГ",
+      "title": "Муфты МОГ - Каталог",
+      "match": { "nameIncludes": ["МОГ"] }
+    },
+    {
+      "categorySlug": "mufty_opticheskie",
+      "slug": "mko",
+      "type": "series",
+      "displayName": "МКО",
+      "h1": "Муфты МКО",
+      "title": "Муфты МКО - Каталог",
+      "match": { "nameIncludes": ["МКО"] }
+    },
+    {
+      "categorySlug": "opticheskie-stoechnye-krossy",
+      "slug": "shkos",
+      "type": "series",
+      "displayName": "ШКОС",
+      "h1": "Кроссы ШКОС",
+      "title": "Кроссы ШКОС - Каталог",
+      "match": { "nameIncludes": ["ШКОС"] }
+    },
+    {
+      "categorySlug": "opticheskie-nastennye-krossy",
+      "slug": "shkon",
+      "type": "series",
+      "displayName": "ШКОН",
+      "h1": "Кроссы ШКОН",
+      "title": "Кроссы ШКОН - Каталог",
+      "match": { "nameIncludes": ["ШКОН"] }
+    },
+    {
+      "categorySlug": "truby_pnd_ssd_payp",
+      "slug": "ssd-payp",
+      "type": "series",
+      "displayName": "ССД-Пайп",
+      "h1": "Трубы ССД-Пайп",
+      "title": "Трубы ССД-Пайп - Каталог",
+      "match": { "nameIncludes": ["ССД-Пайп", "ССД Пайп", "SSD-Pipe", "SSD Pipe"] }
+    },
+    {
+      "categorySlug": "opticheskie_reflektometry",
+      "slug": "exfo",
+      "type": "brand",
+      "brand": "EXFO",
+      "h1": "Рефлектометры EXFO",
+      "title": "Рефлектометры EXFO - Каталог"
+    },
+    {
+      "categorySlug": "opticheskie_reflektometry",
+      "slug": "yokogawa",
+      "type": "brand",
+      "brand": "Yokogawa",
+      "h1": "Рефлектометры Yokogawa",
+      "title": "Рефлектометры Yokogawa - Каталог"
+    },
+    {
+      "categorySlug": "svarochnye_apparaty",
+      "slug": "fujikura",
+      "type": "brand",
+      "brand": "Fujikura",
+      "h1": "Сварочные аппараты Fujikura",
+      "title": "Сварочные аппараты Fujikura - Каталог"
+    },
+    {
+      "categorySlug": "lenty_montazhnye",
+      "slug": "3m",
+      "type": "brand",
+      "brand": "3M",
+      "h1": "Ленты 3M",
+      "title": "Ленты 3M - Каталог"
+    },
+    {
+      "categorySlug": "shkafy_napolnye",
+      "slug": "ssd",
+      "type": "brand",
+      "brand": "ССД",
+      "h1": "Шкафы напольные ССД",
+      "title": "Шкафы напольные ССД - Каталог"
+    },
+    {
+      "categorySlug": "shkafy_nastennye",
+      "slug": "ssd",
+      "type": "brand",
+      "brand": "ССД",
+      "h1": "Шкафы настенные ССД",
+      "title": "Шкафы настенные ССД - Каталог"
+    },
+    {
+      "categorySlug": "shkafy_klimaticheskie",
+      "slug": "ssd",
+      "type": "brand",
+      "brand": "ССД",
+      "h1": "Шкафы климатические ССД",
+      "title": "Шкафы климатические ССД - Каталог"
+    },
+    {
+      "categorySlug": "natyazhnaya-i-podderzhivayushchaya-armatura",
+      "slug": "metallprom",
+      "type": "brand",
+      "brand": "МеталлПром",
+      "h1": "Арматура МеталлПром",
+      "title": "Арматура МеталлПром - Каталог"
+    }
+  ]
+}

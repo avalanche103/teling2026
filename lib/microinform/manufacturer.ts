@@ -75,6 +75,12 @@ export function normalizeManufacturerUrl(url: string): string {
     if (host === "atenpro.ru") {
       u.hostname = "www.atenpro.ru";
     }
+    if (host === "systeme.ru" || host === "www.systeme.ru") {
+      u.hostname = "systeme.ru";
+    }
+    if (host === "svc.ru" || host === "www.svc.ru") {
+      u.hostname = "svc.ru";
+    }
     u.hash = "";
     return u.toString();
   } catch {
@@ -126,6 +132,47 @@ export function lookupAtenRussianUrl(
   const pro = lookupInUrlMap(getAtenproUrlMap(), articul);
   if (pro) return { url: normalizeManufacturerUrl(pro), source: "atenpro.ru" };
   return null;
+}
+
+let systemeUrlMapCache: Record<string, string> | null = null;
+let svcUrlMapCache: Record<string, string> | null = null;
+
+function getSystemeUrlMap(): Record<string, string> {
+  if (!systemeUrlMapCache) systemeUrlMapCache = readJsonMap("systeme-url-map.json");
+  return systemeUrlMapCache;
+}
+
+function getSvcUrlMap(): Record<string, string> {
+  if (!svcUrlMapCache) svcUrlMapCache = readJsonMap("svc-url-map.json");
+  return svcUrlMapCache;
+}
+
+function lookupUpsUrlMap(map: Record<string, string>, articul: string): string {
+  const raw = (articul || "").trim();
+  if (!raw) return "";
+  const upper = raw.toUpperCase();
+  const base = upper.split("/")[0] || upper;
+  const compact = upper.replace(/[\s/-]+/g, "");
+  const slug = upper.replace(/\//g, "-");
+  return (
+    map[raw] ||
+    map[upper] ||
+    map[base] ||
+    map[slug] ||
+    map[compact] ||
+    map[raw.toLowerCase()] ||
+    ""
+  );
+}
+
+export function lookupSystemeUrl(articul: string): string | null {
+  const hit = lookupUpsUrlMap(getSystemeUrlMap(), articul);
+  return hit ? normalizeManufacturerUrl(hit) : null;
+}
+
+export function lookupSvcUrl(articul: string): string | null {
+  const hit = lookupUpsUrlMap(getSvcUrlMap(), articul);
+  return hit ? normalizeManufacturerUrl(hit) : null;
 }
 
 async function fetchText(url: string): Promise<string> {

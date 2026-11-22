@@ -67,7 +67,8 @@ export default async function HomePage() {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "Teling.by",
+    name: "Телинг групп",
+    alternateName: "Teling.by",
     url: origin,
     logo: `${origin}/teling-circle.webp`,
     description: "Компания с более чем 20-летним опытом в области телекоммуникаций. Производим и поставляем оборудование, материалы и комплектующие для ввода в эксплуатацию инженерных систем связи.",
@@ -86,10 +87,12 @@ export default async function HomePage() {
     shippingDetails: getOfferShippingDetails(origin),
   };
 
+  // Preferred site name for Google Search (shown above the URL in results).
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Teling.by",
+    name: "Телинг групп",
+    alternateName: "Teling.by",
     url: origin,
     potentialAction: {
       "@type": "SearchAction",

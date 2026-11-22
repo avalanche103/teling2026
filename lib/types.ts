@@ -84,6 +84,11 @@ export interface ProductRaw {
     import_status?: "new";
     /** Present in catalog but missing from the latest successful price apply. */
     absent_from_price?: boolean;
+    /**
+     * Supplier cost from Microinform price-list column B (lower column).
+     * Admin-only reference; never shown on the public site.
+     */
+    cost_price?: number | null;
   };
 }
 
@@ -164,6 +169,8 @@ export interface AdminProductListItem {
   sectionName: string;
   brand: string;
   vendor: string;
+  /** Hidden supplier tag for admin filters (e.g. microinform). */
+  supplier?: string | null;
   price: number;
   priceWithoutVat: number;
   currency: string;

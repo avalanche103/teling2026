@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { SectionRaw, SectionFilterOption } from "@/lib/types";
+import { slugify } from "@/lib/slugify";
 
 // ---- types ----
 
@@ -367,55 +368,57 @@ function TreeNodeRow({
     <>
       <li>
         <div
-          className={`flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors ${
+          className={`flex flex-col gap-2 px-3 py-2.5 transition-colors hover:bg-slate-50 sm:flex-row sm:items-center sm:gap-2 sm:px-4 ${
             depth === 0 ? "bg-slate-50/60" : ""
           }`}
-          style={{ paddingLeft: `${16 + depth * 20}px` }}
+          style={{ paddingLeft: `${12 + depth * 12}px` }}
         >
-          {/* expand toggle */}
-          <button
-            onClick={() => onToggle(node.id)}
-            className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded text-slate-400 transition hover:text-slate-700 ${
-              !hasChildren ? "opacity-0 pointer-events-none" : ""
-            }`}
-            aria-label={isExpanded ? "Свернуть" : "Развернуть"}
-          >
-            {isExpanded ? "▾" : "▸"}
-          </button>
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            {/* expand toggle */}
+            <button
+              onClick={() => onToggle(node.id)}
+              className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded text-slate-400 transition hover:text-slate-700 ${
+                !hasChildren ? "pointer-events-none opacity-0" : ""
+              }`}
+              aria-label={isExpanded ? "Свернуть" : "Развернуть"}
+            >
+              {isExpanded ? "▾" : "▸"}
+            </button>
 
-          {/* name */}
-          <span className={`flex-1 text-sm ${highlight ? "bg-yellow-100 rounded px-1" : ""}`}>
-            <span className={`font-medium ${depth === 0 ? "text-slate-900" : "text-slate-700"}`}>
-              {node.name}
-            </span>
-            <span className="ml-2 text-xs text-slate-400">
-              /{node.external_id}
-            </span>
-            <span className="ml-2 text-xs text-slate-300">
-              #{node.id} · sort {node.metadata.sort} · lvl {node.metadata.level}
-            </span>
-            {hasChildren && (
-              <span className="ml-2 text-xs text-slate-400">
-                ({node.children.length})
+            {/* name */}
+            <span
+              className={`min-w-0 flex-1 text-sm ${highlight ? "rounded bg-yellow-100 px-1" : ""}`}
+            >
+              <span
+                className={`block truncate font-medium ${
+                  depth === 0 ? "text-slate-900" : "text-slate-700"
+                }`}
+              >
+                {node.name}
               </span>
-            )}
-          </span>
+              <span className="mt-0.5 block truncate text-xs text-slate-400 sm:mt-0 sm:inline sm:ml-2">
+                /{node.external_id}
+                <span className="ml-2 hidden text-slate-300 sm:inline">
+                  #{node.id} · sort {node.metadata.sort} · lvl {node.metadata.level}
+                </span>
+                {hasChildren && (
+                  <span className="ml-2 text-slate-400">({node.children.length})</span>
+                )}
+              </span>
+            </span>
+          </div>
 
           {/* actions */}
-          <div className="flex flex-shrink-0 items-center gap-1">
+          <div className="flex flex-shrink-0 flex-wrap items-center gap-1 pl-7 sm:pl-0">
             <button
-              onClick={() =>
-                setMode({ type: "add", parentId: node.id })
-              }
+              onClick={() => setMode({ type: "add", parentId: node.id })}
               title="Добавить дочерний раздел"
               className="rounded px-2 py-1 text-xs text-blue-600 hover:bg-blue-50"
             >
               + Дочерний
             </button>
             <button
-              onClick={() =>
-                setMode({ type: "edit", section: node })
-              }
+              onClick={() => setMode({ type: "edit", section: node })}
               title="Редактировать"
               className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-100"
             >
@@ -425,7 +428,7 @@ function TreeNodeRow({
               onClick={() => onDelete(node.id, node.name)}
               title="Удалить"
               disabled={hasChildren}
-              className="rounded px-2 py-1 text-xs text-black/70 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed"
+              className="rounded px-2 py-1 text-xs text-black/70 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30"
             >
               Удалить
             </button>
@@ -434,7 +437,10 @@ function TreeNodeRow({
 
         {/* edit form inline */}
         {isEditing && (
-          <div style={{ paddingLeft: `${16 + depth * 20 + 24}px` }} className="pr-4 pb-3 pt-1">
+          <div
+            style={{ paddingLeft: `${12 + depth * 12 + 20}px` }}
+            className="pr-3 pb-3 pt-1 sm:pr-4"
+          >
             <SectionForm
               mode={mode}
               sections={sections}
@@ -447,7 +453,10 @@ function TreeNodeRow({
 
         {/* add child form inline */}
         {isAddingChild && (
-          <div style={{ paddingLeft: `${16 + (depth + 1) * 20 + 24}px` }} className="pr-4 pb-3 pt-1">
+          <div
+            style={{ paddingLeft: `${12 + (depth + 1) * 12 + 20}px` }}
+            className="pr-3 pb-3 pt-1 sm:pr-4"
+          >
             <SectionForm
               mode={mode}
               sections={sections}
@@ -592,14 +601,6 @@ function SectionForm({ mode, sections, saving, onSave, onCancel }: SectionFormPr
   const clearAllFilters = () => {
     setValues((prev) => ({ ...prev, selected_filters: [] }));
   };
-
-  const slugify = (s: string) =>
-    s
-      .toLowerCase()
-      .replace(/[а-яё]/g, (c) => translitMap[c] ?? c)
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "")
-      .replace(/-+/g, "-");
 
   const handleNameChange = (v: string) => {
     set("name", v);
@@ -793,12 +794,3 @@ function SectionForm({ mode, sections, saving, onSave, onCancel }: SectionFormPr
   );
 }
 
-// ---- transliteration map (basic RU → EN for slug generation) ----
-
-const translitMap: Record<string, string> = {
-  а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "yo",
-  ж: "zh", з: "z", и: "i", й: "y", к: "k", л: "l", м: "m",
-  н: "n", о: "o", п: "p", р: "r", с: "s", т: "t", у: "u",
-  ф: "f", х: "kh", ц: "ts", ч: "ch", ш: "sh", щ: "shch",
-  ъ: "", ы: "y", ь: "", э: "e", ю: "yu", я: "ya",
-};

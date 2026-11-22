@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import type { ActiveFilters, ProductSort } from "@/lib/types";
 import {
   buildCatalogHref,
+  buildCatalogNavHref,
   hasActiveFilters,
   type CatalogLayout,
 } from "@/lib/catalog-query";
@@ -15,6 +16,8 @@ interface ActiveFilterChipsProps {
   sort?: ProductSort;
   layout?: CatalogLayout;
   viewAll?: boolean;
+  categorySlug?: string;
+  brandSeoHrefs?: Record<string, string>;
 }
 
 export function ActiveFilterChips({
@@ -23,6 +26,8 @@ export function ActiveFilterChips({
   sort = "relevance",
   layout = "grid",
   viewAll = false,
+  categorySlug,
+  brandSeoHrefs = {},
 }: ActiveFilterChipsProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -30,15 +35,18 @@ export function ActiveFilterChips({
   if (!hasActiveFilters(active) && !searchQuery) return null;
 
   const push = (next: ActiveFilters, nextSearch = searchQuery) => {
-    router.push(
-      buildCatalogHref(pathname, {
-        q: nextSearch,
-        sort,
-        layout,
-        view: viewAll ? "all" : undefined,
-        filters: next,
-      })
-    );
+    const state = {
+      q: nextSearch,
+      sort,
+      layout,
+      view: viewAll ? ("all" as const) : undefined,
+      filters: next,
+    };
+    if (categorySlug) {
+      router.push(buildCatalogNavHref(categorySlug, state, brandSeoHrefs));
+      return;
+    }
+    router.push(buildCatalogHref(pathname, state));
   };
 
   const chips: Array<{ key: string; label: string; onRemove: () => void }> = [];

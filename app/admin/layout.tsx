@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { AdminChatBadge } from "@/components/admin/AdminChatBadge";
-import { AdminRequestsBadge } from "@/components/admin/AdminRequestsBadge";
-import { LogoutButton } from "@/components/admin/LogoutButton";
+import { AdminMobileNav } from "@/components/admin/AdminMobileNav";
 import { requireSession } from "@/lib/auth";
 
 export const metadata: Metadata = {
@@ -21,82 +19,23 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   return (
     <div className="min-h-screen bg-slate-100">
       <header className="bg-slate-900 text-white shadow-md">
-        <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3 lg:px-6">
-          <Link href="/admin" className="text-base font-bold tracking-tight text-white hover:text-slate-100 transition-colors">
+        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 md:gap-6 lg:px-6">
+          <Link
+            href="/admin"
+            className="shrink-0 text-base font-bold tracking-tight text-white transition-colors hover:text-slate-100"
+          >
             Teling Admin
           </Link>
-          <nav className="flex flex-1 items-center gap-1 text-sm">
-            {(user.role === "admin" || user.role === "employee") && (
-              <>
-                <Link
-                  href="/admin/catalog"
-                  className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-                >
-                  Каталог
-                </Link>
-                <Link
-                  href="/admin/products"
-                  className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-                >
-                  Товары
-                </Link>
-                <Link
-                  href="/admin/content"
-                  className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-                >
-                  Контент
-                </Link>
-                <Link
-                  href="/ssd"
-                  className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-                >
-                  SSD база
-                </Link>
-                <Link
-                  href="/admin/microinform"
-                  className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-                >
-                  Микроинформ
-                </Link>
-              </>
-            )}
-            <Link
-              href="/admin/requests"
-              className="flex items-center rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-            >
-              Запросы
-              <AdminRequestsBadge />
-            </Link>
-            <Link
-              href="/admin/chat"
-              className="flex items-center rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-            >
-              Чат
-              <AdminChatBadge />
-            </Link>
-            {user.role === "admin" && (
-              <Link
-                href="/admin/staff"
-                className="rounded-md px-3 py-1.5 font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-              >
-                Сотрудники
-              </Link>
-            )}
-          </nav>
-          <div className="hidden text-right text-xs text-slate-400 sm:block">
-            <p className="font-medium text-slate-200">{user.name}</p>
-            <p>{user.username} · {user.role}</p>
-          </div>
-          <Link
-            href="/"
-            className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
-          >
-            ← Сайт
-          </Link>
-          <LogoutButton />
+          <AdminMobileNav
+            user={{
+              name: user.name,
+              username: user.username,
+              role: user.role,
+            }}
+          />
         </div>
       </header>
-      <main className="mx-auto max-w-7xl px-4 py-8 lg:px-6">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 py-6 md:py-8 lg:px-6">{children}</main>
     </div>
   );
 }

@@ -22,9 +22,10 @@ function getSiteUrl(): URL {
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
+  applicationName: "Телинг групп",
   title: {
-    default: "Teling.by - Каталог телекоммуникационного оборудования",
-    template: "%s | Teling.by",
+    default: "Телинг групп — каталог телекоммуникационного оборудования",
+    template: "%s | Телинг групп",
   },
   description:
     "Каталог оборудования для ЛВС, ВОЛС, видеонаблюдения, кабельного ТВ и мультимедийных систем.",
@@ -35,14 +36,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ru_BY",
     url: "/",
-    siteName: "Teling.by",
-    title: "Teling.by - Каталог телекоммуникационного оборудования",
+    siteName: "Телинг групп",
+    title: "Телинг групп — каталог телекоммуникационного оборудования",
     description:
       "Каталог оборудования для ЛВС, ВОЛС, видеонаблюдения, кабельного ТВ и мультимедийных систем.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Teling.by - Каталог телекоммуникационного оборудования",
+    title: "Телинг групп — каталог телекоммуникационного оборудования",
     description:
       "Каталог оборудования для ЛВС, ВОЛС, видеонаблюдения, кабельного ТВ и мультимедийных систем.",
   },

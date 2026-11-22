@@ -79,6 +79,7 @@ function toListItem(product: ProductRaw): AdminProductListItem {
     sectionName: product.section_name,
     brand: product.metadata?.brand || product.vendor || "",
     vendor: product.vendor || "",
+    supplier: product.supplier || (product.id >= 2_000_000 ? "microinform" : null),
     price: product.price,
     priceWithoutVat: product.price_without_vat,
     currency: product.currency,

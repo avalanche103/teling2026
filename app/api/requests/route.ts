@@ -106,6 +106,12 @@ export async function POST(request: NextRequest) {
       );
     }
     const created = upsertDraftRequest(null, resolvedItems);
+    if (!created) {
+      return NextResponse.json(
+        { error: "Добавьте хотя бы один товар" },
+        { status: 400 }
+      );
+    }
     draftId = created.id;
   }
 

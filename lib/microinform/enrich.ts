@@ -19,6 +19,7 @@ import {
   refineActiveNetworkChars,
   resolveActiveNetworkGroup,
 } from "./chars";
+import { downloadFileViaCurl, fetchTextWithCurlFallback } from "./http-fetch";
 import { processMicroinformPackshot } from "./knockout-bg";
 
 const UA =
@@ -31,6 +32,17 @@ function absoluteUrl(base: string, href: string): string | null {
   } catch {
     return null;
   }
+}
+
+/** Unwrap Nuxt/_ipx image proxies used by systeme.ru. */
+function unwrapImageUrl(href: string): string {
+  const raw = (href || "").trim();
+  if (!raw) return raw;
+  const ipx = raw.match(/\/_ipx\/[^/]+\/(https?:\/\/.+)$/i);
+  if (ipx?.[1]) return ipx[1];
+  const embedded = raw.match(/(https?:\/\/static\.systeme\.ru\/catalog\/images\/[^"'?\s]+)/i);
+  if (embedded?.[1]) return embedded[1];
+  return raw;
 }
 
 function absolutizeHtml(pageUrl: string, html: string): string {
@@ -130,9 +142,10 @@ function isLikelyProductImage(url: string): boolean {
   // Category listing *_prev.jpg / *_x.jpg is often the only angled packshot.
   if (isListingPrevImage(url)) return true;
   if (u.includes("/min/") || u.includes("mini_") || u.includes("/min_")) return false;
-  if (u.includes("/i/") && !u.includes("prod")) return false;
+  if (u.includes("/i/") && !u.includes("prod") && !u.includes("iblock")) return false;
   // Diagrams / install collages from support sections are usually not the hero shot.
   if (/\/support\/.*ant\d/i.test(u)) return false;
+  if (/\/upload\/iblock\//i.test(u)) return true;
   return /\.(jpe?g|png|webp|gif)(\?|$)/i.test(u);
 }
 
@@ -157,6 +170,12 @@ function scoreProductImage(url: string): number {
     else score += 120;
   } else if (u.includes("assets.aten.com/")) {
     score += 90;
+  } else if (u.includes("static.systeme.ru/catalog/images/")) {
+    score += 200;
+  } else if (u.includes("svc.ru") && /\.(jpe?g|png|webp)(\?|$)/i.test(u)) {
+    score += 180;
+  } else if (/\/upload\/iblock\//i.test(u)) {
+    score += 170;
   } else if (u.includes("/up/prod_fotos/")) score += 100;
   else if (u.includes("/up/prod/")) score += 70;
   else if (u.includes("/prod_fotos/")) score += 80;
@@ -185,6 +204,8 @@ function minImageBytes(url: string): number {
   if (/\/up\/prod\/600\//i.test(url)) return 3_500;
   if (isListingPrevImage(url)) return 8_000;
   if (/assets\.aten\.com\/product\/image\//i.test(url)) return 4_000;
+  if (/static\.systeme\.ru\/catalog\/images\//i.test(url)) return 4_000;
+  if (/svc\.ru/i.test(url)) return 4_000;
   return 12_000;
 }
 
@@ -286,6 +307,18 @@ function pickDescription($: ReturnType<typeof cheerio.load>, pageUrl: string): s
     ".product-item-detail-text",
     ".bx_item_description",
     "[itemprop='description'] .detail_text",
+  ]) {
+    push($(sel).first().html());
+  }
+
+  // 3d) systeme.ru / svc.ru product cards
+  for (const sel of [
+    "[itemprop='description']",
+    ".catalog__item-info-text",
+    ".catalog-item__description",
+    ".product-item-detail-text-detail",
+    ".detail_text",
+    ".bx_item_description",
   ]) {
     push($(sel).first().html());
   }
@@ -395,15 +428,79 @@ function collectCharGroupsFromRoot(
   return groups.filter((g) => g.items.length > 0).slice(0, 12);
 }
 
+function collectSystemePropGroups($: ReturnType<typeof cheerio.load>): ProductCharGroup[] {
+  const groups: ProductCharGroup[] = [];
+  const groupsRoot = $(".specification__groups, .specification");
+  if (groupsRoot.length) {
+    $(".specification-group").each((_, el) => {
+      const groupName =
+        cleanCharText($(el).find(".specification-group__top .display4, .display4").first().text())
+          .replace(/\s+/g, " ")
+          .trim() || "Характеристики";
+      const items: ProductCharGroup["items"] = [];
+      $(el)
+        .find(".prop-item")
+        .each((__, prop) => {
+          const name = cleanCharText($(prop).find(".prop-item__title").text()).replace(/\s+/g, " ");
+          const value = cleanCharText($(prop).find(".prop-item__desc").text()).replace(/\s+/g, " ");
+          if (isJunkCharName(name) || !value) return;
+          if (/логистическ/i.test(groupName)) return;
+          items.push({ name: name.slice(0, 100), value: value.slice(0, 500) });
+        });
+      if (items.length) groups.push({ name: groupName.slice(0, 80), items: items.slice(0, 40) });
+    });
+    if (groups.length) return groups.slice(0, 12);
+  }
+
+  // Flat prop list fallback
+  const flat: ProductCharGroup["items"] = [];
+  $(".prop-item").each((_, el) => {
+    const name = cleanCharText($(el).find(".prop-item__title").text()).replace(/\s+/g, " ");
+    const value = cleanCharText($(el).find(".prop-item__desc").text()).replace(/\s+/g, " ");
+    if (isJunkCharName(name) || !value) return;
+    flat.push({ name: name.slice(0, 100), value: value.slice(0, 500) });
+  });
+  if (flat.length) return [{ name: "Характеристики", items: flat.slice(0, 40) }];
+  return [];
+}
+
+function collectSvcCompareTable($: ReturnType<typeof cheerio.load>): ProductCharGroup[] {
+  const items: ProductCharGroup["items"] = [];
+  // svc.ru compare/spec tables: first column = name, second = value for current offer.
+  $("table.offers_table tr, .catalog-compare-table table tr, table tr").each((_, el) => {
+    const cells = $(el).find("td, th");
+    if (cells.length < 2) return;
+    const name = cleanCharText($(cells[0]).text()).replace(/\s+/g, " ");
+    const value = cleanCharText($(cells[1]).text()).replace(/\s+/g, " ");
+    if (isJunkCharName(name) || !value) return;
+    if (/^название$/i.test(name) || /сравнить/i.test(value)) return;
+    if (name.length > 80) return;
+    if (items.some((i) => i.name === name)) return;
+    items.push({ name: name.slice(0, 100), value: value.slice(0, 500) });
+  });
+  if (items.length >= 4) return [{ name: "Характеристики", items: items.slice(0, 40) }];
+  return [];
+}
+
 function pickCharacteristics($: ReturnType<typeof cheerio.load>): ProductCharGroup[] {
+  // systeme.ru specification props
+  const systeme = collectSystemePropGroups($);
+  if (systeme.length) return systeme;
+
+  // svc.ru compare/spec tables
+  const svc = collectSvcCompareTable($);
+  if (svc.length) return svc;
+
   // aten.ru specification tab
   const atenSpec = collectCharGroupsFromRoot($, $("#spec").first());
   if (atenSpec.length) return atenSpec;
 
-  // atenpro.ru / Bitrix property tables
+  // atenpro.ru / Bitrix / svc.ru property tables
   const atenpro = collectCharGroupsFromRoot(
     $,
-    $(".product-item-detail-properties, .bx_item_detail_props, .detail_chars").first(),
+    $(
+      ".product-item-detail-properties, .bx_item_detail_props, .detail_chars, .product-item-detail-properties-container, .chars",
+    ).first(),
   );
   if (atenpro.length) return atenpro;
 
@@ -460,7 +557,8 @@ export function extractFromHtml(
   const collected: string[] = [];
   const pushImage = (href: string | undefined) => {
     if (!href) return;
-    const abs = absoluteUrl(pageUrl, href);
+    const unwrapped = unwrapImageUrl(href);
+    const abs = absoluteUrl(pageUrl, unwrapped);
     if (!abs || !isLikelyProductImage(abs)) return;
     if (!collected.includes(abs)) collected.push(abs);
   };
@@ -526,25 +624,12 @@ function dlinkWwwFallback(url: string): string | null {
 }
 
 async function fetchText(url: string): Promise<string> {
-  const attempt = async (target: string) => {
-    const res = await fetch(target, {
-      headers: {
-        "User-Agent": UA,
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "ru-RU,ru;q=0.9,en;q=0.8",
-      },
-      redirect: "follow",
-      signal: AbortSignal.timeout(45000),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.text();
-  };
   try {
-    return await attempt(url);
+    return await fetchTextWithCurlFallback(url);
   } catch (error) {
     const alt = dlinkWwwFallback(url);
     if (!alt) throw error;
-    return await attempt(alt);
+    return await fetchTextWithCurlFallback(alt);
   }
 }
 
@@ -562,15 +647,20 @@ async function downloadImage(url: string, destPath: string): Promise<boolean> {
   try {
     if (await tryOne(url)) return true;
   } catch {
-    /* try www fallback */
+    /* try www / curl fallback */
   }
   const alt = dlinkWwwFallback(url);
-  if (!alt) return false;
-  try {
-    return await tryOne(alt);
-  } catch {
-    return false;
+  if (alt) {
+    try {
+      if (await tryOne(alt)) return true;
+    } catch {
+      /* curl below */
+    }
   }
+  // svc.ru images often fail undici TLS — curl works.
+  if (downloadFileViaCurl(url, destPath)) return true;
+  if (alt && downloadFileViaCurl(alt, destPath)) return true;
+  return false;
 }
 
 function extensionFromUrl(url: string): string {

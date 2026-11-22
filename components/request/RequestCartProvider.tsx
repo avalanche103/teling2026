@@ -133,38 +133,49 @@ export function RequestCartProvider({ children }: { children: ReactNode }) {
     []
   );
 
-  const syncDraft = useCallback(async (nextItems: RequestCartLine[]) => {
-    const generation = ++syncGenerationRef.current;
-    try {
-      const res = await fetch("/api/requests/draft", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: requestIdRef.current,
-          items: nextItems,
-        }),
-      });
-      if (!res.ok) return;
-      const data = (await res.json()) as {
-        id?: string;
-        number?: number;
-      };
-      if (generation !== syncGenerationRef.current) return;
-      if (typeof data.id === "string" && typeof data.number === "number") {
-        setRequestId(data.id);
-        setRequestNumber(data.number);
-        requestIdRef.current = data.id;
-        requestNumberRef.current = data.number;
-        writeStorage({
-          requestId: data.id,
-          number: data.number,
-          items: nextItems,
+  const syncDraft = useCallback(
+    async (nextItems: RequestCartLine[]) => {
+      const generation = ++syncGenerationRef.current;
+      try {
+        const res = await fetch("/api/requests/draft", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: requestIdRef.current,
+            items: nextItems,
+          }),
         });
+        if (!res.ok) return;
+        const data = (await res.json()) as {
+          id?: string;
+          number?: number;
+          gone?: boolean;
+        };
+        if (generation !== syncGenerationRef.current) return;
+        if (data.gone) {
+          // Admin deleted this draft — drop stale local id so we don't resurrect it.
+          if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+          syncGenerationRef.current += 1;
+          persistAll([], null, null);
+          return;
+        }
+        if (typeof data.id === "string" && typeof data.number === "number") {
+          setRequestId(data.id);
+          setRequestNumber(data.number);
+          requestIdRef.current = data.id;
+          requestNumberRef.current = data.number;
+          writeStorage({
+            requestId: data.id,
+            number: data.number,
+            items: nextItems,
+          });
+        }
+      } catch {
+        // keep local cart; next change will retry
       }
-    } catch {
-      // keep local cart; next change will retry
-    }
-  }, []);
+    },
+    [persistAll]
+  );
 
   const scheduleSync = useCallback(
     (nextItems: RequestCartLine[]) => {

@@ -6,6 +6,7 @@ import {
   getProductLastModifiedBySku,
   getSectionLastModifiedBySlug,
 } from "@/lib/data";
+import { listIndexableSeoLandings } from "@/lib/seo-landings";
 
 function getSiteOrigin(): string {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.SITE_URL?.trim() || "https://teling.by";
@@ -34,6 +35,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const seoLandingRoutes: MetadataRoute.Sitemap = listIndexableSeoLandings().map(
+    (landing) => ({
+      url: `${origin}${landing.href}`,
+      lastModified: sectionLastModifiedMap.get(landing.categorySlug) ?? fallbackDate,
+      changeFrequency: "daily" as const,
+      priority: 0.75,
+    })
+  );
+
   const productRoutes: MetadataRoute.Sitemap = getAllProductSkus().map((sku) => ({
     url: `${origin}/product/${encodeURIComponent(sku)}`,
     lastModified: productLastModifiedMap.get(sku) ?? fallbackDate,
@@ -41,5 +51,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...categoryRoutes, ...productRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...seoLandingRoutes, ...productRoutes];
 }

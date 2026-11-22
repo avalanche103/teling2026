@@ -4,7 +4,7 @@
     "number": 437,
     "status": "draft",
     "createdAt": "2026-11-16T20:47:27.670Z",
-    "updatedAt": "2026-11-16T21:29:58.649Z",
+    "updatedAt": "2026-11-21T05:47:25.762Z",
     "submittedAt": null,
     "organization": "",
     "phone": "",
@@ -30,15 +30,9 @@
         "qty": 1,
         "price": 30,
         "currency": "Br"
-      },
-      {
-        "sku": "910000-00140",
-        "name": "Origo OS1105, коммутатор c 5 портами 10/100 Мбит/с в компактном корпусе для настольной установки.",
-        "qty": 1,
-        "price": 24,
-        "currency": "Br"
       }
     ],
-    "seenAt": null
+    "seenAt": "2026-11-21T05:50:12.098Z",
+    "handledAt": null
   }
 ]

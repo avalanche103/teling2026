@@ -55,6 +55,10 @@ export interface Chat {
   assignedToName?: string;
   assignedAt?: string;
   assignmentHistory?: AssignmentHistoryEntry[];
+  /** AI asked operators to take over (order or human request). */
+  needsHuman?: boolean;
+  needsHumanAt?: string;
+  needsHumanReason?: "order" | "human";
   lastInactivityEmailAt?: string;
   lastInactivityEmailMessageId?: string;
   visitorInfo: VisitorInfo;
@@ -230,6 +234,7 @@ export function claimChat(
   chat.assignedToId = user.id;
   chat.assignedToName = user.name;
   chat.assignedAt = now;
+  clearNeedsHuman(chat);
   pushAssignment(
     chat,
     {
@@ -305,6 +310,7 @@ export function takeoverChat(
   chat.assignedToId = admin.id;
   chat.assignedToName = admin.name;
   chat.assignedAt = now;
+  clearNeedsHuman(chat);
   pushAssignment(
     chat,
     {
@@ -331,6 +337,39 @@ export function updateVisitorInfo(
   if (idx === -1) return;
   chats[idx].visitorInfo = { ...chats[idx].visitorInfo, ...info };
   writeChats(chats);
+}
+
+/** Flag chat for operators and append a system note. Clears when claimed. */
+export function markChatNeedsHuman(
+  chatId: string,
+  reason: "order" | "human",
+  systemText: string
+): Chat | null {
+  const chats = readChats();
+  const idx = chats.findIndex((c) => c.id === chatId);
+  if (idx === -1) return null;
+  const now = new Date().toISOString();
+  const chat = chats[idx];
+  chat.needsHuman = true;
+  chat.needsHumanAt = now;
+  chat.needsHumanReason = reason;
+  chat.messages.push({
+    id: crypto.randomUUID(),
+    role: "support",
+    type: "system",
+    text: systemText,
+    createdAt: now,
+  });
+  chat.updatedAt = now;
+  writeChats(chats);
+  return chat;
+}
+
+function clearNeedsHuman(chat: Chat): void {
+  if (!chat.needsHuman && !chat.needsHumanAt && !chat.needsHumanReason) return;
+  chat.needsHuman = false;
+  delete chat.needsHumanAt;
+  delete chat.needsHumanReason;
 }
 
 export function blockChat(chatId: string, blocked: boolean): Chat | null {

@@ -28,6 +28,7 @@ interface MessageExt {
   role: "visitor" | "support";
   type?: "text" | "contact_request" | "contact_response" | "system";
   field?: ContactField;
+  authorName?: string;
   text: string;
   createdAt: string;
 }
@@ -129,18 +130,38 @@ export function ChatWidget() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  const fetchMessages = useCallback(async (id: string) => {
-    try {
-      const res = await fetch(`/api/chat?chatId=${id}`);
-      if (res.ok) {
-        const data = await res.json();
-        setMessages(data.messages ?? []);
-        if (data.blocked) setBlocked(true);
-      }
-    } catch {
-      // ignore
-    }
+  const clearChatSession = useCallback(() => {
+    setChatId(null);
+    setMessages([]);
+    setBlocked(false);
+    setRespondedFields(new Set());
+    setContactInputs({});
+    localStorage.removeItem("chat_id");
   }, []);
+
+  const fetchMessages = useCallback(
+    async (id: string) => {
+      try {
+        const res = await fetch(`/api/chat?chatId=${id}`);
+        if (res.status === 404) {
+          clearChatSession();
+          return;
+        }
+        if (res.ok) {
+          const data = await res.json();
+          if (data.gone) {
+            clearChatSession();
+            return;
+          }
+          setMessages(data.messages ?? []);
+          if (data.blocked) setBlocked(true);
+        }
+      } catch {
+        // ignore
+      }
+    },
+    [clearChatSession]
+  );
 
   // Poll for new messages when chat is open and chatId exists
   useEffect(() => {
@@ -155,7 +176,7 @@ export function ChatWidget() {
 
   async function sendMessage() {
     const text = inputText.trim();
-    if (!text || sending) return;
+    if (!text || sending || blocked) return;
     setSending(true);
     setInputText("");
 
@@ -167,11 +188,16 @@ export function ChatWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ visitorId, chatId, text, type: "text", visitorInfo }),
       });
+      if (res.status === 403) {
+        setBlocked(true);
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
         setChatId(data.chatId);
         localStorage.setItem("chat_id", data.chatId);
         setMessages(data.messages ?? []);
+        setBlocked(false);
       }
     } catch {
       // ignore
@@ -207,9 +233,23 @@ export function ChatWidget() {
           visitorInfo,
         }),
       });
+      if (res.status === 403) {
+        setBlocked(true);
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
+        if (data.chatId) {
+          setChatId(data.chatId);
+          localStorage.setItem("chat_id", data.chatId);
+        }
         setMessages(data.messages ?? []);
+      } else {
+        setRespondedFields((prev) => {
+          const next = new Set(prev);
+          next.delete(msgId);
+          return next;
+        });
       }
     } catch {
       setRespondedFields((prev) => {
@@ -273,20 +313,16 @@ export function ChatWidget() {
                 Напишите ваш вопрос, и мы постараемся помочь.
               </p>
             )}
-            {messages.map((msg) => (
+            {messages
+              .filter((msg) => msg.type !== "system")
+              .map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${
-                  msg.type === "system"
-                    ? "justify-center"
-                    : msg.role === "visitor"
-                      ? "justify-end"
-                      : "justify-start"
+                  msg.role === "visitor" ? "justify-end" : "justify-start"
                 }`}
               >
-                {msg.type === "system" ? (
-                  <p className="max-w-[90%] text-center text-xs text-slate-400">{msg.text}</p>
-                ) : msg.type === "contact_request" && msg.field ? (
+                {msg.type === "contact_request" && msg.field ? (
                   <div className="w-full rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm">
                     <p className="font-medium text-blue-700">
                       Пожалуйста, укажите: {CONTACT_FIELD_LABELS[msg.field]}
@@ -322,7 +358,12 @@ export function ChatWidget() {
                         : "bg-slate-100 text-slate-800 rounded-bl-sm"
                     }`}
                   >
-                    {msg.text}
+                    {msg.role === "support" && msg.authorName && (
+                      <p className="mb-0.5 text-[11px] font-semibold text-slate-500">
+                        {msg.authorName}
+                      </p>
+                    )}
+                    <p>{msg.text}</p>
                   </div>
                 )}
               </div>

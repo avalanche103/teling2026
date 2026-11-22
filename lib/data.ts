@@ -20,6 +20,11 @@ import {
   normalizeColorValue,
 } from "./normalize-color";
 import { getProductViewCount } from "./product-views";
+import {
+  groupForSectionId,
+  refineActiveNetworkChars,
+} from "./microinform/chars";
+import { inferUpsBrand } from "./microinform/ups-brand";
 
 // ---- Module-level lazy caches ----
 
@@ -67,16 +72,71 @@ function readJsonProductsFile(filePath: string, label: string): ProductRaw[] {
   return JSON.parse(raw) as ProductRaw[];
 }
 
+/** Apply shared UPS filter chars + brand inference for SSD↔Microinform section overlap. */
+function normalizeSharedUpsProduct(product: ProductRaw): ProductRaw {
+  const group = groupForSectionId(product.section_id);
+  if (
+    !group ||
+    (group !== "ups" &&
+      group !== "ups_batteries" &&
+      group !== "ups_inverters" &&
+      group !== "ups_bypass" &&
+      group !== "ups_mgmt" &&
+      group !== "ups_mounts" &&
+      group !== "pdu")
+  ) {
+    return product;
+  }
+
+  const articul =
+    (typeof product.metadata?.articul === "string" && product.metadata.articul) ||
+    product.sku ||
+    "";
+  const sectionTitle =
+    (typeof product.metadata?.price_section === "string" && product.metadata.price_section) ||
+    product.section_name ||
+    "";
+  const nextChars = refineActiveNetworkChars(
+    group,
+    sectionTitle,
+    product.name || product.custom_name || "",
+    articul,
+    product.metadata?.chars,
+  );
+
+  const inferredBrand = inferUpsBrand({
+    name: product.name || product.custom_name || "",
+    vendor: product.vendor,
+    brand: product.metadata?.brand,
+    articul,
+  });
+
+  const brand =
+    inferredBrand ||
+    (product.metadata?.brand || product.vendor || "").trim();
+
+  return {
+    ...product,
+    vendor: product.vendor || brand || product.vendor,
+    metadata: {
+      ...product.metadata,
+      brand: brand || product.metadata?.brand || "",
+      chars: nextChars,
+    },
+  };
+}
+
 function getProductsRaw(): ProductRaw[] {
   if (!_products) {
     const ssdPath = path.join(process.cwd(), "data", "products.json");
     const microinformPath = path.join(process.cwd(), "data", "products.microinform.json");
-    const ssd = readJsonProductsFile(ssdPath, "products.json");
+    const ssd = readJsonProductsFile(ssdPath, "products.json").map(normalizeSharedUpsProduct);
     const microinform = readJsonProductsFile(microinformPath, "products.microinform.json").map(
-      (product) => ({
-        ...product,
-        supplier: product.supplier || ("microinform" as const),
-      }),
+      (product) =>
+        normalizeSharedUpsProduct({
+          ...product,
+          supplier: product.supplier || ("microinform" as const),
+        }),
     );
     _products = [...ssd, ...microinform];
   }
@@ -544,6 +604,7 @@ function applyProductFilters(
   options: {
     search?: string;
     brands?: string[];
+    nameIncludes?: string[];
     priceMin?: number;
     priceMax?: number;
     charFilters?: Record<string, string[]>;
@@ -561,6 +622,18 @@ function applyProductFilters(
       const brand = (p.metadata?.brand || "").toLowerCase();
       return name.includes(q) || customName.includes(q) || sku.includes(q) || brand.includes(q);
     });
+  }
+
+  if (options.nameIncludes && options.nameIncludes.length > 0) {
+    const needles = options.nameIncludes
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+    if (needles.length) {
+      allProducts = allProducts.filter((p) => {
+        const hay = `${p.name || ""} ${p.custom_name || ""}`.toLowerCase();
+        return needles.some((n) => hay.includes(n));
+      });
+    }
   }
 
   if (options.brands && options.brands.length > 0) {
@@ -673,6 +746,8 @@ export interface GetSectionProductsOptions {
   search?: string;
   includeDescendants?: boolean;
   brands?: string[];
+  /** Case-insensitive substrings matched against product name / custom_name (OR). */
+  nameIncludes?: string[];
   priceMin?: number;
   priceMax?: number;
   charFilters?: Record<string, string[]>;
@@ -689,6 +764,7 @@ export function getSectionProducts(
     search = "",
     includeDescendants = true,
     brands,
+    nameIncludes,
     priceMin,
     priceMax,
     charFilters,
@@ -699,6 +775,7 @@ export function getSectionProducts(
   allProducts = applyProductFilters(allProducts, {
     search,
     brands,
+    nameIncludes,
     priceMin,
     priceMax,
     charFilters,
@@ -753,11 +830,16 @@ function scoreProductForSearch(p: ProductRaw, variants: string[]): number {
   const name = normalizeForSearch(typeof p.name === "string" ? p.name : "");
   const customName = normalizeForSearch(typeof p.custom_name === "string" ? p.custom_name : "");
   const brand = normalizeForSearch(p.metadata?.brand || "");
+  const sectionName = normalizeForSearch(
+    typeof p.section_name === "string" ? p.section_name : ""
+  );
   if (!sku) return 0;
 
   let bestScore = 0;
   for (const term of variants) {
     if (!term) continue;
+    // Ignore ultra-short stems matching too many SKUs/noise (keep 3+ for Cyrillic nouns like «муфт»)
+    if (term.length < 3) continue;
 
     if (sku === term) {
       bestScore = Math.max(bestScore, 120 + Math.min(term.length, 15));
@@ -781,6 +863,10 @@ function scoreProductForSearch(p: ProductRaw, variants: string[]): number {
 
     if (brand.includes(term)) {
       bestScore = Math.max(bestScore, 30 + Math.min(term.length, 6));
+    }
+
+    if (sectionName.includes(term)) {
+      bestScore = Math.max(bestScore, 40 + Math.min(term.length, 8));
     }
   }
   return bestScore;
@@ -881,6 +967,117 @@ function normalizeForSearch(value: string): string {
     .trim();
 }
 
+/** Chat/search filler words — keep product nouns, drop the rest. */
+const SEARCH_STOPWORDS = new Set([
+  "есть",
+  "на",
+  "в",
+  "и",
+  "или",
+  "ли",
+  "как",
+  "какой",
+  "какие",
+  "какая",
+  "какое",
+  "что",
+  "это",
+  "сайт",
+  "сайте",
+  "сайту",
+  "сайта",
+  "можно",
+  "нужно",
+  "надо",
+  "подскажите",
+  "скажите",
+  "пожалуйста",
+  "здравствуйте",
+  "привет",
+  "для",
+  "по",
+  "из",
+  "от",
+  "до",
+  "при",
+  "про",
+  "без",
+  "не",
+  "ни",
+  "же",
+  "бы",
+  "то",
+  "все",
+  "всё",
+  "еще",
+  "ещё",
+  "мне",
+  "нам",
+  "вас",
+  "вам",
+  "у",
+  "с",
+  "со",
+  "а",
+  "но",
+  "да",
+  "нет",
+  "наличие",
+  "прайс",
+  "каталог",
+  "каталоге",
+]);
+
+/** Light RU stem so «муфты» matches «муфта». */
+function lightStemRu(token: string): string {
+  const t = token.toLowerCase().replace(/ё/g, "е");
+  if (t.length < 4) return t;
+  const endings = [
+    "ями",
+    "ами",
+    "иями",
+    "ах",
+    "ях",
+    "ов",
+    "ев",
+    "ей",
+    "ом",
+    "ем",
+    "ам",
+    "ям",
+    "ую",
+    "юю",
+    "ая",
+    "яя",
+    "ые",
+    "ие",
+    "ых",
+    "их",
+    "ой",
+    "ий",
+    "ый",
+    "ое",
+    "ее",
+    "ыми",
+    "ими",
+    "ы",
+    "и",
+    "а",
+    "я",
+    "у",
+    "ю",
+    "о",
+    "е",
+    "ь",
+  ];
+  for (const end of endings) {
+    if (t.length - end.length >= 3 && t.endsWith(end)) {
+      return t.slice(0, -end.length);
+    }
+  }
+  return t;
+}
+
 function buildSearchVariants(query: string): string[] {
   const raw = query.trim();
   if (!raw) return [];
@@ -895,6 +1092,16 @@ function buildSearchVariants(query: string): string[] {
   add(swapKeyboardLayout(raw));
   add(translitRuToLat(raw));
   add(translitLatToRu(raw));
+
+  // Tokenize: «муфты есть на сайте?» → муфты / муфт
+  const normalized = normalizeForSearch(raw);
+  for (const word of normalized.split(/\s+/)) {
+    if (word.length < 3) continue;
+    if (SEARCH_STOPWORDS.has(word)) continue;
+    add(word);
+    const stem = lightStemRu(word);
+    if (stem.length >= 3) add(stem);
+  }
 
   // Keep terms with meaningful length first.
   return [...candidates].sort((a, b) => b.length - a.length);
@@ -954,6 +1161,8 @@ function translitLatToRu(input: string): string {
 export interface GetSectionFacetsOptions {
   search?: string;
   active?: ActiveFilters;
+  /** Base name filter (SEO series landings). Applied before facet recompute. */
+  nameIncludes?: string[];
 }
 
 /** First number in a facet value: "8", "до 60 Вт", "61–120 Вт", "1,8 м". */
@@ -1106,8 +1315,12 @@ export function getSectionFacets(
   sectionId: number,
   options: GetSectionFacetsOptions = {}
 ): SectionFacets {
-  const base = collectSectionProductsRaw(sectionId, true);
+  const baseRaw = collectSectionProductsRaw(sectionId, true);
   const search = options.search?.trim() || "";
+  const nameIncludes = options.nameIncludes;
+  const base = nameIncludes?.length
+    ? applyProductFilters(baseRaw, { nameIncludes })
+    : baseRaw;
   const active = options.active;
 
   // Empty ActiveFilters object used to take the expensive per-char rebuild path

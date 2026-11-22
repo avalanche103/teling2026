@@ -15,8 +15,10 @@ import {
   USB_SELECTED_FILTERS,
 } from "./io-group";
 import {
+  DAC_SELECTED_FILTERS,
   MEDIA_CONVERTER_SELECTED_FILTERS,
   MODULE_SELECTED_FILTERS,
+  refineDacCharGroups,
   refineMediaConverterCharGroups,
   refineModuleCharGroups,
 } from "./optics";
@@ -39,6 +41,19 @@ import {
   XDSL_SELECTED_FILTERS,
 } from "./small-group";
 import {
+  PDU_SELECTED_FILTERS,
+  refinePduCharGroups,
+  refineUpsBatteryCharGroups,
+  refineUpsBypassCharGroups,
+  refineUpsCharGroups,
+  refineUpsInverterCharGroups,
+  refineUpsMgmtCharGroups,
+  refineUpsMountCharGroups,
+  UPS_ACCESSORY_SELECTED_FILTERS,
+  UPS_BATTERY_SELECTED_FILTERS,
+  UPS_SELECTED_FILTERS,
+} from "./ups-group";
+import {
   refineRouterCharGroups,
   refineWirelessCharGroups,
   ROUTER_SELECTED_FILTERS,
@@ -57,6 +72,7 @@ type RefineFn = (
 const REFINERS: Record<ActiveNetworkGroup, RefineFn> = {
   switches: refineSwitchCharGroups,
   modules: refineModuleCharGroups,
+  dac: refineDacCharGroups,
   media_converters: refineMediaConverterCharGroups,
   wireless: refineWirelessCharGroups,
   routers: refineRouterCharGroups,
@@ -80,11 +96,19 @@ const REFINERS: Record<ActiveNetworkGroup, RefineFn> = {
   av_splitters: refineKvmCharGroups,
   av_converters: refineAdapterCharGroups,
   av_cables: refineKvmCharGroups,
+  ups: refineUpsCharGroups,
+  ups_batteries: refineUpsBatteryCharGroups,
+  ups_inverters: refineUpsInverterCharGroups,
+  ups_bypass: refineUpsBypassCharGroups,
+  ups_mgmt: refineUpsMgmtCharGroups,
+  ups_mounts: refineUpsMountCharGroups,
+  pdu: refinePduCharGroups,
 };
 
 export const SELECTED_FILTERS_BY_GROUP: Record<ActiveNetworkGroup, string[]> = {
   switches: SWITCH_SELECTED_FILTERS,
   modules: MODULE_SELECTED_FILTERS,
+  dac: DAC_SELECTED_FILTERS,
   media_converters: MEDIA_CONVERTER_SELECTED_FILTERS,
   wireless: WIRELESS_SELECTED_FILTERS,
   routers: ROUTER_SELECTED_FILTERS,
@@ -108,6 +132,13 @@ export const SELECTED_FILTERS_BY_GROUP: Record<ActiveNetworkGroup, string[]> = {
   av_splitters: KVM_SELECTED_FILTERS,
   av_converters: ADAPTER_SELECTED_FILTERS,
   av_cables: KVM_SELECTED_FILTERS,
+  ups: UPS_SELECTED_FILTERS,
+  ups_batteries: UPS_BATTERY_SELECTED_FILTERS,
+  ups_inverters: UPS_ACCESSORY_SELECTED_FILTERS,
+  ups_bypass: UPS_ACCESSORY_SELECTED_FILTERS,
+  ups_mgmt: UPS_ACCESSORY_SELECTED_FILTERS,
+  ups_mounts: UPS_ACCESSORY_SELECTED_FILTERS,
+  pdu: PDU_SELECTED_FILTERS,
 };
 
 const SECTION_ID_TO_GROUP = new Map<number, ActiveNetworkGroup>(

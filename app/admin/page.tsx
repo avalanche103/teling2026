@@ -26,7 +26,7 @@ export default async function AdminDashboard() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-700 text-2xl">
                   🗂
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-lg font-bold text-slate-900 group-hover:text-blue-700">
                     Структура каталога
                   </h2>
@@ -45,7 +45,7 @@ export default async function AdminDashboard() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 text-2xl">
                   📦
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-lg font-bold text-slate-900 group-hover:text-emerald-700">
                     Товары
                   </h2>
@@ -64,7 +64,7 @@ export default async function AdminDashboard() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-100 text-rose-700 text-2xl">
                   📝
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-lg font-bold text-slate-900 group-hover:text-rose-700">
                     Контент
                   </h2>
@@ -83,7 +83,7 @@ export default async function AdminDashboard() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-100 text-cyan-700 text-2xl">
                   🛠
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-lg font-bold text-slate-900 group-hover:text-cyan-700">
                     SSD база
                   </h2>
@@ -102,12 +102,31 @@ export default async function AdminDashboard() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700 text-2xl">
                   📡
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-lg font-bold text-slate-900 group-hover:text-indigo-700">
                     Микроинформ
                   </h2>
                   <p className="mt-1 text-sm text-slate-500">
                     Прайс партнёра, выбор вендоров, маппинг разделов и публикация товаров на сайт
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            <Link
+              href="/admin/price-analysis"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100 text-teal-700 text-2xl">
+                  💹
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-lg font-bold text-slate-900 group-hover:text-teal-700">
+                    Анализ цен
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Выдача Яндекс/Google, цены из сниппетов, себестоимость и сохранение цены в один клик
                   </p>
                 </div>
               </div>
@@ -123,7 +142,7 @@ export default async function AdminDashboard() {
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-orange-700 text-2xl">
               📋
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-bold text-slate-900 group-hover:text-orange-700">
                   Запросы
@@ -145,7 +164,7 @@ export default async function AdminDashboard() {
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 text-violet-700 text-2xl">
               💬
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-bold text-slate-900 group-hover:text-violet-700">
                   Чат
@@ -168,7 +187,7 @@ export default async function AdminDashboard() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-700 text-2xl">
                 👥
               </div>
-              <div>
+              <div className="min-w-0">
                 <h2 className="text-lg font-bold text-slate-900 group-hover:text-amber-700">
                   Сотрудники
                 </h2>
