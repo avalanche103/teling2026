@@ -19,6 +19,25 @@ export default async function AdminDashboard() {
         {(user.role === "admin" || user.role === "employee") && (
           <>
             <Link
+              href="/admin/stats"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-100 text-sky-700 text-2xl">
+                  📊
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-lg font-bold text-slate-900 group-hover:text-sky-700">
+                    Статистика
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Посетители и страницы из Яндекс Метрики
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            <Link
               href="/admin/catalog"
               className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
             >

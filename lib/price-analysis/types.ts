@@ -19,6 +19,13 @@ export interface PriceAnalysisProductResult {
   scannedAt: string;
   hits: SerpHit[];
   validPrices: number[];
+  /** Min of filtered SERP snippet prices (secondary signal). */
+  serpMinPrice: number | null;
+  onlinerMinPrice: number | null;
+  onlinerUrl: string | null;
+  onlinerMatchedName: string | null;
+  onlinerOffers: number | null;
+  /** Prefer Onliner min; fall back to SERP min. */
   suggestedPrice: number | null;
   error: string | null;
 }
@@ -46,4 +53,16 @@ export interface PriceAnalysisWatchlist {
   productIds: number[];
   items: PriceAnalysisWatchlistItem[];
   updatedAt: string | null;
+}
+
+export type PriceAnalysisSchedulerStatus = "idle" | "running" | "done";
+
+export interface PriceAnalysisSchedulerState {
+  weekKey: string;
+  status: PriceAnalysisSchedulerStatus;
+  cursor: number;
+  total: number;
+  lastBatchAt: string | null;
+  lastError: string | null;
+  lastScannedIds: number[];
 }

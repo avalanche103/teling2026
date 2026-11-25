@@ -15,6 +15,8 @@ Full access notes and credentials live in the personal skill `teling-vps-deploy`
 
 Do not deploy/restart production unless the user explicitly asks.
 
+On the next deploy, if `/opt/teling/.env.production` has no `YANDEX_METRIKA_TOKEN`, append the value from local `.env.local`. Do not print the token or overwrite other keys. Restart Next afterwards. Counter id `114684236` is already the code fallback.
+
 ## Preferred path (avoid OOM)
 
 VPS has ~1 GB RAM and ~2 GB swap (`/swapfile` + `/swapfile2`). Large product

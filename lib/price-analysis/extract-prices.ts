@@ -70,7 +70,9 @@ export function filterValidPrices(
   if (unique.length === 0) return [];
 
   const ref = ourPrice > 0 ? ourPrice : unique[Math.floor(unique.length / 2)];
-  const low = ref * 0.25;
+  // 0.5× cuts obvious snippet junk (accessories / wrong currency) while
+  // still allowing real discounts vs our shelf price.
+  const low = ref * 0.5;
   const high = ref * 4;
 
   let filtered = unique.filter((p) => p >= low && p <= high);

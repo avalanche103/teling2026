@@ -39,7 +39,15 @@ export type SectionMap = Record<string, SectionMapAction>;
 const DEFAULT_SETTINGS: MicroinformSettings = {
   priceUrl: "https://microinform.by/downloads/Microinform_price.xls",
   markupPercent: 0,
-  enabledVendors: ["D-Link", "Origo", "ATEN", "SVC", "INFORMIX", "Systeme Electric"],
+  enabledVendors: [
+    "D-Link",
+    "Origo",
+    "ATEN",
+    "SVC",
+    "INFORMIX",
+    "Systeme Electric",
+    "MOXA",
+  ],
 };
 
 const DEFAULT_STATE: MicroinformState = {

@@ -81,6 +81,12 @@ export function normalizeManufacturerUrl(url: string): string {
     if (host === "svc.ru" || host === "www.svc.ru") {
       u.hostname = "svc.ru";
     }
+    if (host === "moxa.ru" || host === "www.moxa.ru") {
+      u.hostname = "moxa.ru";
+    }
+    if (host === "moxa.com.ua" || host === "www.moxa.com.ua") {
+      u.hostname = "moxa.com.ua";
+    }
     u.hash = "";
     return u.toString();
   } catch {
@@ -172,6 +178,95 @@ export function lookupSystemeUrl(articul: string): string | null {
 
 export function lookupSvcUrl(articul: string): string | null {
   const hit = lookupUpsUrlMap(getSvcUrlMap(), articul);
+  return hit ? normalizeManufacturerUrl(hit) : null;
+}
+
+let moxaRuUrlMapCache: Record<string, string> | null = null;
+
+function getMoxaRuUrlMap(): Record<string, string> {
+  if (!moxaRuUrlMapCache) moxaRuUrlMapCache = readJsonMap("moxa-ru-url-map.json");
+  return moxaRuUrlMapCache;
+}
+
+function lookupMoxaUrlMap(map: Record<string, string>, articul: string): string {
+  const raw = (articul || "").trim();
+  if (!raw) return "";
+  const upper = raw.toUpperCase();
+  const compact = upper.replace(/[\s/_-]+/g, "");
+  const spaced = upper.replace(/\s+/g, " ");
+  const nospace = upper.replace(/\s+/g, "");
+  return (
+    map[raw] ||
+    map[upper] ||
+    map[spaced] ||
+    map[nospace] ||
+    map[compact] ||
+    map[raw.toLowerCase()] ||
+    ""
+  );
+}
+
+export function isMoxaEnglishHost(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.replace(/^www\./i, "").toLowerCase();
+    // Official EN site only — .com.ua stays allowed (RU content).
+    return host === "moxa.com";
+  } catch {
+    return false;
+  }
+}
+
+export function isMoxaRussianHost(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.replace(/^www\./i, "").toLowerCase();
+    return host === "moxa.ru" || host === "moxa.com.ua";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Resolve a Russian MOXA product page.
+ * Priority: working RU host from price (moxa.com.ua / moxa.ru) → moxa.ru map.
+ * Never return moxa.com EN. Prefer .com.ua from price when present — moxa.ru often
+ * times out from datacenter/CI networks while .com.ua serves the same RU copy.
+ */
+export function resolveMoxaPageUrl(
+  articul: string,
+  priceUrl?: string | null,
+): { url: string; source: "moxa.ru" | "moxa.com.ua" | "moxa.ru-price" } | null {
+  const raw = (priceUrl || "").trim();
+  if (raw && /^https?:\/\//i.test(raw)) {
+    const url = normalizeManufacturerUrl(raw);
+    if (url && !isMoxaEnglishHost(url) && isMoxaRussianHost(url)) {
+      try {
+        const host = new URL(url).hostname.replace(/^www\./i, "").toLowerCase();
+        // Prefer UA catalog pages from the price list when available.
+        if (host === "moxa.com.ua") {
+          return { url, source: "moxa.com.ua" };
+        }
+        if (host === "moxa.ru") {
+          return { url, source: "moxa.ru-price" };
+        }
+      } catch {
+        /* fall through to map */
+      }
+    }
+  }
+
+  const mapped = lookupMoxaUrlMap(getMoxaRuUrlMap(), articul);
+  if (mapped) {
+    const url = normalizeManufacturerUrl(mapped);
+    if (url && !isMoxaEnglishHost(url)) {
+      return { url, source: "moxa.ru" };
+    }
+  }
+
+  return null;
+}
+
+export function lookupMoxaRuUrl(articul: string): string | null {
+  const hit = lookupMoxaUrlMap(getMoxaRuUrlMap(), articul);
   return hit ? normalizeManufacturerUrl(hit) : null;
 }
 

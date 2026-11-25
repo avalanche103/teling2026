@@ -168,15 +168,3 @@ export function normalizeColorValue(raw: string | undefined | null): string | nu
 
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
-
-/** Normalize a char item value when the name is a color field. */
-export function normalizeCharValue(
-  name: string | undefined | null,
-  value: string | undefined | null,
-): string | null {
-  if (!isColorCharName(name)) {
-    const v = (value || "").trim();
-    return v || null;
-  }
-  return normalizeColorValue(value);
-}

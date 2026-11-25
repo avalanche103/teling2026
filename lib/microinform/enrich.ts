@@ -12,7 +12,13 @@ import { Readable } from "stream";
 import * as cheerio from "cheerio";
 import type { ProductCharGroup, ProductDocument, ProductRaw } from "@/lib/types";
 import { normalizeMicroinformArticul } from "./articul";
-import { getManufacturerIndex, lookupManufacturerEntry } from "./manufacturer";
+import {
+  getManufacturerIndex,
+  isMoxaEnglishHost,
+  lookupManufacturerEntry,
+  resolveMoxaPageUrl,
+} from "./manufacturer";
+import { applyLocalMoxaEnrich } from "./moxa-local-enrich";
 import { PUBLIC_IMAGES_DIR } from "./paths";
 import { readMicroinformProducts, writeMicroinformProducts } from "./store";
 import {
@@ -174,6 +180,12 @@ function scoreProductImage(url: string): number {
     score += 200;
   } else if (u.includes("svc.ru") && /\.(jpe?g|png|webp)(\?|$)/i.test(u)) {
     score += 180;
+  } else if (/moxa\.ru\/images\/cms\//i.test(u)) {
+    // NNZ moxa.ru Bitrix import packshots.
+    score += 200;
+  } else if (/moxa\.com\.ua\/.+\.(jpe?g|png|webp)/i.test(u) && !u.includes("menu") && !u.includes("logo")) {
+    // Prefer product folder shots (…/products/…/IMC-101_s.jpg) over news banners.
+    score += /\/products\//i.test(u) ? 210 : 120;
   } else if (/\/upload\/iblock\//i.test(u)) {
     score += 170;
   } else if (u.includes("/up/prod_fotos/")) score += 100;
@@ -206,6 +218,8 @@ function minImageBytes(url: string): number {
   if (/assets\.aten\.com\/product\/image\//i.test(url)) return 4_000;
   if (/static\.systeme\.ru\/catalog\/images\//i.test(url)) return 4_000;
   if (/svc\.ru/i.test(url)) return 4_000;
+  if (/moxa\.ru\/images\/cms\//i.test(url)) return 4_000;
+  if (/moxa\.com\.ua\//i.test(url)) return 4_000;
   return 12_000;
 }
 
@@ -323,6 +337,50 @@ function pickDescription($: ReturnType<typeof cheerio.load>, pageUrl: string): s
     push($(sel).first().html());
   }
 
+  // 3e) moxa.ru (NNZ shop) + legacy moxa.com.ua product pages
+  for (const sel of [
+    ".product-item-detail-tab-content",
+    ".catalog-element-section-description",
+    ".catalog-element__description",
+    ".product-detail-desc",
+    "#detail_text",
+  ]) {
+    push($(sel).first().html());
+  }
+  if (/moxa\.com\.ua/i.test(pageUrl)) {
+    // Old UA catalog: leaf <font> nodes hold the prose; parents also match via nested text.
+    const paras: Array<{ html: string; score: number }> = [];
+    $("font, p").each((_, el) => {
+      const text = $(el).text().replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+      // Keep leaf-sized blocks only — wrappers swallow the whole left nav.
+      if (text.length < 80 || text.length > 1200) return;
+      if (!/[А-Яа-яЁё]{15,}/.test(text)) return;
+      if (/основная\s*\|?\s*продукция|контакты\s*\|?\s*новости|поиск по сайту|меню сайта/i.test(text)) {
+        return;
+      }
+      if (/^спецификац|^сертификат|^загрузк|^комплект поставки/i.test(text)) return;
+      const childCount = $(el).children().length;
+      if (childCount > 3) return;
+      let score = text.length;
+      if (/преодолевает|неразрешимую|дублированн|link fault|релейный выход|температурный диапазон/i.test(text)) {
+        score += 2000;
+      }
+      if (/предназначен|обеспечивает|особенност|поддержк/i.test(text)) score += 800;
+      if (/индустриальн|промышленн|преобразовател|коммутатор|медиа.?конверт|nport|uport|mgate/i.test(text)) {
+        score += 300;
+      }
+      const html = $(el).html();
+      if (html) paras.push({ html: `<p>${html}</p>`, score });
+    });
+    paras.sort((a, b) => b.score - a.score);
+    const top = paras.slice(0, 6);
+    for (const p of top) push(p.html);
+    // Combined lead + features when several leaf fonts exist.
+    if (top.length >= 2) {
+      push(top.slice(0, 4).map((p) => p.html).join("\n"));
+    }
+  }
+
   // 4) ATEN / generic product pages
   for (const sel of [
     "[itemprop='description']",
@@ -360,12 +418,24 @@ function pickDescription($: ReturnType<typeof cheerio.load>, pageUrl: string): s
     push(`<p>${metaDesc.trim()}</p>`);
   }
 
-  // Prefer the longest textual candidate
-  candidates.sort((a, b) => {
-    const ta = cheerio.load(a).text().trim().length;
-    const tb = cheerio.load(b).text().trim().length;
-    return tb - ta;
-  });
+  // Prefer useful prose: demote nav chrome / giant wrappers, boost product copy.
+  const scoreCandidate = (html: string): number => {
+    const text = cheerio.load(html).text().replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+    if (!text) return -1;
+    let score = Math.min(text.length, 1800);
+    if (/основная\s*\|?\s*продукция|secure remote|fieldbus решения|мультипортовые\s+платы/i.test(text)) {
+      score -= 5000;
+    }
+    if (text.length > 3500) score -= 2000;
+    if (/преодолевает|неразрешимую|предназначен|обеспечивает|дублированн|особенност/i.test(text)) {
+      score += 2500;
+    }
+    if (/индустриальн|промышленн|преобразовател|медиа.?конверт|nport|uport|mgate|коммутатор/i.test(text)) {
+      score += 400;
+    }
+    return score;
+  };
+  candidates.sort((a, b) => scoreCandidate(b) - scoreCandidate(a));
   return candidates[0] || "";
 }
 
@@ -569,18 +639,18 @@ export function extractFromHtml(
   pushImage($("meta[name='twitter:image']").attr("content"));
 
   // Prefer lightbox/full-size links from the product photo strip first.
-  $("a[href*='prod_fotos'], a[href*='/prod/'], a[href*='assets.aten.com']").each((_, el) => {
+  $("a[href*='prod_fotos'], a[href*='/prod/'], a[href*='assets.aten.com'], a[href*='images/cms']").each((_, el) => {
     pushImage($(el).attr("href"));
   });
   $("a[href]").each((_, el) => {
     const href = $(el).attr("href");
     if (href && /\.(jpe?g|png|webp|gif)(\?|$)/i.test(href)) pushImage(href);
   });
-  $("img[src*='prod_fotos'], img[src*='/prod/'], img[src*='assets.aten.com']").each((_, el) => {
+  $("img[src*='prod_fotos'], img[src*='/prod/'], img[src*='assets.aten.com'], img[src*='images/cms']").each((_, el) => {
     pushImage($(el).attr("src") || $(el).attr("data-src") || $(el).attr("data-lazy"));
   });
-  $("img[src]").each((_, el) => {
-    pushImage($(el).attr("src") || $(el).attr("data-src"));
+  $("img[src], img[data-src]").each((_, el) => {
+    pushImage($(el).attr("src") || $(el).attr("data-src") || $(el).attr("data-lazy"));
   });
 
   const imageUrls = rankProductImages(collected);
@@ -891,25 +961,53 @@ export async function enrichMicroinformProducts(options?: {
     if (processed >= limit) break;
     const product = products[i];
     if (idSet && !idSet.has(product.id)) continue;
-    const vendor = (product.vendor || product.metadata?.brand || "").toLowerCase();
+    const vendorRaw = product.vendor || product.metadata?.brand || "";
+    const vendor = vendorRaw.toLowerCase();
     if (vendorSet && !vendorSet.has(vendor)) continue;
 
-    const hasDesc = Boolean(product.metadata?.description?.trim());
-    const hasPics = (product.metadata?.pictures?.length || 0) > 0;
-    const hasUrl = Boolean(product.metadata?.url);
-    if (!hasUrl) continue;
+    const isMoxa = vendor.includes("moxa");
+    let working: ProductRaw = product;
+
+    // MOXA: resolve RU page (map → moxa.com.ua / moxa.ru); never enrich from moxa.com EN.
+    if (isMoxa) {
+      const resolved = resolveMoxaPageUrl(
+        product.metadata?.articul || "",
+        product.metadata?.url || "",
+      );
+      if (resolved?.url) {
+        working = {
+          ...product,
+          metadata: { ...product.metadata, url: resolved.url },
+        };
+      } else if (product.metadata?.url && isMoxaEnglishHost(product.metadata.url)) {
+        working = {
+          ...product,
+          metadata: { ...product.metadata, url: "" },
+        };
+      }
+    }
+
+    const hasDesc = Boolean(working.metadata?.description?.trim());
+    const hasPics = (working.metadata?.pictures?.length || 0) > 0;
+    const hasUrl = Boolean(working.metadata?.url);
     const descText = hasDesc
-      ? cheerio.load(product.metadata.description).text().replace(/\s+/g, " ").trim()
+      ? cheerio.load(working.metadata.description).text().replace(/\s+/g, " ").trim()
       : "";
     const descLooksBroken = descText.startsWith("Описание ");
-    const heroNeedsRefresh = firstPictureNeedsRefresh(product.metadata?.pictures);
-    const hasRichChars = (product.metadata?.chars || []).some(
+    const descNotRu = Boolean(descText) && !hasCyrillic(descText);
+    const heroNeedsRefresh = firstPictureNeedsRefresh(working.metadata?.pictures);
+    const hasRichChars = (working.metadata?.chars || []).some(
       (g) => g.name !== "Характеристики" || g.items.length > 5,
     );
+
+    // MOXA without URL still gets local RU enrich from price name.
+    if (!hasUrl && !isMoxa) continue;
+
     if (
       onlyMissing &&
       hasDesc &&
-      hasPics &&
+      !descNotRu &&
+      (hasPics || isMoxa) &&
       hasRichChars &&
       !descLooksBroken &&
       !heroNeedsRefresh
@@ -918,19 +1016,77 @@ export async function enrichMicroinformProducts(options?: {
     }
 
     processed += 1;
-    const result = await enrichProduct(product);
-    products[i] = result.product;
-    imagesDownloaded += result.imagesDownloaded;
-    if (result.descriptionChars > 0) withDescription += 1;
-    if (result.charCount > 0) withChars += 1;
-    if (result.ok) succeeded += 1;
-    else {
-      failed += 1;
-      errors.push({
-        sku: product.sku,
-        articul: product.metadata?.articul || "",
-        error: result.error || "failed",
+
+    if (!hasUrl && isMoxa) {
+      const local = applyLocalMoxaEnrich(working);
+      products[i] = local;
+      if (local.metadata?.description?.trim()) {
+        succeeded += 1;
+        withDescription += 1;
+      } else {
+        failed += 1;
+        errors.push({
+          sku: product.sku,
+          articul: product.metadata?.articul || "",
+          error: "no-url-local-failed",
+        });
+      }
+    } else {
+      const result = await enrichProduct(working, {
+        pageUrl: working.metadata?.url,
+        requireCyrillic: isMoxa,
       });
+      let next = result.product;
+      if (isMoxa && (!result.ok || !hasCyrillic(
+        cheerio.load(next.metadata?.description || "").text(),
+      ))) {
+        next = applyLocalMoxaEnrich({
+          ...next,
+          metadata: {
+            ...next.metadata,
+            // Keep RU page URL even if scrape failed; drop EN.
+            url:
+              next.metadata?.url && !isMoxaEnglishHost(next.metadata.url)
+                ? next.metadata.url
+                : working.metadata?.url || "",
+            description:
+              result.ok && hasCyrillic(cheerio.load(next.metadata?.description || "").text())
+                ? next.metadata.description
+                : working.metadata?.description || "",
+          },
+        });
+        // If scrape failed but local produced RU text, count as success.
+        const localText = cheerio.load(next.metadata?.description || "").text();
+        if (hasCyrillic(localText)) {
+          products[i] = next;
+          succeeded += 1;
+          withDescription += 1;
+          withChars += (next.metadata?.chars || []).reduce((s, g) => s + g.items.length, 0) > 0 ? 1 : 0;
+          imagesDownloaded += result.imagesDownloaded;
+        } else {
+          products[i] = result.product;
+          failed += 1;
+          errors.push({
+            sku: product.sku,
+            articul: product.metadata?.articul || "",
+            error: result.error || "no-cyrillic-description",
+          });
+        }
+      } else {
+        products[i] = next;
+        imagesDownloaded += result.imagesDownloaded;
+        if (result.descriptionChars > 0) withDescription += 1;
+        if (result.charCount > 0) withChars += 1;
+        if (result.ok) succeeded += 1;
+        else {
+          failed += 1;
+          errors.push({
+            sku: product.sku,
+            articul: product.metadata?.articul || "",
+            error: result.error || "failed",
+          });
+        }
+      }
     }
 
     options?.onProgress?.({

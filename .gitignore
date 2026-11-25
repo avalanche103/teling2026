@@ -58,6 +58,9 @@ next-env.d.ts
 /data/microinform/sync-log.json
 /data/microinform/sync-task-*.log
 /data/product-views.json
+/data/price-analysis-cron-stdout.log
+/data/price-analysis-cron-stderr.log
+/data/price-analysis-scheduler.json
 /NUL
 NUL
 /_tmp/

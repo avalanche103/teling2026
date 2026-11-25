@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireApiSession } from "@/lib/auth";
+import { getSchedulerPublicStatus } from "@/lib/price-analysis/scheduler";
 import { isXmlRiverConfigured } from "@/lib/price-analysis/serp-xmlriver";
 import { readCache, readWatchlist } from "@/lib/price-analysis/store";
 
@@ -34,5 +35,6 @@ export async function GET() {
     watchlistCount: watchlist.items.length || watchlist.productIds.length,
     updatedAt: cache.updatedAt,
     results,
+    scheduler: getSchedulerPublicStatus(),
   });
 }

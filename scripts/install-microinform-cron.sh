@@ -40,8 +40,10 @@ FILTERED="$(
 
 # Host clock is UTC. 06:30 UTC == 09:30 Europe/Minsk year-round (no DST).
 # Do not rely on CRON_TZ — on this VPS it was ignored and the job ran at 09:30 UTC.
+# Invoke via bash: deploys unpack this file as mode 0644, and cron then fails
+# instantly with "Permission denied" (no MTA, so the error is discarded).
 BLOCK=$(cat <<EOF
-30 6 * * * $WRAPPER $MARKER
+30 6 * * * /usr/bin/bash $WRAPPER $MARKER
 EOF
 )
 

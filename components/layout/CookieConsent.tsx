@@ -30,9 +30,9 @@ export function CookieConsent() {
     >
       <div className="mx-auto flex max-w-4xl flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:flex-row sm:items-center sm:gap-4 sm:p-5">
         <p className="flex-1 text-sm leading-relaxed text-slate-700">
-          Мы используем cookie для работы сайта и обезличенной аналитики. Нажимая
-          «Принять», вы соглашаетесь на все cookie. Можно оставить только
-          необходимые для работы сайта.
+          Мы используем cookie для работы сайта и обезличенной аналитики — Google
+          Analytics и Яндекс Метрика. Нажимая «Принять», вы соглашаетесь на все
+          cookie. Можно оставить только необходимые для работы сайта.
         </p>
         <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
           <button

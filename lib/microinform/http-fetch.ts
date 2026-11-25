@@ -1,9 +1,55 @@
 import { execFileSync } from "child_process";
 import { mkdtempSync, readFileSync, rmSync } from "fs";
+import iconv from "iconv-lite";
 import { platform, tmpdir } from "os";
 import path from "path";
 
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36";
+
+/** True when text looks like CP1251 bytes misread as Latin-1/UTF-8. */
+function looksLikeCp1251Mojibake(text: string): boolean {
+  if (!text) return false;
+  if (/[А-Яа-яЁё]/.test(text)) return false;
+  return /[À-ÿ]{3,}/.test(text) && /[ñîáóäâàåèÿ÷ñòü]/.test(text);
+}
+
+function decodeCp1251Mojibake(text: string): string {
+  const bytes = Buffer.from(Array.from(text, (ch) => ch.charCodeAt(0) & 0xff));
+  return iconv.decode(bytes, "win1251");
+}
+
+/** Decode HTML using charset hints / mojibake repair (moxa.com.ua is win1251). */
+export function decodeHtmlBuffer(buffer: Buffer, url = ""): string {
+  const lowerUrl = url.toLowerCase();
+  const head = buffer.slice(0, 4096).toString("latin1").toLowerCase();
+  const metaCharset =
+    head.match(/charset\s*=\s*["']?\s*(windows-1251|cp1251|utf-8|utf8)/i)?.[1] || "";
+  const prefer1251 =
+    /moxa\.com\.ua/i.test(lowerUrl) ||
+    /windows-1251|cp1251/i.test(metaCharset);
+
+  if (prefer1251) {
+    const decoded = iconv.decode(buffer, "win1251");
+    if (/[А-Яа-яЁё]/.test(decoded)) return decoded;
+  }
+
+  const asUtf8 = buffer.toString("utf8");
+  if (/[А-Яа-яЁё]/.test(asUtf8)) return asUtf8;
+
+  if (looksLikeCp1251Mojibake(asUtf8)) {
+    try {
+      const fixed = decodeCp1251Mojibake(asUtf8);
+      if (/[А-Яа-яЁё]/.test(fixed)) return fixed;
+    } catch {
+      /* keep */
+    }
+  }
+
+  if (/windows-1251|cp1251/i.test(metaCharset) || /moxa\.com\.ua/i.test(lowerUrl)) {
+    return iconv.decode(buffer, "win1251");
+  }
+  return asUtf8;
+}
 
 function curlBin(): string {
   return platform() === "win32" ? "curl.exe" : "curl";
@@ -33,7 +79,8 @@ export function fetchTextViaCurl(url: string, timeoutSec = 45): string {
       ],
       { stdio: ["ignore", "ignore", "pipe"] },
     );
-    const out = readFileSync(outFile, "utf8");
+    const buffer = readFileSync(outFile);
+    const out = decodeHtmlBuffer(buffer, url);
     if (!out || out.length < 50) throw new Error(`curl empty response for ${url}`);
     return out;
   } finally {
@@ -57,7 +104,8 @@ export async function fetchTextWithCurlFallback(url: string): Promise<string> {
       signal: AbortSignal.timeout(45000),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
+    const buffer = Buffer.from(await res.arrayBuffer());
+    const text = decodeHtmlBuffer(buffer, url);
     if (text && text.length >= 50) return text;
     throw new Error("empty body");
   } catch (error) {

@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Onest } from "next/font/google";
 import { ConsentAwareAnalytics } from "@/components/analytics/ConsentAwareAnalytics";
+import { YandexMetrika } from "@/components/analytics/YandexMetrika";
+import { readGaMeasurementId } from "@/lib/ga-id";
+import { readYmCounterId } from "@/lib/metrika-id";
 import "./generated-globals.css";
 
 const onest = Onest({
@@ -62,13 +66,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID?.trim();
+  const gaId = readGaMeasurementId();
+  const ymId = readYmCounterId();
 
   return (
     <html lang="ru" className={`${onest.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
         {children}
         {gaId ? <ConsentAwareAnalytics gaId={gaId} /> : null}
+        {ymId ? (
+          <Suspense fallback={null}>
+            <YandexMetrika counterId={ymId} />
+          </Suspense>
+        ) : null}
       </body>
     </html>
   );

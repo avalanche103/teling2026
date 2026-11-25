@@ -15,10 +15,9 @@ import type {
   ProductCharGroup,
 } from "./types";
 import {
-  isColorCharName,
+  isFacetableCharValue,
   normalizeCharValue,
-  normalizeColorValue,
-} from "./normalize-color";
+} from "./normalize-char";
 import { getProductViewCount } from "./product-views";
 import {
   groupForSectionId,
@@ -32,7 +31,7 @@ let _products: ProductRaw[] | null = null;
 let _productsBySkuMap: Map<string, ProductRaw> | null = null;
 let _productsBySectionMap: Map<number, ProductRaw[]> | null = null;
 let _categoryTree: Category[] | null = null;
-let _sectionPopularImageMap: Map<number, { score: number; url: string }> | null = null;
+let _sectionPopularImageMap: Map<number, SectionImagePick> | null = null;
 let _sectionProductCountMap: Map<number, number> | null = null;
 
 function isGitLfsPointer(text: string): boolean {
@@ -292,40 +291,44 @@ function getProductThumbnailUrlFast(product: ProductRaw): string | null {
   return externalImages[0] ?? null;
 }
 
-/** Heuristic used as tiebreaker / cold-start when view counts are zero. */
-function scoreProductHeuristic(product: ProductRaw): number {
-  let score = 1000;
-  if (product.price > 0) score += 200;
-  const delivery = (product.metadata?.timeDelivery || "").toLowerCase();
-  if (delivery.includes("1-2")) score += 150;
-  if (delivery.includes("запросу")) score -= 80;
-  if (product.price > 0) {
-    score += Math.max(0, 120 - Math.min(product.price, 120));
-  }
-  const picCount = product.metadata?.pictures?.length || 0;
-  score += Math.min(picCount, 5) * 10;
-  return score;
-}
+/** Category photos only use products priced at least this many BYN. */
+const SECTION_IMAGE_MIN_PRICE_BYN = 100;
 
-function scoreProductPopularity(product: ProductRaw, thumbnail: string | null): number {
-  if (!thumbnail) return Number.NEGATIVE_INFINITY;
-  const views = getProductViewCount(product.sku);
-  // Views dominate; heuristic stays in a small range so it only breaks ties.
-  return views * 10_000 + scoreProductHeuristic(product);
+type SectionImagePick = {
+  url: string;
+  views: number;
+  productId: number;
+  name: string;
+};
+
+/**
+ * Section photo rank: more views, then earlier product id, then name Z→A.
+ * Product id is the creation order — the catalog has no separate created-at field.
+ */
+function isBetterSectionImage(next: SectionImagePick, prev: SectionImagePick): boolean {
+  if (next.views !== prev.views) return next.views > prev.views;
+  if (next.productId !== prev.productId) return next.productId < prev.productId;
+  return next.name.localeCompare(prev.name, "ru") > 0;
 }
 
 /** One pass over products → best image per direct section_id. */
-function getSectionPopularImageMap(): Map<number, { score: number; url: string }> {
+function getSectionPopularImageMap(): Map<number, SectionImagePick> {
   if (_sectionPopularImageMap) return _sectionPopularImageMap;
 
-  const bestBySection = new Map<number, { score: number; url: string }>();
+  const bestBySection = new Map<number, SectionImagePick>();
   for (const product of getVisibleProductsRaw()) {
     const thumb = getProductThumbnailUrlFast(product);
     if (!thumb) continue;
-    const score = scoreProductPopularity(product, thumb);
+    if (!(product.price >= SECTION_IMAGE_MIN_PRICE_BYN)) continue;
+    const candidate: SectionImagePick = {
+      url: thumb,
+      views: getProductViewCount(product.sku),
+      productId: product.id,
+      name: (product.name || "").trim(),
+    };
     const prev = bestBySection.get(product.section_id);
-    if (!prev || score > prev.score) {
-      bestBySection.set(product.section_id, { score, url: thumb });
+    if (!prev || isBetterSectionImage(candidate, prev)) {
+      bestBySection.set(product.section_id, candidate);
     }
   }
 
@@ -335,11 +338,11 @@ function getSectionPopularImageMap(): Map<number, { score: number; url: string }
 
 function getPopularImageForSectionIds(sectionIds: number[]): string | null {
   const map = getSectionPopularImageMap();
-  let best: { score: number; url: string } | null = null;
+  let best: SectionImagePick | null = null;
   for (const id of sectionIds) {
     const candidate = map.get(id);
     if (!candidate) continue;
-    if (!best || candidate.score > best.score) best = candidate;
+    if (!best || isBetterSectionImage(candidate, best)) best = candidate;
   }
   return best?.url ?? null;
 }
@@ -551,6 +554,49 @@ function isJunkCharFacetName(name: string): boolean {
   return false;
 }
 
+const PRIMARY_CHAR_GROUP = "Основные характеристики";
+const SECONDARY_CHAR_GROUP = "Прочие характеристики";
+
+/**
+ * Yield char items for filtering/facets.
+ * Prefer «Основные характеристики» over «Прочие» when the same name exists
+ * in both (SSD short vs long duplicates). Also prefer synthetic
+ * «Характеристики» when that name is present on the product.
+ */
+function iterPreferredCharItems(
+  groups: ProductCharGroup[] | undefined | null,
+): Array<{ name: string; value: string; groupName: string }> {
+  if (!groups?.length) return [];
+
+  const syntheticNames = new Set<string>();
+  const primaryNames = new Set<string>();
+  for (const group of groups) {
+    const gn = group.name?.trim() || "";
+    for (const item of group.items || []) {
+      const name = item.name?.trim();
+      if (!name) continue;
+      if (gn === "Характеристики") syntheticNames.add(name);
+      if (gn === PRIMARY_CHAR_GROUP) primaryNames.add(name);
+    }
+  }
+
+  const out: Array<{ name: string; value: string; groupName: string }> = [];
+  for (const group of groups) {
+    const gn = group.name?.trim() || "";
+    const isSynthetic = gn === "Характеристики";
+    const isSecondary = gn === SECONDARY_CHAR_GROUP;
+    for (const item of group.items || []) {
+      const name = item.name?.trim();
+      const value = item.value?.trim();
+      if (!name || !value) continue;
+      if (syntheticNames.has(name) && !isSynthetic) continue;
+      if (isSecondary && primaryNames.has(name)) continue;
+      out.push({ name, value, groupName: gn });
+    }
+  }
+  return out;
+}
+
 function productDisplayName(p: ProductRaw): string {
   if (typeof p.custom_name === "string" && p.custom_name.trim()) return p.custom_name.trim();
   if (typeof p.name === "string" && p.name.trim()) return p.name.trim();
@@ -657,25 +703,16 @@ function applyProductFilters(
         if (!selectedValues.length) continue;
         const wanted = new Set(
           selectedValues
-            .map((v) =>
-              isColorCharName(paramName)
-                ? normalizeColorValue(v) || v.trim()
-                : v.trim(),
-            )
+            .map((v) => normalizeCharValue(paramName, v) || v.trim())
             .filter(Boolean),
         );
         let found = false;
-        outer: for (const group of p.metadata?.chars ?? []) {
-          for (const item of group.items) {
-            if (item.name?.trim() !== paramName) continue;
-            const raw = item.value?.trim() || "";
-            const normalized = isColorCharName(paramName)
-              ? normalizeColorValue(raw) || raw
-              : raw;
-            if (wanted.has(normalized) || wanted.has(raw)) {
-              found = true;
-              break outer;
-            }
+        for (const item of iterPreferredCharItems(p.metadata?.chars)) {
+          if (item.name !== paramName) continue;
+          const normalized = normalizeCharValue(paramName, item.value) || item.value;
+          if (wanted.has(normalized) || wanted.has(item.value)) {
+            found = true;
+            break;
           }
         }
         if (!found) return false;
@@ -717,6 +754,7 @@ function rawToProduct(p: ProductRaw): Product {
 function normalizeProductCharGroups(
   groups: ProductCharGroup[],
 ): ProductCharGroup[] {
+  const seen = new Set<string>();
   return groups.map((group) => ({
     ...group,
     items: (group.items || [])
@@ -724,6 +762,9 @@ function normalizeProductCharGroups(
         const name = item.name?.trim() || "";
         const value = normalizeCharValue(name, item.value);
         if (!name || !value) return null;
+        const key = `${name}\0${value}`;
+        if (seen.has(key)) return null;
+        seen.add(key);
         return { name, value };
       })
       .filter((item): item is { name: string; value: string } => item != null),
@@ -1253,23 +1294,19 @@ function buildFacetsFromProducts(allProducts: ProductRaw[]): SectionFacets {
 
   const charMap = new Map<string, Map<string, number>>();
   for (const p of allProducts) {
-    for (const group of p.metadata?.chars ?? []) {
-      const isSynthetic = group.name?.trim() === "Характеристики";
-      for (const item of group.items) {
-        const name = item.name?.trim();
-        const rawValue = item.value?.trim();
-        if (!name || !rawValue) continue;
-        if (isJunkCharFacetName(name)) continue;
-        if (sectionSyntheticNames.has(name) && !isSynthetic) continue;
-        if (BRAND_CHAR_NAMES.has(name.toLowerCase())) continue;
-        const value = isColorCharName(name)
-          ? normalizeColorValue(rawValue)
-          : rawValue;
-        if (!value) continue;
-        if (!charMap.has(name)) charMap.set(name, new Map());
-        const vm = charMap.get(name)!;
-        vm.set(value, (vm.get(value) ?? 0) + 1);
-      }
+    const seenOnProduct = new Set<string>();
+    for (const item of iterPreferredCharItems(p.metadata?.chars)) {
+      const name = item.name;
+      if (isJunkCharFacetName(name)) continue;
+      if (BRAND_CHAR_NAMES.has(name.toLowerCase())) continue;
+      const value = normalizeCharValue(name, item.value);
+      if (!value || !isFacetableCharValue(value)) continue;
+      const dedupeKey = `${name}\0${value}`;
+      if (seenOnProduct.has(dedupeKey)) continue;
+      seenOnProduct.add(dedupeKey);
+      if (!charMap.has(name)) charMap.set(name, new Map());
+      const vm = charMap.get(name)!;
+      vm.set(value, (vm.get(value) ?? 0) + 1);
     }
   }
 

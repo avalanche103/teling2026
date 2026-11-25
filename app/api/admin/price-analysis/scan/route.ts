@@ -68,7 +68,7 @@ export async function POST(request: Request) {
   }
 
   const toScan = items.map(watchlistItemToProductRaw);
-  const scanned = await scanProducts(toScan, 2);
+  const scanned = await scanProducts(toScan, 1);
   const nextCache = mergeCacheResults(readCache(), scanned);
   writeCache(nextCache);
 

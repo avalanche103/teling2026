@@ -72,7 +72,11 @@
       "displayName": "МТОК",
       "h1": "Муфты МТОК",
       "title": "Муфты МТОК - Каталог",
-      "match": { "nameIncludes": ["МТОК"] }
+      "match": {
+        "nameIncludes": [
+          "МТОК"
+        ]
+      }
     },
     {
       "categorySlug": "mufty_opticheskie",
@@ -81,7 +85,11 @@
       "displayName": "МОГ",
       "h1": "Муфты МОГ",
       "title": "Муфты МОГ - Каталог",
-      "match": { "nameIncludes": ["МОГ"] }
+      "match": {
+        "nameIncludes": [
+          "МОГ"
+        ]
+      }
     },
     {
       "categorySlug": "mufty_opticheskie",
@@ -90,7 +98,11 @@
       "displayName": "МКО",
       "h1": "Муфты МКО",
       "title": "Муфты МКО - Каталог",
-      "match": { "nameIncludes": ["МКО"] }
+      "match": {
+        "nameIncludes": [
+          "МКО"
+        ]
+      }
     },
     {
       "categorySlug": "opticheskie-stoechnye-krossy",
@@ -99,7 +111,11 @@
       "displayName": "ШКОС",
       "h1": "Кроссы ШКОС",
       "title": "Кроссы ШКОС - Каталог",
-      "match": { "nameIncludes": ["ШКОС"] }
+      "match": {
+        "nameIncludes": [
+          "ШКОС"
+        ]
+      }
     },
     {
       "categorySlug": "opticheskie-nastennye-krossy",
@@ -108,7 +124,11 @@
       "displayName": "ШКОН",
       "h1": "Кроссы ШКОН",
       "title": "Кроссы ШКОН - Каталог",
-      "match": { "nameIncludes": ["ШКОН"] }
+      "match": {
+        "nameIncludes": [
+          "ШКОН"
+        ]
+      }
     },
     {
       "categorySlug": "truby_pnd_ssd_payp",
@@ -117,7 +137,14 @@
       "displayName": "ССД-Пайп",
       "h1": "Трубы ССД-Пайп",
       "title": "Трубы ССД-Пайп - Каталог",
-      "match": { "nameIncludes": ["ССД-Пайп", "ССД Пайп", "SSD-Pipe", "SSD Pipe"] }
+      "match": {
+        "nameIncludes": [
+          "ССД-Пайп",
+          "ССД Пайп",
+          "SSD-Pipe",
+          "SSD Pipe"
+        ]
+      }
     },
     {
       "categorySlug": "opticheskie_reflektometry",
@@ -182,6 +209,62 @@
       "brand": "МеталлПром",
       "h1": "Арматура МеталлПром",
       "title": "Арматура МеталлПром - Каталог"
+    },
+    {
+      "categorySlug": "kommutatory",
+      "slug": "moxa",
+      "type": "brand",
+      "brand": "MOXA",
+      "h1": "Коммутаторы MOXA",
+      "title": "Коммутаторы MOXA - Каталог"
+    },
+    {
+      "categorySlug": "mediakonvertery",
+      "slug": "moxa",
+      "type": "brand",
+      "brand": "MOXA",
+      "h1": "Медиаконвертеры MOXA",
+      "title": "Медиаконвертеры MOXA - Каталог"
+    },
+    {
+      "categorySlug": "sfp_moduli",
+      "slug": "moxa",
+      "type": "brand",
+      "brand": "MOXA",
+      "h1": "SFP модули MOXA",
+      "title": "SFP модули MOXA - Каталог"
+    },
+    {
+      "categorySlug": "preobrazovateli-serial-ethernet",
+      "slug": "moxa",
+      "type": "brand",
+      "brand": "MOXA",
+      "h1": "Преобразователи Serial↔Ethernet MOXA",
+      "title": "Преобразователи Serial↔Ethernet MOXA - Каталог"
+    },
+    {
+      "categorySlug": "konvertery-interfejsov",
+      "slug": "moxa",
+      "type": "brand",
+      "brand": "MOXA",
+      "h1": "Конвертеры интерфейсов MOXA",
+      "title": "Конвертеры интерфейсов MOXA - Каталог"
+    },
+    {
+      "categorySlug": "shlyuzy-io-i-platy",
+      "slug": "moxa",
+      "type": "brand",
+      "brand": "MOXA",
+      "h1": "Шлюзы, I/O и платы MOXA",
+      "title": "Шлюзы, I/O и платы MOXA - Каталог"
+    },
+    {
+      "categorySlug": "kabeli-i-montazhnye-komplekty",
+      "slug": "moxa",
+      "type": "brand",
+      "brand": "MOXA",
+      "h1": "Кабели и монтаж MOXA",
+      "title": "Кабели и монтажные комплекты MOXA - Каталог"
     }
   ]
 }

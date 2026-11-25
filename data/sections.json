@@ -2810,33 +2810,6 @@
     }
   },
   {
-    "id": 669,
-    "name": "DAC кабели",
-    "parent": 293,
-    "external_id": "dac_kabeli",
-    "metadata": {
-      "id": 669,
-      "name": "DAC кабели",
-      "sort": 1002,
-      "code": "dac_kabeli",
-      "url": "",
-      "level": 3,
-      "parent_id": 293,
-      "picture": "",
-      "selected_filters": [
-        "brand",
-        "price",
-        "char:Тип",
-        "char:Форм-фактор",
-        "char:Скорость",
-        "char:Разъем",
-        "char:Дальность",
-        "char:Исполнение"
-      ],
-      "source": "microinform"
-    }
-  },
-  {
     "id": 518,
     "name": "Медиаконвертеры",
     "parent": 293,
@@ -4277,6 +4250,150 @@
         "price",
         "char:Тип",
         "char:Монтаж"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 669,
+    "name": "DAC кабели",
+    "parent": 293,
+    "external_id": "dac_kabeli",
+    "metadata": {
+      "id": 669,
+      "name": "DAC кабели",
+      "sort": 1002,
+      "code": "dac_kabeli",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Форм-фактор",
+        "char:Скорость",
+        "char:Разъем",
+        "char:Дальность",
+        "char:Исполнение"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 670,
+    "name": "Промышленные интерфейсы",
+    "parent": 293,
+    "external_id": "promyshlennye-interfejsy",
+    "metadata": {
+      "id": 670,
+      "name": "Промышленные интерфейсы",
+      "sort": 1200,
+      "code": "promyshlennye-interfejsy",
+      "url": "",
+      "level": 3,
+      "parent_id": 293,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 671,
+    "name": "Преобразователи Serial↔Ethernet",
+    "parent": 670,
+    "external_id": "preobrazovateli-serial-ethernet",
+    "metadata": {
+      "id": 671,
+      "name": "Преобразователи Serial↔Ethernet",
+      "sort": 100,
+      "code": "preobrazovateli-serial-ethernet",
+      "url": "",
+      "level": 4,
+      "parent_id": 670,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Порты",
+        "char:Интерфейс",
+        "char:Исполнение"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 672,
+    "name": "Конвертеры интерфейсов",
+    "parent": 670,
+    "external_id": "konvertery-interfejsov",
+    "metadata": {
+      "id": 672,
+      "name": "Конвертеры интерфейсов",
+      "sort": 200,
+      "code": "konvertery-interfejsov",
+      "url": "",
+      "level": 4,
+      "parent_id": 670,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Порты",
+        "char:Интерфейс",
+        "char:Исполнение"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 673,
+    "name": "Шлюзы, I/O и платы",
+    "parent": 670,
+    "external_id": "shlyuzy-io-i-platy",
+    "metadata": {
+      "id": 673,
+      "name": "Шлюзы, I/O и платы",
+      "sort": 300,
+      "code": "shlyuzy-io-i-platy",
+      "url": "",
+      "level": 4,
+      "parent_id": 670,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип",
+        "char:Порты",
+        "char:Интерфейс",
+        "char:Исполнение"
+      ],
+      "source": "microinform"
+    }
+  },
+  {
+    "id": 674,
+    "name": "Кабели и монтажные комплекты",
+    "parent": 670,
+    "external_id": "kabeli-i-montazhnye-komplekty",
+    "metadata": {
+      "id": 674,
+      "name": "Кабели и монтажные комплекты",
+      "sort": 400,
+      "code": "kabeli-i-montazhnye-komplekty",
+      "url": "",
+      "level": 4,
+      "parent_id": 670,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price",
+        "char:Тип"
       ],
       "source": "microinform"
     }

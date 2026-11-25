@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import type {
   PriceAnalysisCache,
+  PriceAnalysisSchedulerState,
   PriceAnalysisWatchlist,
   PriceAnalysisWatchlistItem,
 } from "./types";
@@ -9,6 +10,7 @@ import type {
 const DATA_DIR = path.join(process.cwd(), "data");
 const WATCHLIST_PATH = path.join(DATA_DIR, "price-analysis-watchlist.json");
 const CACHE_PATH = path.join(DATA_DIR, "price-analysis-cache.json");
+const SCHEDULER_PATH = path.join(DATA_DIR, "price-analysis-scheduler.json");
 
 function ensureDataDir(): void {
   if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
@@ -152,4 +154,47 @@ export function mergeCacheResults(
     updatedAt: new Date().toISOString(),
     results: [...byId.values()].sort((a, b) => a.name.localeCompare(b.name, "ru")),
   };
+}
+
+function emptyScheduler(): PriceAnalysisSchedulerState {
+  return {
+    weekKey: "",
+    status: "idle",
+    cursor: 0,
+    total: 0,
+    lastBatchAt: null,
+    lastError: null,
+    lastScannedIds: [],
+  };
+}
+
+export function readScheduler(): PriceAnalysisSchedulerState {
+  if (!existsSync(SCHEDULER_PATH)) return emptyScheduler();
+  try {
+    const raw = JSON.parse(
+      readFileSync(SCHEDULER_PATH, "utf-8"),
+    ) as Partial<PriceAnalysisSchedulerState>;
+    const status =
+      raw.status === "running" || raw.status === "done" || raw.status === "idle"
+        ? raw.status
+        : "idle";
+    return {
+      weekKey: typeof raw.weekKey === "string" ? raw.weekKey : "",
+      status,
+      cursor: Number.isFinite(raw.cursor) ? Math.max(0, Number(raw.cursor)) : 0,
+      total: Number.isFinite(raw.total) ? Math.max(0, Number(raw.total)) : 0,
+      lastBatchAt: typeof raw.lastBatchAt === "string" ? raw.lastBatchAt : null,
+      lastError: typeof raw.lastError === "string" ? raw.lastError : null,
+      lastScannedIds: Array.isArray(raw.lastScannedIds)
+        ? raw.lastScannedIds.filter((id) => Number.isFinite(id)).map(Number)
+        : [],
+    };
+  } catch {
+    return emptyScheduler();
+  }
+}
+
+export function writeScheduler(state: PriceAnalysisSchedulerState): void {
+  ensureDataDir();
+  writeFileSync(SCHEDULER_PATH, JSON.stringify(state, null, 2), "utf-8");
 }

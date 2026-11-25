@@ -242,5 +242,68 @@
   "SVC Распределители питания (PDU)": {
     "action": "existing",
     "sectionId": 508
+  },
+  "MOXA Промышленные коммутаторы": {
+    "action": "existing",
+    "sectionId": 633
+  },
+  "MOXA Преобразователи RS-232/422/485 в Ethernet": {
+    "action": "existing",
+    "sectionId": 671
+  },
+  "MOXA Преобразователи среды": {
+    "action": "existing",
+    "sectionId": 674
+  },
+  "MOXA Медиаконвертеры": {
+    "action": "existing",
+    "sectionId": 518
+  },
+  "MOXA Проекты": {
+    "action": "existing",
+    "sectionId": 633
+  },
+  "MOXA Конвертеры RS-232/422/485 в USB": {
+    "action": "existing",
+    "sectionId": 672
+  },
+  "MOXA Преобразователи RS-232/422/485 в в оптику": {
+    "action": "existing",
+    "sectionId": 672
+  },
+  "MOXA Мультипортовые платы на шине PCI Express": {
+    "action": "existing",
+    "sectionId": 673
+  },
+  "MOXA Преобразователи RS-232 в RS-422/485": {
+    "action": "existing",
+    "sectionId": 672
+  },
+  "MOXA Блоки питания": {
+    "action": "existing",
+    "sectionId": 639
+  },
+  "MOXA Модули SFP": {
+    "action": "existing",
+    "sectionId": 517
+  },
+  "MOXA Преобразователи Modbus/Profibus": {
+    "action": "existing",
+    "sectionId": 673
+  },
+  "MOXA Беспроводное оборудование": {
+    "action": "existing",
+    "sectionId": 632
+  },
+  "MOXA Мультипортовые платы на шине ISA": {
+    "action": "existing",
+    "sectionId": 673
+  },
+  "MOXA Мультипортовые платы на шине Universal PCI": {
+    "action": "existing",
+    "sectionId": 673
+  },
+  "MOXA Коммутаторы/Медиаконвертеры (BY)": {
+    "action": "skip"
   }
 }

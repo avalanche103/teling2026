@@ -28,6 +28,7 @@ export function AdminMobileNav({ user }: { user: AdminNavUser }) {
   const items: NavItem[] = [
     ...(canCatalog
       ? ([
+          { href: "/admin/stats", label: "Статистика" },
           { href: "/admin/catalog", label: "Каталог" },
           { href: "/admin/products", label: "Товары" },
           { href: "/admin/content", label: "Контент" },

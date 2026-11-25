@@ -35,6 +35,10 @@ export type CatalogGroup =
   | "ups_mgmt"
   | "ups_mounts"
   | "pdu"
+  | "serial_ethernet"
+  | "serial_converters"
+  | "serial_gateways_boards"
+  | "industrial_accessories"
   | "mixed"
   | "skip";
 
@@ -75,6 +79,10 @@ export const CATALOG_SECTION_IDS = {
   ups_mgmt: 667,
   ups_mounts: 668,
   pdu: 508,
+  serial_ethernet: 671,
+  serial_converters: 672,
+  serial_gateways_boards: 673,
+  industrial_accessories: 674,
 } as const;
 
 function isUpsVendor(vendor: string): boolean {
@@ -87,12 +95,17 @@ function isUpsVendor(vendor: string): boolean {
   );
 }
 
+function isMoxaVendor(vendor: string): boolean {
+  return vendor.toLowerCase().includes("moxa");
+}
+
 function isSupportedVendor(vendor: string): boolean {
   const v = vendor.toLowerCase();
   return (
     v.includes("d-link") ||
     v.includes("origo") ||
     v.includes("aten") ||
+    isMoxaVendor(vendor) ||
     isUpsVendor(vendor)
   );
 }
@@ -192,6 +205,71 @@ export function classifyUpsBySku(
   return null;
 }
 
+function classifyMoxaPriceSection(title: string): CatalogGroup {
+  const t = title.toLowerCase();
+  if (t.includes("(by)")) return "skip";
+  if (t.includes("проект")) return "mixed";
+  if (t.includes("промышленн") && t.includes("коммутатор")) return "mixed";
+  if (t.includes("беспровод")) return "mixed";
+  if (t.includes("ethernet") && (t.includes("rs-232") || t.includes("rs232"))) {
+    return "serial_ethernet";
+  }
+  if (t.includes("преобразовател") && t.includes("сред")) return "industrial_accessories";
+  if (t.includes("медиаконверт")) return "media_converters";
+  if (t.includes("usb")) return "serial_converters";
+  if (t.includes("оптик")) return "serial_converters";
+  if (t.includes("rs-232") && (t.includes("rs-422") || t.includes("rs-485"))) {
+    return "serial_converters";
+  }
+  if (t.includes("modbus") || t.includes("profibus")) return "serial_gateways_boards";
+  if (t.includes("плат") || t.includes("pci") || t.includes("isa")) {
+    return "serial_gateways_boards";
+  }
+  if (t.includes("блок") && t.includes("питан")) return "power_supplies";
+  if (t.includes("sfp") || (t.includes("модул") && t.includes("sfp"))) return "modules";
+  return "skip";
+}
+
+export function classifyMoxaBySku(
+  articul: string,
+  name: string,
+  sectionTitle = "",
+): CatalogGroup | null {
+  const a = (articul || "").toUpperCase().replace(/\s+/g, " ").trim();
+  const compact = a.replace(/\s+/g, "");
+  const n = (name || "").toLowerCase();
+  const t = (sectionTitle || "").toLowerCase();
+  const hay = `${n} ${t}`;
+
+  if (/^NPORT/i.test(a) || /^NPORT/i.test(compact)) return "serial_ethernet";
+  if (/^UPORT/i.test(a) || /^UPORT/i.test(compact)) return "serial_converters";
+  if (/^ICF/i.test(compact)) return "serial_converters";
+  if (/^TCC/i.test(compact)) return "serial_converters";
+  if (/^MGATE/i.test(a) || /^MGATE/i.test(compact)) return "serial_gateways_boards";
+  if (/^IOLOGIK/i.test(a) || /^IOLOGIK/i.test(compact)) return "serial_gateways_boards";
+  if (/^(CP-|CI-)/i.test(compact)) return "serial_gateways_boards";
+  if (
+    /^(CBL-|CN\d|DK35|WK-|RK-|M12|MINIDB)/i.test(compact) ||
+    /кабел|креплен|монтажн|разъем|разъём|din rail/.test(hay)
+  ) {
+    return "industrial_accessories";
+  }
+  if (/^IMC/i.test(compact) || /медиаконверт/.test(hay)) return "media_converters";
+  if (/^SFP-/i.test(compact) || (/модуль/.test(n) && /sfp/.test(hay))) return "modules";
+  if (/^(DR-|DRP-|HDR-)/i.test(compact) || (/блок/.test(n) && /питан/.test(n))) {
+    return "power_supplies";
+  }
+  if (/^ANT/i.test(compact) || /антенн/.test(n)) return "wireless";
+  if (/^EDR|^ONCELL/i.test(compact) || /маршрут/.test(n)) return "routers";
+  if (
+    /^(EDS|IKS|SDS|PT-|TN-|TRS)/i.test(compact) ||
+    /коммутатор|ethernet switch/.test(hay)
+  ) {
+    return "switches";
+  }
+  return null;
+}
+
 export function classifyPriceSection(title: string, vendor: string): CatalogGroup {
   const t = title.toLowerCase();
   const v = vendor.toLowerCase();
@@ -199,6 +277,10 @@ export function classifyPriceSection(title: string, vendor: string): CatalogGrou
 
   if (isUpsVendor(vendor)) {
     return classifyUpsPriceSection(title, vendor);
+  }
+
+  if (isMoxaVendor(vendor)) {
+    return classifyMoxaPriceSection(title);
   }
 
   if (v.includes("aten")) {
@@ -283,6 +365,11 @@ function classifyBySku(articul: string, name: string, sectionTitle = ""): Catalo
   const upsHit = classifyUpsBySku(articul, name, sectionTitle);
   if (upsHit) return upsHit;
 
+  const moxaHit = classifyMoxaBySku(articul, name, sectionTitle);
+  if (moxaHit && (/moxa/i.test(sectionTitle) || /moxa/i.test(name) || /^(NPORT|UPORT|MGATE|IOLOGIK|ICF|TCC|EDS|IKS|IMC|SFP-|EDR|ONCELL|CP-|CI-|CBL-)/i.test(base.replace(/\s+/g, "")))) {
+    return moxaHit;
+  }
+
   const atenHit = classifyAtenBySku(articul, name, sectionTitle);
   if (atenHit && (/^(CS|CL|CE|KE|KH|KN|KA|UC|UH|UCE|UE|UEH|2L|2X|2A|VE|VM|VS|VC)/.test(base) || /aten/i.test(sectionTitle))) {
     return atenHit;
@@ -314,8 +401,10 @@ function classifyBySku(articul: string, name: string, sectionTitle = ""): Catalo
     return "power_supplies";
   }
   if (/маршрут/.test(n)) return "routers";
+  // UPort / industrial USB-serial stay in MOXA serial converters, not generic USB.
+  if (moxaHit === "serial_converters") return moxaHit;
   if (/usb|док-станц|хаб|dock/.test(n)) return "usb";
-  return atenHit;
+  return moxaHit || atenHit;
 }
 
 /** DEM-CB / OFM-CB / DAC / stacking / direct-attach copper interconnects. */
@@ -376,6 +465,13 @@ const UPS_SECTION_GROUPS = new Set<CatalogGroup>([
   "pdu",
 ]);
 
+const MOXA_SECTION_GROUPS = new Set<CatalogGroup>([
+  "serial_ethernet",
+  "serial_converters",
+  "serial_gateways_boards",
+  "industrial_accessories",
+]);
+
 /**
  * Product-level resolve. Homogeneous price headers keep their section group;
  * wireless splits routers/adapters; mixed headers use SKU heuristics.
@@ -388,6 +484,25 @@ export function classifyProductGroup(
   vendor: string,
 ): CatalogGroup {
   const sectionGroup = classifyPriceSection(sectionTitle, vendor);
+
+  if (isMoxaVendor(vendor)) {
+    if (sectionGroup === "mixed" || sectionGroup === "skip") {
+      return classifyMoxaBySku(articul, name, sectionTitle) || "skip";
+    }
+    // Homogeneous MOXA serial headers win; still peel SFP/PSU misfiles from switch-like bags.
+    if (!MOXA_SECTION_GROUPS.has(sectionGroup)) {
+      const accessory = classifyAccessoryOverride(articul, name);
+      if (accessory) return accessory;
+      // Industrial switch headers can still contain a router SKU via override above only.
+      if (sectionGroup === "switches" || sectionGroup === "media_converters") {
+        const bySku = classifyMoxaBySku(articul, name, sectionTitle);
+        if (bySku === "routers" || bySku === "modules" || bySku === "power_supplies") {
+          return bySku;
+        }
+      }
+    }
+    return sectionGroup;
+  }
 
   if (sectionGroup === "wireless") {
     const bySku = classifyBySku(articul, name, sectionTitle);
@@ -488,11 +603,23 @@ export function defaultActionForSection(
       return { action: "existing", sectionId: CATALOG_SECTION_IDS.ups_mounts };
     case "pdu":
       return { action: "existing", sectionId: CATALOG_SECTION_IDS.pdu };
+    case "serial_ethernet":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.serial_ethernet };
+    case "serial_converters":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.serial_converters };
+    case "serial_gateways_boards":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.serial_gateways_boards };
+    case "industrial_accessories":
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.industrial_accessories };
     case "mixed":
       // Placeholder: products re-resolved per SKU in sync.
-      return isUpsVendor(vendor)
-        ? { action: "existing", sectionId: CATALOG_SECTION_IDS.ups }
-        : { action: "existing", sectionId: CATALOG_SECTION_IDS.wireless };
+      if (isUpsVendor(vendor)) {
+        return { action: "existing", sectionId: CATALOG_SECTION_IDS.ups };
+      }
+      if (isMoxaVendor(vendor)) {
+        return { action: "existing", sectionId: CATALOG_SECTION_IDS.switches };
+      }
+      return { action: "existing", sectionId: CATALOG_SECTION_IDS.wireless };
     default:
       return { action: "skip" };
   }

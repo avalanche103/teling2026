@@ -11,8 +11,14 @@ import {
 } from "react";
 import { formatPrice, formatPriceValue } from "@/lib/format";
 import { splitVat } from "@/lib/microinform/pricing";
-import type { PriceAnalysisProductResult, SerpHit } from "@/lib/price-analysis/types";
+import type {
+  PriceAnalysisProductResult,
+  PriceAnalysisSchedulerStatus,
+  SerpHit,
+} from "@/lib/price-analysis/types";
 import type { ProductSummary } from "@/lib/types";
+
+const LAST_VISIT_KEY = "teling.priceAnalysis.lastVisitAt";
 
 interface WatchlistItem {
   id: number;
@@ -26,12 +32,65 @@ interface WatchlistItem {
   sectionName: string;
 }
 
+interface SchedulerStatus {
+  weekKey: string;
+  status: PriceAnalysisSchedulerStatus;
+  cursor: number;
+  total: number;
+  lastBatchAt: string | null;
+  lastError: string | null;
+  batchSize: number;
+  currentWeekKey: string;
+}
+
 interface DraftMap {
   [productId: number]: string;
 }
 
+function schedulerStatusLabel(status: PriceAnalysisSchedulerStatus): string {
+  if (status === "running") return "идёт";
+  if (status === "done") return "готово";
+  return "ожидание";
+}
+
 function engineLabel(engine: string): string {
   return engine === "yandex" ? "Яндекс" : engine === "google" ? "Google" : engine;
+}
+
+/** SERP min; legacy rows (pre-Onliner) stored it only as suggestedPrice. */
+function serpMinOf(row: PriceAnalysisProductResult | undefined): number | null {
+  if (!row) return null;
+  if (row.serpMinPrice != null) return row.serpMinPrice;
+  if (row.onlinerMinPrice == null && !row.onlinerUrl && row.suggestedPrice != null) {
+    return row.suggestedPrice;
+  }
+  return null;
+}
+
+function OnlinerPriceCell({ row }: { row: PriceAnalysisProductResult | undefined }) {
+  if (!row || row.onlinerMinPrice == null) {
+    return <span className="text-slate-400">—</span>;
+  }
+  const label = formatPriceValue(row.onlinerMinPrice);
+  if (row.onlinerUrl) {
+    return (
+      <a
+        href={row.onlinerUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="tabular-nums text-sky-700 hover:underline"
+        title={row.onlinerMatchedName || "Onliner"}
+      >
+        {label}
+        {row.onlinerOffers != null ? (
+          <span className="ml-1 text-[10px] font-normal text-slate-500">
+            ({row.onlinerOffers})
+          </span>
+        ) : null}
+      </a>
+    );
+  }
+  return <span className="tabular-nums">{label}</span>;
 }
 
 function renderHighlightedText(text: string, query: string) {
@@ -58,6 +117,8 @@ export function PriceAnalysisPanel() {
   const [results, setResults] = useState<PriceAnalysisProductResult[]>([]);
   const [configured, setConfigured] = useState(true);
   const [cacheUpdatedAt, setCacheUpdatedAt] = useState<string | null>(null);
+  const [scheduler, setScheduler] = useState<SchedulerStatus | null>(null);
+  const [lastVisitAt, setLastVisitAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [scanning, setScanning] = useState(false);
   const [savingId, setSavingId] = useState<number | null>(null);
@@ -74,6 +135,7 @@ export function PriceAnalysisPanel() {
   const [suggestLoading, setSuggestLoading] = useState(false);
   const [activeSuggest, setActiveSuggest] = useState(-1);
   const searchRootRef = useRef<HTMLDivElement>(null);
+  const visitSavedRef = useRef(false);
 
   const load = useCallback(async () => {
     setError(null);
@@ -89,11 +151,13 @@ export function PriceAnalysisPanel() {
         configured: boolean;
         updatedAt: string | null;
         results: PriceAnalysisProductResult[];
+        scheduler?: SchedulerStatus;
       };
       setWatchItems(wJson.items || []);
       setResults(rJson.results || []);
       setConfigured(Boolean(rJson.configured));
       setCacheUpdatedAt(rJson.updatedAt);
+      setScheduler(rJson.scheduler ?? null);
       setDrafts((prev) => {
         const next = { ...prev };
         for (const row of rJson.results || []) {
@@ -111,8 +175,46 @@ export function PriceAnalysisPanel() {
   }, []);
 
   useEffect(() => {
+    try {
+      setLastVisitAt(window.localStorage.getItem(LAST_VISIT_KEY));
+    } catch {
+      setLastVisitAt(null);
+    }
     void load();
   }, [load]);
+
+  const markVisit = useCallback(() => {
+    const now = new Date().toISOString();
+    try {
+      window.localStorage.setItem(LAST_VISIT_KEY, now);
+    } catch {
+      /* ignore quota / private mode */
+    }
+    visitSavedRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    // Persist visit after first paint so highlight uses the previous value this session.
+    const t = window.setTimeout(() => markVisit(), 800);
+    const onHide = () => markVisit();
+    document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("beforeunload", onHide);
+    return () => {
+      window.clearTimeout(t);
+      document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("beforeunload", onHide);
+      if (!visitSavedRef.current) markVisit();
+    };
+  }, [loading, markVisit]);
+
+  const isUpdatedSinceVisit = useCallback(
+    (scannedAt: string | undefined) => {
+      if (!scannedAt || !lastVisitAt) return false;
+      return new Date(scannedAt).getTime() > new Date(lastVisitAt).getTime();
+    },
+    [lastVisitAt],
+  );
 
   const resultById = useMemo(() => {
     const map = new Map<number, PriceAnalysisProductResult>();
@@ -429,6 +531,28 @@ export function PriceAnalysisPanel() {
         </div>
       )}
 
+      {scheduler && (
+        <section className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm">
+          <h2 className="text-sm font-semibold text-slate-900">Автоскан (неделя)</h2>
+          <p className="mt-1 text-xs text-slate-600">
+            Неделя {scheduler.weekKey || scheduler.currentWeekKey || "—"} · статус{" "}
+            <span className="font-medium text-slate-800">
+              {schedulerStatusLabel(scheduler.status)}
+            </span>
+            {" · "}
+            прогресс {Math.min(scheduler.cursor, scheduler.total)}/
+            {scheduler.total || watchItems.length}
+            {scheduler.batchSize ? ` (по ${scheduler.batchSize})` : ""}
+            {scheduler.lastBatchAt
+              ? ` · последняя партия ${new Date(scheduler.lastBatchAt).toLocaleString("ru-RU")}`
+              : ""}
+          </p>
+          {scheduler.lastError && (
+            <p className="mt-1 text-xs text-amber-700">Ошибка: {scheduler.lastError}</p>
+          )}
+        </section>
+      )}
+
       <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="text-sm font-semibold text-slate-900">Добавить в мониторинг</h2>
         <p className="mt-1 text-xs text-slate-500">
@@ -542,6 +666,7 @@ export function PriceAnalysisPanel() {
               {watchItems.map((item) => {
                 const row = resultById.get(item.id);
                 const cost = item.costPrice ?? row?.costPrice ?? null;
+                const serpMin = serpMinOf(row);
                 const draft =
                   drafts[item.id] ??
                   (row?.suggestedPrice != null ? String(row.suggestedPrice) : "");
@@ -557,11 +682,16 @@ export function PriceAnalysisPanel() {
                   row.validPrices.length === 0 &&
                   row.hits.length > 0;
                 const isOpen = Boolean(expanded[item.id]);
+                const updated = isUpdatedSinceVisit(row?.scannedAt);
 
                 return (
                   <article
                     key={item.id}
-                    className="rounded-xl border border-slate-200 bg-slate-50/50 p-3"
+                    className={`rounded-xl border p-3 ${
+                      updated
+                        ? "border-sky-200 bg-sky-50/80"
+                        : "border-slate-200 bg-slate-50/50"
+                    }`}
                   >
                     <div className="flex items-start gap-2">
                       <input
@@ -573,7 +703,14 @@ export function PriceAnalysisPanel() {
                         }
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium text-slate-900">{item.name}</p>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-medium text-slate-900">{item.name}</p>
+                          {updated && (
+                            <span className="rounded bg-sky-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-sky-800">
+                              Обновлено
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-slate-500">
                           {item.sku}
                           {item.supplier ? ` · ${item.supplier}` : ""}
@@ -594,11 +731,15 @@ export function PriceAnalysisPanel() {
                         </dd>
                       </div>
                       <div>
+                        <dt className="text-xs text-slate-500">Onliner</dt>
+                        <dd>
+                          <OnlinerPriceCell row={row} />
+                        </dd>
+                      </div>
+                      <div>
                         <dt className="text-xs text-slate-500">Min сниппет</dt>
                         <dd className="tabular-nums">
-                          {row?.suggestedPrice != null
-                            ? formatPriceValue(row.suggestedPrice)
-                            : "—"}
+                          {serpMin != null ? formatPriceValue(serpMin) : "—"}
                         </dd>
                       </div>
                       <div>
@@ -687,6 +828,7 @@ export function PriceAnalysisPanel() {
                     <th className="px-2 py-2">Товар</th>
                     <th className="px-2 py-2">Себестоимость</th>
                     <th className="px-2 py-2">Наша цена</th>
+                    <th className="px-2 py-2">Onliner</th>
                     <th className="px-2 py-2">Min сниппет</th>
                     <th className="px-2 py-2">Находки</th>
                     <th className="px-2 py-2">Предложенная</th>
@@ -698,6 +840,7 @@ export function PriceAnalysisPanel() {
                     const row = resultById.get(item.id);
                     const cost = item.costPrice ?? row?.costPrice ?? null;
                     const ourPrice = item.price;
+                    const serpMin = serpMinOf(row);
                     const draft =
                       drafts[item.id] ??
                       (row?.suggestedPrice != null ? String(row.suggestedPrice) : "");
@@ -713,10 +856,11 @@ export function PriceAnalysisPanel() {
                       row.validPrices.length === 0 &&
                       row.hits.length > 0;
                     const isOpen = Boolean(expanded[item.id]);
+                    const updated = isUpdatedSinceVisit(row?.scannedAt);
 
                     return (
                       <Fragment key={item.id}>
-                        <tr className="align-top">
+                        <tr className={`align-top ${updated ? "bg-sky-50/90" : ""}`}>
                           <td className="px-2 py-3">
                             <input
                               type="checkbox"
@@ -730,8 +874,13 @@ export function PriceAnalysisPanel() {
                             />
                           </td>
                           <td className="px-2 py-3">
-                            <div className="max-w-[280px] font-medium text-slate-900">
-                              {item.name}
+                            <div className="flex max-w-[280px] flex-wrap items-center gap-2 font-medium text-slate-900">
+                              <span>{item.name}</span>
+                              {updated && (
+                                <span className="rounded bg-sky-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-sky-800">
+                                  Обновлено
+                                </span>
+                              )}
                             </div>
                             <div className="text-xs text-slate-500">
                               {item.sku}
@@ -752,10 +901,11 @@ export function PriceAnalysisPanel() {
                           <td className="px-2 py-3 tabular-nums text-slate-900">
                             {formatPriceValue(ourPrice)}
                           </td>
+                          <td className="px-2 py-3">
+                            <OnlinerPriceCell row={row} />
+                          </td>
                           <td className="px-2 py-3 tabular-nums">
-                            {row?.suggestedPrice != null
-                              ? formatPriceValue(row.suggestedPrice)
-                              : "—"}
+                            {serpMin != null ? formatPriceValue(serpMin) : "—"}
                           </td>
                           <td className="px-2 py-3">
                             {row ? (
@@ -821,7 +971,7 @@ export function PriceAnalysisPanel() {
                         </tr>
                         {isOpen && row && (
                           <tr>
-                            <td colSpan={8} className="bg-slate-50 px-4 py-3">
+                            <td colSpan={9} className="bg-slate-50 px-4 py-3">
                               <SnippetsList hits={row.hits} query={row.query} />
                             </td>
                           </tr>

@@ -59,6 +59,16 @@ import {
   ROUTER_SELECTED_FILTERS,
   WIRELESS_SELECTED_FILTERS,
 } from "./wireless-group";
+import {
+  INDUSTRIAL_ACCESSORIES_SELECTED_FILTERS,
+  refineIndustrialAccessoriesCharGroups,
+  refineSerialConvertersCharGroups,
+  refineSerialEthernetCharGroups,
+  refineSerialGatewaysBoardsCharGroups,
+  SERIAL_CONVERTERS_SELECTED_FILTERS,
+  SERIAL_ETHERNET_SELECTED_FILTERS,
+  SERIAL_GATEWAYS_BOARDS_SELECTED_FILTERS,
+} from "./moxa-group";
 
 export type ActiveNetworkGroup = Exclude<CatalogGroup, "mixed" | "skip">;
 
@@ -103,6 +113,10 @@ const REFINERS: Record<ActiveNetworkGroup, RefineFn> = {
   ups_mgmt: refineUpsMgmtCharGroups,
   ups_mounts: refineUpsMountCharGroups,
   pdu: refinePduCharGroups,
+  serial_ethernet: refineSerialEthernetCharGroups,
+  serial_converters: refineSerialConvertersCharGroups,
+  serial_gateways_boards: refineSerialGatewaysBoardsCharGroups,
+  industrial_accessories: refineIndustrialAccessoriesCharGroups,
 };
 
 export const SELECTED_FILTERS_BY_GROUP: Record<ActiveNetworkGroup, string[]> = {
@@ -139,6 +153,10 @@ export const SELECTED_FILTERS_BY_GROUP: Record<ActiveNetworkGroup, string[]> = {
   ups_mgmt: UPS_ACCESSORY_SELECTED_FILTERS,
   ups_mounts: UPS_ACCESSORY_SELECTED_FILTERS,
   pdu: PDU_SELECTED_FILTERS,
+  serial_ethernet: SERIAL_ETHERNET_SELECTED_FILTERS,
+  serial_converters: SERIAL_CONVERTERS_SELECTED_FILTERS,
+  serial_gateways_boards: SERIAL_GATEWAYS_BOARDS_SELECTED_FILTERS,
+  industrial_accessories: INDUSTRIAL_ACCESSORIES_SELECTED_FILTERS,
 };
 
 const SECTION_ID_TO_GROUP = new Map<number, ActiveNetworkGroup>(

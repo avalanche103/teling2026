@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-22T09:27:07.339Z",
+  "builtAt": "2026-11-25T21:23:17.821Z",
   "entries": [
     {
       "vendor": "D-Link",
@@ -385,6 +385,20 @@
       "url": "https://dlink.ru/ru/products/1/2455.html",
       "subtitle": "Коммутатор с 48 портами 10/100/1000Base-T и 4 комбо-портами 100/1000Base-T/SFP",
       "listingImage": "https://dlink.ru/up/prod/min/DGS-1052_A1_x.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1006P",
+      "url": "https://dlink.ru/ru/products/1/2811.html",
+      "subtitle": "Конфигурируемый коммутатор с 6 портами 10/100Base-TX и DIP-переключателем (4 порта PoE 802.3af/at, PoE-бюджет 58 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1006P_prev.jpg"
+    },
+    {
+      "vendor": "D-Link",
+      "model": "DES-1010P",
+      "url": "https://dlink.ru/ru/products/1/2810.html",
+      "subtitle": "Конфигурируемый коммутатор с 8 портами 10/100Base-TX, 2 портами 10/100/1000Base-T и DIP-переключателем (8 портов PoE 802.3af/at, PoE-бюджет 90 Вт, дальность до 250 м)",
+      "listingImage": "https://dlink.ru/up/prod/min/DES-1010P_prev.jpg"
     },
     {
       "vendor": "D-Link",
