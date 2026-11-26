@@ -27,6 +27,7 @@ import {
 } from "./chars";
 import { downloadFileViaCurl, fetchTextWithCurlFallback } from "./http-fetch";
 import { processMicroinformPackshot } from "./knockout-bg";
+import { fetchMoxaEnglishImageUrls } from "./moxa-en-images";
 
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
@@ -183,6 +184,9 @@ function scoreProductImage(url: string): number {
   } else if (/moxa\.ru\/images\/cms\//i.test(u)) {
     // NNZ moxa.ru Bitrix import packshots.
     score += 200;
+  } else if (/azurefd\.net|cdn-cms.*moxa|getattachment/i.test(u) && !/logo|icon|cybersecurity/i.test(u)) {
+    // Official moxa.com CDN packshots (EN site — images only).
+    score += /moxa-[a-z0-9-]+-image/i.test(u) ? 240 : 200;
   } else if (/moxa\.com\.ua\/.+\.(jpe?g|png|webp)/i.test(u) && !u.includes("menu") && !u.includes("logo")) {
     // Prefer product folder shots (…/products/…/IMC-101_s.jpg) over news banners.
     score += /\/products\//i.test(u) ? 210 : 120;
@@ -219,6 +223,7 @@ function minImageBytes(url: string): number {
   if (/static\.systeme\.ru\/catalog\/images\//i.test(url)) return 4_000;
   if (/svc\.ru/i.test(url)) return 4_000;
   if (/moxa\.ru\/images\/cms\//i.test(url)) return 4_000;
+  if (/azurefd\.net|getattachment/i.test(url)) return 4_000;
   if (/moxa\.com\.ua\//i.test(url)) return 4_000;
   return 12_000;
 }
@@ -912,6 +917,81 @@ export async function enrichProduct(
       charCount: 0,
     };
   }
+}
+
+/**
+ * Replace MOXA packshots from moxa.com (EN). Keeps Russian description/chars intact.
+ */
+export async function enrichMoxaEnglishImages(product: ProductRaw): Promise<{
+  product: ProductRaw;
+  ok: boolean;
+  error?: string;
+  imagesDownloaded: number;
+  pageUrl: string | null;
+}> {
+  const articul = product.metadata?.articul || product.sku;
+  const priceUrl = product.metadata?.url || "";
+  const { pageUrl, imageUrls } = await fetchMoxaEnglishImageUrls(articul, priceUrl);
+  if (!pageUrl) {
+    return { product, ok: false, error: "no-en-url", imagesDownloaded: 0, pageUrl: null };
+  }
+  if (!imageUrls.length) {
+    return { product, ok: false, error: "no-en-images", imagesDownloaded: 0, pageUrl };
+  }
+
+  if (!existsSync(PUBLIC_IMAGES_DIR)) {
+    mkdirSync(PUBLIC_IMAGES_DIR, { recursive: true });
+  }
+  clearLocalSkuImages(product.sku);
+
+  let imagesDownloaded = 0;
+  const localPictureUrls: string[] = [];
+  for (const imageUrl of imageUrls) {
+    const ext = extensionFromUrl(imageUrl);
+    const seq = localPictureUrls.length + 1;
+    const rawFilename = `${product.sku}_${seq}${ext}`;
+    const dest = path.join(PUBLIC_IMAGES_DIR, rawFilename);
+    const ok = await downloadImage(imageUrl, dest);
+    if (!ok) continue;
+    try {
+      const size = statSync(dest).size;
+      if (size < minImageBytes(imageUrl)) {
+        unlinkSync(dest);
+        continue;
+      }
+    } catch {
+      continue;
+    }
+
+    let localUrl = `/images/${encodeURIComponent(rawFilename)}`;
+    try {
+      const webpPath = await processMicroinformPackshot(dest);
+      localUrl = `/images/${encodeURIComponent(path.basename(webpPath))}`;
+    } catch {
+      /* keep opaque download */
+    }
+    imagesDownloaded += 1;
+    localPictureUrls.push(localUrl);
+  }
+
+  if (!localPictureUrls.length) {
+    return { product, ok: false, error: "download-failed", imagesDownloaded: 0, pageUrl };
+  }
+
+  return {
+    product: {
+      ...product,
+      metadata: {
+        ...product.metadata,
+        pictures: localPictureUrls,
+        // Keep RU description URL as-is; store EN packshot source separately.
+        moxa_en_url: pageUrl,
+      },
+    },
+    ok: true,
+    imagesDownloaded,
+    pageUrl,
+  };
 }
 
 export interface EnrichBatchResult {

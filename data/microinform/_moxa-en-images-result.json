@@ -1,0 +1,171 @@
+{
+  "processed": 178,
+  "ok": 73,
+  "failed": 105,
+  "images": 275,
+  "withPics": 154,
+  "withEn": 114,
+  "total": 208,
+  "errors": [
+    {
+      "articul": "ANT-WSB-ANF-09",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "IMC-21GA-LX-SC-T",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "ME51-S-SC",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "EDR-G9010-VPN-2MGSFP-HV",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CBL-F9M9-150",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CBL-F9M9-20",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CBL-M23(FF6P)/OPEN-BK-100 IP67",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CBL-M62M9x8-100",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CBL-M68M9x8-100",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CBL-M68M9x8-BK-100",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CBL-M78M9x8-100",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CBL-RJ45F9-150",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CBL-RJ45SM9-150",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "CN20070",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "DK35A",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "M12D-4P-IP68",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "Mini DB9F-to-TB",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "RK-4U",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "WK-35-04",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "WK-45-01",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "WK-46",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "WK-51-01",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "DR-120-48",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "DR-4524",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "DR-75-48",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "DRP-240-48",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "HDR-60-24",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "MDR-60-24",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "PWR-05200-EU-S1",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "PWR-12050-EU-S1",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "PWR-HV-P48",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "UPort 1150",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "UPort 1150I",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "UPort 1250I-G2",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "UPort 1450-G2",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "UPort 1450I-G2",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "UPort 404A-T",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "SFP-1FEMLC-T",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "SFP-1FESLC-T",
+      "error": "no-en-url"
+    },
+    {
+      "articul": "SFP-1GLSXLC",
+      "error": "no-en-url"
+    }
+  ]
+}

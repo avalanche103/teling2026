@@ -89,6 +89,8 @@ export interface ProductRaw {
      * Admin-only reference; never shown on the public site.
      */
     cost_price?: number | null;
+    /** moxa.com product page used as English packshot source (descriptions stay RU). */
+    moxa_en_url?: string;
   };
 }
 
