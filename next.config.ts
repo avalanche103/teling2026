@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Permanent redirects for renamed catalog section slugs (preserve SEO equity).
+  async redirects() {
+    return [
+      {
+        source: "/catalog/stroitelstvo-obshchegorodskikh-i-zagorodnykh-obektov",
+        destination: "/catalog/montazh-strukturirovannykh-kabelnykh-sistem",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     // Allow external images from supplier host.
     remotePatterns: [
