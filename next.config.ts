@@ -34,6 +34,21 @@ const nextConfig: NextConfig = {
         hostname: "www.ssd.ru",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "c-tt.shop",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.kiwitech.ru",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "kiwitech.ru",
+        pathname: "/**",
+      },
     ],
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200],

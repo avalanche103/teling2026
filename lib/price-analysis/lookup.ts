@@ -1,4 +1,6 @@
 import type { ProductRaw } from "@/lib/types";
+import { CONCEPT_ID_MIN } from "@/lib/concept/sku";
+import { readConceptProducts } from "@/lib/concept/store";
 import { readMicroinformProducts } from "@/lib/microinform/store";
 import type { PriceAnalysisWatchlistItem } from "./types";
 
@@ -10,13 +12,22 @@ function productName(product: ProductRaw): string {
   return product.original_name || product.sku || `ID ${product.id}`;
 }
 
+function inferSupplier(product: ProductRaw): PriceAnalysisWatchlistItem["supplier"] {
+  if (product.supplier === "concept" || product.supplier === "microinform" || product.supplier === "ssd") {
+    return product.supplier;
+  }
+  if (product.id >= CONCEPT_ID_MIN) return "concept";
+  if (product.id >= 2_000_000) return "microinform";
+  return null;
+}
+
 function toWatchlistItem(product: ProductRaw): PriceAnalysisWatchlistItem {
   const cost = product.metadata?.cost_price;
   return {
     id: product.id,
     sku: product.sku || "",
     name: productName(product),
-    supplier: product.supplier || (product.id >= 2_000_000 ? "microinform" : null),
+    supplier: inferSupplier(product),
     price: product.price,
     priceWithoutVat: product.price_without_vat,
     costPrice:
@@ -29,7 +40,7 @@ function toWatchlistItem(product: ProductRaw): PriceAnalysisWatchlistItem {
 
 /**
  * Resolve a product for the watchlist without parsing the 100MB+ SSD catalog.
- * Microinform (id >= 2e6): read only products.microinform.json (~6MB).
+ * Concept (id >= 3e6) / Microinform (id >= 2e6): read dedicated JSON files.
  * SSD: use client hint; cost_price is typically absent.
  */
 export function resolveWatchlistItem(
@@ -44,7 +55,17 @@ export function resolveWatchlistItem(
 ): PriceAnalysisWatchlistItem | null {
   if (!Number.isFinite(id) || id <= 0) return null;
 
-  // Prefer Microinform file for MI ids (and also try it for any id in case of overlap).
+  if (id >= CONCEPT_ID_MIN) {
+    try {
+      const found = readConceptProducts().find((p) => p.id === id);
+      if (found) {
+        return toWatchlistItem({ ...found, supplier: found.supplier || "concept" });
+      }
+    } catch {
+      /* fall through */
+    }
+  }
+
   try {
     const mi = readMicroinformProducts();
     const found = mi.find((p) => p.id === id);
@@ -65,7 +86,8 @@ export function resolveWatchlistItem(
       id,
       sku: (hint.sku || "").trim(),
       name: (hint.name || hint.sku || `ID ${id}`).trim(),
-      supplier: id >= 2_000_000 ? "microinform" : "ssd",
+      supplier:
+        id >= CONCEPT_ID_MIN ? "concept" : id >= 2_000_000 ? "microinform" : "ssd",
       price,
       priceWithoutVat: price > 0 ? Number((price / 1.2).toFixed(2)) : 0,
       costPrice: null,
@@ -80,13 +102,19 @@ export function resolveWatchlistItem(
 
 /** Minimal ProductRaw for SERP scan from a stored watchlist snapshot. */
 export function watchlistItemToProductRaw(item: PriceAnalysisWatchlistItem): ProductRaw {
+  const supplier =
+    item.supplier === "microinform" ||
+    item.supplier === "ssd" ||
+    item.supplier === "concept"
+      ? item.supplier
+      : undefined;
   return {
     id: item.id,
     name: item.name,
     original_name: item.name,
     custom_name: null,
     sku: item.sku,
-    supplier: item.supplier === "microinform" || item.supplier === "ssd" ? item.supplier : undefined,
+    supplier,
     visible: true,
     section_id: 0,
     section_name: item.sectionName,

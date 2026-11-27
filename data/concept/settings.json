@@ -1,0 +1,8 @@
+{
+  "usdToBynRate": 3,
+  "markupPercent": 15,
+  "enabledBrands": [
+    "KIWI",
+    "EXFO"
+  ]
+}

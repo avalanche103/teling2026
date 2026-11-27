@@ -38,6 +38,43 @@ VAT_RATE = Decimal("0.20")
 BYN_CURRENCY_SYMBOL = "Br"
 BYN_CURRENCY_CODE = "BYN"
 
+# Brands supplied by Concept Technology — never export from SSD.
+BLOCKED_EXPORT_BRANDS = frozenset({"KIWI", "EXFO"})
+
+
+def normalize_brand_token(value: Any) -> str:
+    return str(value or "").strip().upper()
+
+
+def is_blocked_export_brand(
+    vendor: Any = None,
+    metadata: Any = None,
+    name: Any = None,
+) -> bool:
+    """True when product must come from Concept Technology, not SSD."""
+    meta = metadata if isinstance(metadata, dict) else {}
+    if isinstance(metadata, str):
+        try:
+            meta = json.loads(metadata) if metadata else {}
+        except Exception:
+            meta = {}
+    brand = normalize_brand_token(meta.get("brand") if isinstance(meta, dict) else "")
+    vend = normalize_brand_token(vendor)
+    for token in (brand, vend):
+        if token in BLOCKED_EXPORT_BRANDS:
+            return True
+        for blocked in BLOCKED_EXPORT_BRANDS:
+            if token.startswith(f"{blocked} "):
+                return True
+    blob = normalize_brand_token(name)
+    if not blob:
+        return False
+    if "EXFO" in blob.split() or blob.startswith("EXFO"):
+        return True
+    if "KIWI" in blob.split() or "KIWI-" in blob:
+        return True
+    return False
+
 
 def get_default_rub_to_byn_rate() -> Decimal:
     """Вернуть курс по умолчанию: из env или константа."""

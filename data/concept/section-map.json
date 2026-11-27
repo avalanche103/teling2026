@@ -1,0 +1,54 @@
+{
+  "Измерительное оборудование для ADSL линий": {
+    "action": "existing",
+    "sectionId": 676
+  },
+  "Оптическое измерительное оборудование": {
+    "action": "existing",
+    "sectionId": 490
+  },
+  "Универсальные тестеры оптика+витая пара": {
+    "action": "existing",
+    "sectionId": 490
+  },
+  "Оптические рефлектометры": {
+    "action": "existing",
+    "sectionId": 489
+  },
+  "Радиочастотные анализаторы": {
+    "action": "existing",
+    "sectionId": 680
+  },
+  "Оптические сварки и акксессуары": {
+    "action": "existing",
+    "sectionId": 487
+  },
+  "Инструменты для монтажа ВОЛС": {
+    "action": "existing",
+    "sectionId": 485
+  },
+  "EXFO": {
+    "action": "existing",
+    "sectionId": 489
+  },
+  "Анализаторы потоков E1": {
+    "action": "existing",
+    "sectionId": 675
+  },
+  "Анализаторы Gigabit Ethernet": {
+    "action": "existing",
+    "sectionId": 677
+  },
+  "Анализаторы 10G Ethernet": {
+    "action": "existing",
+    "sectionId": 678
+  },
+  "Модули SFP": {
+    "action": "existing",
+    "sectionId": 517
+  },
+  "Модули SFP+": {
+    "action": "existing",
+    "sectionId": 517
+  }
+}

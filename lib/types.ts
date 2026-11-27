@@ -36,7 +36,7 @@ export interface ProductDocument {
   url: string;
 }
 
-export type ProductSupplier = "ssd" | "microinform";
+export type ProductSupplier = "ssd" | "microinform" | "concept";
 
 export interface ProductRaw {
   id: number;

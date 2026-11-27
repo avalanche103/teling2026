@@ -2168,22 +2168,6 @@
     }
   },
   {
-    "id": 477,
-    "name": "Приборы для СКС",
-    "parent": 296,
-    "external_id": "pribory_dlya_sks",
-    "metadata": {
-      "id": 477,
-      "name": "Приборы для СКС",
-      "sort": 1007,
-      "code": "pribory_dlya_sks",
-      "url": "https://ssd.ru/catalog/montazh-i-izmerenie-mednozhilnykh-kabeley-svyazi/pribory-i-instrumenty-dlya-raboty-s-elektricheskimi-kabelyami-svyazi/pribory_dlya_sks/",
-      "level": 3,
-      "parent_id": 296,
-      "picture": "https://ssd.ru/upload/resta.ssd/05c/xdvoi581ehwfvy50i5ucca7erstoyx0h/01.webp"
-    }
-  },
-  {
     "id": 479,
     "name": "Приборы электроизмерительные",
     "parent": 296,
@@ -4396,6 +4380,153 @@
         "char:Тип"
       ],
       "source": "microinform"
+    }
+  },
+  {
+    "id": 675,
+    "name": "Анализаторы потоков E1",
+    "parent": 682,
+    "external_id": "analizatory_potokov_e1",
+    "metadata": {
+      "id": 675,
+      "name": "Анализаторы потоков E1",
+      "sort": 500,
+      "code": "analizatory_potokov_e1",
+      "url": "",
+      "level": 3,
+      "parent_id": 682,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "concept"
+    }
+  },
+  {
+    "id": 676,
+    "name": "Измерительное оборудование для ADSL линий",
+    "parent": 682,
+    "external_id": "izmeritelnoe_oborudovanie_dlya_adsl_liniy",
+    "metadata": {
+      "id": 676,
+      "name": "Измерительное оборудование для ADSL линий",
+      "sort": 500,
+      "code": "izmeritelnoe_oborudovanie_dlya_adsl_liniy",
+      "url": "",
+      "level": 3,
+      "parent_id": 682,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "concept"
+    }
+  },
+  {
+    "id": 677,
+    "name": "Анализаторы Gigabit Ethernet",
+    "parent": 682,
+    "external_id": "analizatory_gigabit_ethernet",
+    "metadata": {
+      "id": 677,
+      "name": "Анализаторы Gigabit Ethernet",
+      "sort": 500,
+      "code": "analizatory_gigabit_ethernet",
+      "url": "",
+      "level": 3,
+      "parent_id": 682,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "concept"
+    }
+  },
+  {
+    "id": 678,
+    "name": "Анализаторы 10G Ethernet",
+    "parent": 682,
+    "external_id": "analizatory_10g_ethernet",
+    "metadata": {
+      "id": 678,
+      "name": "Анализаторы 10G Ethernet",
+      "sort": 500,
+      "code": "analizatory_10g_ethernet",
+      "url": "",
+      "level": 3,
+      "parent_id": 682,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "concept"
+    }
+  },
+  {
+    "id": 680,
+    "name": "Радиочастотные анализаторы",
+    "parent": 682,
+    "external_id": "radiochastotnye_analizatory",
+    "metadata": {
+      "id": 680,
+      "name": "Радиочастотные анализаторы",
+      "sort": 500,
+      "code": "radiochastotnye_analizatory",
+      "url": "",
+      "level": 3,
+      "parent_id": 682,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "concept"
+    }
+  },
+  {
+    "id": 682,
+    "name": "Измерительное оборудование для СКС",
+    "parent": 257,
+    "external_id": "izmeritelnoe_oborudovanie_dlya_sks",
+    "metadata": {
+      "id": 682,
+      "name": "Измерительное оборудование для СКС",
+      "sort": 450,
+      "code": "izmeritelnoe_oborudovanie_dlya_sks",
+      "url": "",
+      "level": 2,
+      "parent_id": 257,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "concept"
+    }
+  },
+  {
+    "id": 683,
+    "name": "Кабельные тестеры СКС",
+    "parent": 682,
+    "external_id": "kabelnye_testery_sks",
+    "metadata": {
+      "id": 683,
+      "name": "Кабельные тестеры СКС",
+      "sort": 400,
+      "code": "kabelnye_testery_sks",
+      "url": "",
+      "level": 3,
+      "parent_id": 682,
+      "picture": "",
+      "selected_filters": [
+        "brand",
+        "price"
+      ],
+      "source": "local"
     }
   }
 ]

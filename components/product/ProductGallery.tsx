@@ -31,15 +31,18 @@ export function ProductGallery({ localImages, externalImages = [], alt }: Produc
 
   return (
     <div className="space-y-3">
-      <div className="relative h-96 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <div className="relative h-96 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
         {isExternalUrl(current) ? (
           <img src={current} alt={alt} className="h-full w-full object-contain p-4" />
         ) : (
+          // Serve enrich JPEGs directly — Next `/_next/image` re-encodes at q=75 and
+          // poisoned caches made sharp 900×900 shots look like thumbnails.
           <Image
             src={current}
             alt={alt}
             fill
             priority
+            unoptimized
             sizes="(max-width: 1024px) 100vw, 60vw"
             className="object-contain p-4"
           />
@@ -52,19 +55,20 @@ export function ProductGallery({ localImages, externalImages = [], alt }: Produc
             <button
               key={`${src}-${idx}`}
               onClick={() => setActive(idx)}
-              className={`relative h-16 overflow-hidden rounded-lg border ${
+              className={`relative h-16 overflow-hidden rounded-lg border bg-slate-100 ${
                 idx === active ? "border-slate-700" : "border-slate-200"
               }`}
             >
               {isExternalUrl(src) ? (
-                <img src={src} alt={`${alt} ${idx + 1}`} className="h-full w-full object-cover" />
+                <img src={src} alt={`${alt} ${idx + 1}`} className="h-full w-full object-contain p-1" />
               ) : (
                 <Image
                   src={src}
                   alt={`${alt} ${idx + 1}`}
                   fill
+                  unoptimized
                   sizes="64px"
-                  className="object-cover"
+                  className="object-contain p-1"
                 />
               )}
             </button>

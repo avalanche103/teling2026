@@ -10,6 +10,7 @@ from catalog_utils import (
     build_export_pricing,
     ensure_product_overrides_table,
     extract_offer_fields,
+    is_blocked_export_brand,
     safe_json_loads,
 )
 
@@ -75,6 +76,8 @@ def export_products_csv():
         for row in rows:
             id_, name, sku, section_id, price, stock, vendor, section_name, raw_json, custom_name, custom_vendor, price_override = row
             raw = safe_json_loads(raw_json, {})
+            if is_blocked_export_brand(vendor, raw if isinstance(raw, dict) else {}, name):
+                continue
             offer_fields = extract_offer_fields(raw_json)
             pricing = build_export_pricing(price, offer_fields["distributor_discount"], price_override)
             effective = apply_product_overrides(name, pricing["price"], custom_name, vendor, custom_vendor, price_override)

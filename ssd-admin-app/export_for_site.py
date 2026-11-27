@@ -13,6 +13,7 @@ from catalog_utils import (
     build_export_pricing,
     ensure_product_overrides_table,
     extract_offer_fields,
+    is_blocked_export_brand,
     resolve_export_dir,
     safe_json_loads,
 )
@@ -105,6 +106,9 @@ def export_products():
             id_, name, sku, section_id, price, stock, vendor, metadata, raw_json, section_name, custom_name, custom_vendor, price_override = row
             if section_id in excluded:
                 continue
+            meta_obj = safe_json_loads(metadata, {})
+            if is_blocked_export_brand(vendor, meta_obj, name):
+                continue
             offer_fields = extract_offer_fields(raw_json)
             pricing = build_export_pricing(price, offer_fields["distributor_discount"], price_override)
             effective = apply_product_overrides(name, pricing["price"], custom_name, vendor, custom_vendor, price_override)
@@ -136,7 +140,7 @@ def export_products():
                 "vendor_overridden": effective["vendor_overridden"],
                 "price_overridden": pricing["price_overridden"],
                 **offer_fields,
-                "metadata": safe_json_loads(metadata, {}),
+                "metadata": meta_obj,
                 "raw_json": safe_json_loads(raw_json, {}),
             })
         with open(EXPORT_DIR / "products.json", "w", encoding="utf-8") as f:
@@ -182,6 +186,9 @@ def export_catalog_tree():
             id_, name, sku, section_id, price, stock, vendor, metadata, raw_json, custom_name, custom_vendor, price_override = row
             if section_id in all_excluded:
                 continue
+            meta_obj = safe_json_loads(metadata, {})
+            if is_blocked_export_brand(vendor, meta_obj, name):
+                continue
             if section_id in sections:
                 offer_fields = extract_offer_fields(raw_json)
                 pricing = build_export_pricing(price, offer_fields["distributor_discount"], price_override)
@@ -212,7 +219,7 @@ def export_catalog_tree():
                     "vendor_overridden": effective["vendor_overridden"],
                     "price_overridden": pricing["price_overridden"],
                     **offer_fields,
-                    "metadata": safe_json_loads(metadata, {}),
+                    "metadata": meta_obj,
                 })
 
         tree = []

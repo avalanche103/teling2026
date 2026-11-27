@@ -133,6 +133,25 @@ export default async function AdminDashboard() {
             </Link>
 
             <Link
+              href="/admin/concept"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-700 text-2xl">
+                  🔌
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-lg font-bold text-slate-900 group-hover:text-amber-700">
+                    Концепт технологии
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    KIWI прайс в $, курс и наценка; EXFO по запросу; публикация на сайт
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            <Link
               href="/admin/price-analysis"
               className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-400 hover:shadow-md"
             >

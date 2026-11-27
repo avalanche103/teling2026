@@ -34,6 +34,7 @@ export function AdminMobileNav({ user }: { user: AdminNavUser }) {
           { href: "/admin/content", label: "Контент" },
           { href: "/ssd", label: "SSD база" },
           { href: "/admin/microinform", label: "Микроинформ" },
+          { href: "/admin/concept", label: "Концепт" },
           { href: "/admin/price-analysis", label: "Анализ цен" },
         ] satisfies NavItem[])
       : []),

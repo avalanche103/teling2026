@@ -1,12 +1,14 @@
-import { renameSync, unlinkSync } from "fs";
+import { readFileSync, unlinkSync, writeFileSync, existsSync } from "fs";
 import path from "path";
 import sharp from "sharp";
 
-/** Near-white threshold for manufacturer packshots (D-Link / Origo). */
+/** Near-white threshold for manufacturer packshots (D-Link / Origo / KIWI). */
 const WHITE_THRESH = 248;
+/** Near-black studio backdrops (some EXFO / KIWI shop shots). */
+const BLACK_THRESH = 18;
 
 /**
- * Flood-fill near-white background from image edges → transparent alpha.
+ * Flood-fill near-white (and near-black) background from image edges → transparent alpha.
  * Matches SSD cutouts so catalog `bg-slate-100` shows through as gray.
  */
 export async function knockoutWhiteToTransparent(
@@ -14,7 +16,9 @@ export async function knockoutWhiteToTransparent(
   outputPath: string,
   thresh = WHITE_THRESH,
 ): Promise<{ clearedRatio: number }> {
-  const { data, info } = await sharp(inputPath)
+  // Always read into memory first — Windows locks files opened by sharp/Next.
+  const inputBuf = readFileSync(inputPath);
+  const { data, info } = await sharp(inputBuf)
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
@@ -34,15 +38,43 @@ export async function knockoutWhiteToTransparent(
 
   const idx = (x: number, y: number) => y * width + x;
 
-  const isNearWhite = (i: number) => {
+  let whiteEdge = 0;
+  let blackEdge = 0;
+  const sampleEdge = (x: number, y: number) => {
+    const o = idx(x, y) * 4;
+    const r = buf[o]!;
+    const g = buf[o + 1]!;
+    const b = buf[o + 2]!;
+    if (r >= thresh && g >= thresh && b >= thresh) whiteEdge += 1;
+    else if (r <= BLACK_THRESH && g <= BLACK_THRESH && b <= BLACK_THRESH) blackEdge += 1;
+  };
+  for (let x = 0; x < width; x += Math.max(1, Math.floor(width / 64))) {
+    sampleEdge(x, 0);
+    sampleEdge(x, height - 1);
+  }
+  for (let y = 0; y < height; y += Math.max(1, Math.floor(height / 64))) {
+    sampleEdge(0, y);
+    sampleEdge(width - 1, y);
+  }
+  const clearWhite = whiteEdge >= blackEdge;
+  const clearBlack = blackEdge > whiteEdge;
+
+  const isBg = (i: number) => {
     const o = i * 4;
-    return buf[o]! >= thresh && buf[o + 1]! >= thresh && buf[o + 2]! >= thresh;
+    const r = buf[o]!;
+    const g = buf[o + 1]!;
+    const b = buf[o + 2]!;
+    if (clearWhite && r >= thresh && g >= thresh && b >= thresh) return true;
+    if (clearBlack && r <= BLACK_THRESH && g <= BLACK_THRESH && b <= BLACK_THRESH) {
+      return true;
+    }
+    return false;
   };
 
   const enqueue = (x: number, y: number) => {
     const i = idx(x, y);
     if (visited[i]) return;
-    if (!isNearWhite(i)) return;
+    if (!isBg(i)) return;
     visited[i] = 1;
     queue[qt++] = i;
   };
@@ -73,9 +105,11 @@ export async function knockoutWhiteToTransparent(
     cleared += 1;
   }
 
-  await sharp(buf, { raw: { width, height, channels: 4 } })
+  const outBuf = await sharp(buf, { raw: { width, height, channels: 4 } })
     .webp({ quality: 90, alphaQuality: 100, effort: 4 })
-    .toFile(outputPath);
+    .toBuffer();
+
+  writeFileSync(outputPath, outBuf);
 
   return { clearedRatio: cleared / (width * height) };
 }
@@ -87,23 +121,22 @@ export async function processMicroinformPackshot(
   const dir = path.dirname(downloadedPath);
   const base = path.basename(downloadedPath, path.extname(downloadedPath));
   const webpPath = path.join(dir, `${base}.webp`);
-  const samePath = path.resolve(downloadedPath) === path.resolve(webpPath);
-  const targetPath = samePath
-    ? path.join(dir, `${base}.knockout.tmp.webp`)
-    : webpPath;
+  const tmpPath = path.join(dir, `${base}.knockout.tmp.webp`);
 
-  await knockoutWhiteToTransparent(downloadedPath, targetPath);
+  await knockoutWhiteToTransparent(downloadedPath, tmpPath);
+  const out = readFileSync(tmpPath);
+  try {
+    unlinkSync(tmpPath);
+  } catch {
+    /* ignore */
+  }
 
-  if (samePath) {
+  // Replace destination via write (avoids Windows rename locks).
+  writeFileSync(webpPath, out);
+
+  if (path.resolve(downloadedPath) !== path.resolve(webpPath)) {
     try {
-      unlinkSync(downloadedPath);
-    } catch {
-      /* ignore */
-    }
-    renameSync(targetPath, webpPath);
-  } else {
-    try {
-      unlinkSync(downloadedPath);
+      if (existsSync(downloadedPath)) unlinkSync(downloadedPath);
     } catch {
       /* ignore */
     }

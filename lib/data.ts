@@ -24,6 +24,7 @@ import {
   refineActiveNetworkChars,
 } from "./microinform/chars";
 import { inferUpsBrand } from "./microinform/ups-brand";
+import { isConceptOwnedBrand } from "./concept/blocked-brands";
 
 // ---- Module-level lazy caches ----
 
@@ -129,7 +130,18 @@ function getProductsRaw(): ProductRaw[] {
   if (!_products) {
     const ssdPath = path.join(process.cwd(), "data", "products.json");
     const microinformPath = path.join(process.cwd(), "data", "products.microinform.json");
-    const ssd = readJsonProductsFile(ssdPath, "products.json").map(normalizeSharedUpsProduct);
+    const conceptPath = path.join(process.cwd(), "data", "products.concept.json");
+    const ssd = readJsonProductsFile(ssdPath, "products.json")
+      .filter(
+        (product) =>
+          !isConceptOwnedBrand(product.vendor, product.metadata?.brand, product.name),
+      )
+      .map((product) =>
+        normalizeSharedUpsProduct({
+          ...product,
+          supplier: product.supplier || ("ssd" as const),
+        }),
+      );
     const microinform = readJsonProductsFile(microinformPath, "products.microinform.json").map(
       (product) =>
         normalizeSharedUpsProduct({
@@ -137,7 +149,14 @@ function getProductsRaw(): ProductRaw[] {
           supplier: product.supplier || ("microinform" as const),
         }),
     );
-    _products = [...ssd, ...microinform];
+    const concept = readJsonProductsFile(conceptPath, "products.concept.json").map(
+      (product) =>
+        normalizeSharedUpsProduct({
+          ...product,
+          supplier: product.supplier || ("concept" as const),
+        }),
+    );
+    _products = [...ssd, ...microinform, ...concept];
   }
   return _products;
 }
@@ -217,32 +236,32 @@ function getProductImageSources() {
 
 function getLocalImageUrls(sku: string): string[] {
   const extensions = ["webp", "jpg", "jpeg", "png"];
-  const found: string[] = [];
   const imageSources = getProductImageSources();
+  // Prefer cache-busted enrich names (`sku_g1.jpg`) over legacy `sku_1.jpg`.
+  const prefixes = [`${sku}_g`, `${sku}_`];
 
-  for (let i = 1; i <= 8; i += 1) {
-    let matched = false;
-    for (const ext of extensions) {
-      const filename = `${sku}_${i}.${ext}`;
-      for (const source of imageSources) {
-        const abs = path.join(/* turbopackIgnore: true */ source.dir, filename);
-        if (existsSync(abs)) {
-          found.push(`${source.publicBase}/${encodeURIComponent(filename)}`);
-          matched = true;
-          break;
+  for (const prefix of prefixes) {
+    const batch: string[] = [];
+    for (let i = 1; i <= 8; i += 1) {
+      let matched = false;
+      for (const ext of extensions) {
+        const filename = `${prefix}${i}.${ext}`;
+        for (const source of imageSources) {
+          const abs = path.join(/* turbopackIgnore: true */ source.dir, filename);
+          if (existsSync(abs)) {
+            batch.push(`${source.publicBase}/${encodeURIComponent(filename)}`);
+            matched = true;
+            break;
+          }
         }
+        if (matched) break;
       }
-
-      if (matched) break;
+      if (!matched && batch.length > 0) break;
     }
-
-    // Stop scanning when the sequence is broken after at least one image found.
-    if (!matched && found.length > 0) {
-      break;
-    }
+    if (batch.length > 0) return batch;
   }
 
-  return found;
+  return [];
 }
 
 function getProductsBySkuMap(): Map<string, ProductRaw> {

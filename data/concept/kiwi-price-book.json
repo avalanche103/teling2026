@@ -1,0 +1,1322 @@
+{
+  "fetchedAt": "2026-11-27T18:42:07.961Z",
+  "sourceName": "KIWI Pricelist 01Q26.xls",
+  "products": [
+    {
+      "articul": "KIWI-1130 Kit",
+      "name": "Анализатор потоков E1",
+      "usd": 4270,
+      "sectionTitle": "Анализаторы потоков E1",
+      "vendor": "KIWI",
+      "row": 4,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-2110A",
+      "name": "ADSL тестер с эмуляцией модема (Annex A). Включает цифровой мультиметр, эмуляцию модема, тестирование на уровне IP",
+      "usd": 300,
+      "sectionTitle": "Измерительное оборудование для ADSL линий",
+      "vendor": "KIWI",
+      "row": 7,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-2110B",
+      "name": "ADSL тестер с эмуляцией модема (Annex B). Включает цифровой мультиметр, эмуляцию модема, тестирование на уровне IP",
+      "usd": 400,
+      "sectionTitle": "Измерительное оборудование для ADSL линий",
+      "vendor": "KIWI",
+      "row": 8,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-2110-1",
+      "name": "Аккумуляторная батарея для KIWI-2110 (входит в стандартный комплект поставки)",
+      "usd": 50,
+      "sectionTitle": "Измерительное оборудование для ADSL линий",
+      "vendor": "KIWI",
+      "row": 9,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-2110-2",
+      "name": "Зарядное устройство в прикуриватель",
+      "usd": 100,
+      "sectionTitle": "Измерительное оборудование для ADSL линий",
+      "vendor": "KIWI",
+      "row": 10,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-2115",
+      "name": "ADSL/VDSL тестер с эмуляцией модема. Включает цифровой мультиметр, эмуляцию модема, тестирование на уровне IP",
+      "usd": 500,
+      "sectionTitle": "Измерительное оборудование для ADSL линий",
+      "vendor": "KIWI",
+      "row": 11,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-3130 KIT 1",
+      "name": "Анализатор потоков Gigabit Ethernet KIWI-3130 (1x10/100/1000 Base-T, 2xSFP), в комплекте с опциями:\n\nKIWI-3130.1 Тестирование по стандарту Ethersam Y.1564\nKIWI-3130.2 Тестирование по методике RFC 2544\nKIWI-3130.3 Мониторинг и генерация трафика\nKIWI-3130.4 Тестирование частоты появления битовых ошибок \nKIWI-3130.5 Интеллектуальный шлейф\nKIWI-3130.14 Одновременное тестирование на 2х портах\n\n*Оптические трансиверы заказываются отдельно",
+      "usd": 6820,
+      "sectionTitle": "Анализаторы Gigabit Ethernet",
+      "vendor": "KIWI",
+      "row": 14,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-3130 KIT 2",
+      "name": "Анализатор потоков Gigabit Ethernet KIWI-3130 (1x10/100/1000 Base-T, 2xSFP), в комплекте с опциями:\n\nKIWI-3130.1 Тестирование по стандарту Ethersam Y.1564\nKIWI-3130.2 Тестирование по методике RFC 2544\nKIWI-3130.3 Мониторинг и генерация трафика\nKIWI-3130.4 Тестирование частоты появления битовых ошибок \nKIWI-3130.5 Интеллектуальный шлейф\nKIWI-3130.6 Тестирование IP\nKIWI-3130.7 Поддержка оптических интерфейсов 100Мбит/с \nKIWI-3130.8 Тестирование по методике RFC6349\nKIWI-3130.9 Функции тестирования Ethernet OAM\nKIWI-3130.10 Тестирование кабеля\nKIWI-3130.11 Тестирование IPv6\nKIWI-3130.12 Тестирование в сквозном режиме\nKIWI-3130.13 Генерация и анализ потоков MPLS\nKIWI-3130.14 Одновременное тестирование на 2х портах\n\n*Оптические трансиверы заказываются отдельно",
+      "usd": 9500,
+      "sectionTitle": "Анализаторы Gigabit Ethernet",
+      "vendor": "KIWI",
+      "row": 15,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-3140 KIT 1",
+      "name": "Анализатор потоков 10G Ethernet KIWI-3140 (1x10/100/1000 Base-T, 2xSFP+), в комплекте с опциями:\n\nKIWI-3140.1 Тестирование по стандарту Ethersam Y.1564\nKIWI-3140.2 Тестирование по методике RFC 2544\nKIWI-3140.3 Мониторинг и генерация трафика\nKIWI-3140.4 Тестирование частоты появления битовых ошибок \nKIWI-3140.5 Интеллектуальный шлейф\nKIWI-3140.6 Тестирование IP\nKIWI-3130.14 Одновременное тестирование на 2х портах\n\n*Оптические трансиверы заказываются отдельно",
+      "usd": 13760,
+      "sectionTitle": "Анализаторы 10G Ethernet",
+      "vendor": "KIWI",
+      "row": 18,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-3140 KIT 2",
+      "name": "Анализатор потоков 10G Ethernet KIWI-3140 (1x10/100/1000 Base-T, 2xSFP+), в комплекте с опциями:\n\nKIWI-3140.1 Тестирование по стандарту Ethersam Y.1564\nKIWI-3140.2 Тестирование по методике RFC 2544\nKIWI-3140.3 Мониторинг и генерация трафика\nKIWI-3140.4 Тестирование частоты появления битовых ошибок \nKIWI-3140.5 Интеллектуальный шлейф\nKIWI-3140.6 Тестирование IP\nKIWI-3140.7 Поддержка оптических интерфейсов 100Мбит/с \nKIWI-3140.8 Тестирование по методике RFC6349\nKIWI-3140.9 Функции тестирования Ethernet OAM\nKIWI-3140.10 Тестирование кабеля\nKIWI-3140.11 Тестирование IPv6\nKIWI-3140.12 Тестирование в сквозном режиме\nKIWI-3140.13 Генерация и анализ потоков MPLS\nKIWI-3140.14 Одновременное тестирование на 2х портах\n\n\n*Оптические трансиверы заказываются отдельно",
+      "usd": 17390,
+      "sectionTitle": "Анализаторы 10G Ethernet",
+      "vendor": "KIWI",
+      "row": 19,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KW-SFP155-D3120L-D",
+      "name": "KIWI SFP модуль, 155 Mb, 20 км, TX/RX 1310 нм, LC, DDM",
+      "usd": 10,
+      "sectionTitle": "Модули SFP",
+      "vendor": "KIWI",
+      "row": 22,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KW-SFP1G-D3120L-D",
+      "name": "KIWI SFP модуль, 1.25 G, 20 км, TX/RX 1310 нм, LC, DDM",
+      "usd": 10,
+      "sectionTitle": "Модули SFP",
+      "vendor": "KIWI",
+      "row": 23,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KW-SFP1G-D5580L-D",
+      "name": "KIWI SFP модуль, 1.25 G, 80 км, TX/RX 1550 нм, LC, DDM",
+      "usd": 40,
+      "sectionTitle": "Модули SFP",
+      "vendor": "KIWI",
+      "row": 24,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KW-SFP1G-M8505L-D",
+      "name": "KIWI SFP модуль, 1.25 G, 550 м, TX/RX 850 нм, MM, LC, DDM",
+      "usd": 20,
+      "sectionTitle": "Модули SFP",
+      "vendor": "KIWI",
+      "row": 25,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KW-SFP+10G-D3120L-D",
+      "name": "KIWI SFP+ модуль, 10G, 20 км, TX/RX 1310 нм, LC, DDM",
+      "usd": 40,
+      "sectionTitle": "Модули SFP+",
+      "vendor": "KIWI",
+      "row": 27,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KW-SFP+10G-D5540L-D",
+      "name": "KIWI SFP+ модуль, 10G, 40 км, TX/RX 1550 нм, LC, DDM",
+      "usd": 200,
+      "sectionTitle": "Модули SFP+",
+      "vendor": "KIWI",
+      "row": 28,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KW-SFP+10G-D5580L-D",
+      "name": "KIWI SFP+ модуль, 10G, 80 км, TX/RX 1550 нм, LC, DDM",
+      "usd": 800,
+      "sectionTitle": "Модули SFP+",
+      "vendor": "KIWI",
+      "row": 29,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KW-SFP+10G-MM8503L-D",
+      "name": "KIWI SFP+ модуль, 10G, 300 м, TX/RX 850 нм, LC, DDM",
+      "usd": 40,
+      "sectionTitle": "Модули SFP+",
+      "vendor": "KIWI",
+      "row": 30,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4100",
+      "name": "Детектор повреждений оптического волокна, 650нм, 1 мВт",
+      "usd": 40,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 33,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4101",
+      "name": "Детектор повреждений оптического волокна, 650нм, 10 мВт",
+      "usd": 42,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 34,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4103",
+      "name": "Детектор повреждений оптического волокна, 650нм, 20 мВт",
+      "usd": 45,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 35,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4105",
+      "name": "Детектор повреждений оптического волокна, 650нм, 30 мВт",
+      "usd": 50,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 36,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4100-125",
+      "name": "Адаптер для детектора повреждений для разъемов LC (1,25 мм)",
+      "usd": 20,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 37,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4111",
+      "name": "Детектор повреждений оптического волокна, 650нм, 10 мВт, Powerbank, LED-фонарь",
+      "usd": 60,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 38,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4113",
+      "name": "Детектор повреждений оптического волокна, 650нм, 10 мВт, Powerbank, LED-фонарь",
+      "usd": 70,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 39,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4115",
+      "name": "Детектор повреждений оптического волокна, 650нм, 10 мВт, Powerbank, LED-фонарь",
+      "usd": 80,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 40,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4200",
+      "name": "Источник оптического сигнала (1310/1550нм)",
+      "usd": 245,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 41,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4201",
+      "name": "Источник оптического сигнала (850/1300нм)",
+      "usd": 325,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 42,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4210",
+      "name": "Источник оптического сигнала (1310/1490/1550нм)",
+      "usd": 405,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 43,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4211",
+      "name": "Источник оптического сигнала (1310/1550/1625нм)",
+      "usd": 760,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 44,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4220",
+      "name": "Источник оптического сигнала (цветной дисплей) (1310/1550нм)",
+      "usd": 355,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 45,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4221",
+      "name": "Источник оптического сигнала (цветной дисплей)  (850/1300нм)",
+      "usd": 460,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 46,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4222",
+      "name": "Источник оптического сигнала (цветной дисплей)  (1310/1490/1550нм)",
+      "usd": 460,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 47,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4223",
+      "name": "Источник оптического сигнала (цветной дисплей) (1310/1550/1625нм)",
+      "usd": 820,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 48,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4224",
+      "name": "Источник оптического сигнала (цветной дисплей)  (850/1300/1310/1550нм)",
+      "usd": 610,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 49,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4225",
+      "name": "Источник оптического сигнала (цветной дисплей)  (850/1300/1310/1490/1550нм)",
+      "usd": 915,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 50,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4226",
+      "name": "Источник оптического сигнала (цветной дисплей) (850/1300/1310/1550/1625нм)",
+      "usd": 1000,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 51,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4230",
+      "name": "Источник оптического сигнала (1310/1550нм)",
+      "usd": 165,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 52,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4231",
+      "name": "Источник оптического сигнала  (850/1300нм)",
+      "usd": 285,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 53,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4232",
+      "name": "Источник оптического сигнала  (1310/1490/1550нм)",
+      "usd": 285,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 54,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4233",
+      "name": "Источник оптического сигнала (1310/1550/1625нм)",
+      "usd": 610,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 55,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-423X-VFL",
+      "name": "Опция VFL для источников излучения 423Х",
+      "usd": 50,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 56,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4300",
+      "name": "Измеритель оптической мощности (От -70 до +10dB)",
+      "usd": 225,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 57,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4301",
+      "name": "Измеритель оптической мощности (От -50 до +20dB)",
+      "usd": 225,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 58,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-430X-AD",
+      "name": "Опция автоопредления длины волны для KIWI-430X",
+      "usd": 30,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 59,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4320",
+      "name": "Измеритель оптической мощности (цветной дисплей, авторежим) (От -70 до +10dB)",
+      "usd": 360,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 60,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4321",
+      "name": "Измеритель оптической мощности (цветной дисплей, авторежим) (От -50 до +20dB)",
+      "usd": 360,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 61,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-432X-VFL",
+      "name": "Опция VFL для измерителей мощности 432Х",
+      "usd": 50,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 62,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4330",
+      "name": "Измеритель оптической мощности (От -70 до +10dB)",
+      "usd": 125,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 63,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4331",
+      "name": "Измеритель оптической мощности (От -50 до +20dB)",
+      "usd": 125,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 64,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4400",
+      "name": "Оптический тестер (1310/1550нм)",
+      "usd": 410,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 65,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4401",
+      "name": "Оптический тестер (850/1310нм)",
+      "usd": 490,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 66,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4451",
+      "name": "Оптический тестер (1310/1550нм), встроенный VFL 10мВт",
+      "usd": 510,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 67,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4453",
+      "name": "Оптический тестер (1310/1490/1550нм), встроенный VFL 10мВт",
+      "usd": 660,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 68,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4455",
+      "name": "Оптический тестер (1310/1550/1650нм), встроенный VFL 10мВт",
+      "usd": 1000,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 69,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4510-ХХ",
+      "name": "PON Тестер",
+      "usd": 410,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 70,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4512-ХХ",
+      "name": "PON Тестер, встроенный VFL 10мВт",
+      "usd": 510,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 71,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4513-ХХ-ХХ",
+      "name": "PON Тестер, измеритель оптической мощности",
+      "usd": 610,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 72,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4550",
+      "name": "Измеритель мощности NG-PON",
+      "usd": 1220,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 73,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4600",
+      "name": "Идентификатор активного волокна",
+      "usd": 410,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 74,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4602",
+      "name": "Идентификатор активного волокна, встроенный детектор повреждений, 10 мВт",
+      "usd": 460,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 75,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4603",
+      "name": "Идентификатор активного волокна, встроенный измеритель мощности от -70 до +10 дБм",
+      "usd": 510,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 76,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4604",
+      "name": "Идентификатор активного волокна, встроенный измеритель мощности от -50 до +20 дБм",
+      "usd": 510,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 77,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4610",
+      "name": "Идентификатор активного волокна",
+      "usd": 965,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 78,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4611",
+      "name": "Идентификатор активного волокна, встроенный встроенный VFL 10мВт",
+      "usd": 1000,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 79,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4613",
+      "name": "Идентификатор активного волокна, оптический измеритель мощности",
+      "usd": 1200,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 80,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4620",
+      "name": "Идентификатор активного волокна",
+      "usd": 610,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 81,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4700",
+      "name": "Оптический телефон (комплект, 1310/1550, до 110км)",
+      "usd": 1480,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 82,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4820-200",
+      "name": "Оптический микроскоп ручной, увеличение 200х",
+      "usd": 150,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 83,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4820-400",
+      "name": "Оптический микроскоп ручной, увеличение 400х",
+      "usd": 200,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 84,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4900-40",
+      "name": "Цифровой оптический аттенюатор (40 дБ)",
+      "usd": 1020,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 85,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4900",
+      "name": "Цифровой оптический аттенюатор (60 дБ)",
+      "usd": 1525,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 86,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4900-80",
+      "name": "Цифровой оптический аттенюатор (80дБ)",
+      "usd": 2000,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 87,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4900-PC",
+      "name": "Опция подключения оптического аттенюатора к ПК",
+      "usd": 100,
+      "sectionTitle": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "row": 88,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4350",
+      "name": "Измеритель оптической мощности (От -70 до +10dB), встроенный VFL до 10км",
+      "usd": 250,
+      "sectionTitle": "Универсальные тестеры оптика+витая пара",
+      "vendor": "KIWI",
+      "row": 91,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4350N",
+      "name": "Измеритель оптической мощности (От -70 до +10dB), встроенный VFL до 10км, Net Test",
+      "usd": 350,
+      "sectionTitle": "Универсальные тестеры оптика+витая пара",
+      "vendor": "KIWI",
+      "row": 92,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4351",
+      "name": "Измеритель оптической мощности (От -50 до +26dB), встроенный VFL до 10км",
+      "usd": 250,
+      "sectionTitle": "Универсальные тестеры оптика+витая пара",
+      "vendor": "KIWI",
+      "row": 93,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4351N",
+      "name": "Измеритель оптической мощности (От -50 до +26dB), встроенный VFL до 10км, Net Test",
+      "usd": 350,
+      "sectionTitle": "Универсальные тестеры оптика+витая пара",
+      "vendor": "KIWI",
+      "row": 94,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-435X-SC",
+      "name": "Сменный адаптер SC для серии KIWI-4350",
+      "usd": 5,
+      "sectionTitle": "Универсальные тестеры оптика+витая пара",
+      "vendor": "KIWI",
+      "row": 95,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-435X-ST",
+      "name": "Сменный адаптер SC для серии KIWI-4350",
+      "usd": 5,
+      "sectionTitle": "Универсальные тестеры оптика+витая пара",
+      "vendor": "KIWI",
+      "row": 96,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4360",
+      "name": "Измеритель оптической мощности (От -70 до +10dB), встроенный VFL до 10км, Net Test",
+      "usd": 80,
+      "sectionTitle": "Универсальные тестеры оптика+витая пара",
+      "vendor": "KIWI",
+      "row": 97,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-4361",
+      "name": "Измеритель оптической мощности (От -50 до +26dB), встроенный VFL до 10км, Net Test",
+      "usd": 80,
+      "sectionTitle": "Универсальные тестеры оптика+витая пара",
+      "vendor": "KIWI",
+      "row": 98,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7212",
+      "name": "Оптический рефлектометр (SM. 1310/1550, 30/28dB)",
+      "usd": 5500,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 101,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7222",
+      "name": "Оптический рефлектометр (SM. 1310/1550/1625 (с фильтром), 36/34/34dB)",
+      "usd": 9990,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 102,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7231",
+      "name": "Оптический рефлектометр (SM. 1310/1550, 39/37dB)",
+      "usd": 9740,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 103,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7232",
+      "name": "Оптический рефлектометр (SM. 1310/1550/1625 (с фильтром), 39/37/37dB)",
+      "usd": 12525,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 104,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "VFL",
+      "name": "Опция для рефлектометра 72ХХ: визуальный детектор повреждений",
+      "usd": 565,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 105,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "VPM2X-XX",
+      "name": "Опция для рефлектометра 72ХХ: детектор повреждений + измеритель мощности",
+      "usd": 1380,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 106,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "RF",
+      "name": "Опция для рефлектометра 72ХХ: Беспроводные интерфейсы (WiFi+Bluetooth)",
+      "usd": 360,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 107,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7300",
+      "name": "Оптический рефлектометр (SM. 1310/1550нм, 22/20dB, VFL+измеритель мощности)",
+      "usd": 800,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 108,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7310",
+      "name": "Оптический рефлектометр (SM. 1310/1550нм, 22/20dB, VFL+OPM, кабельный тестер, фонарь)",
+      "usd": 1000,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 109,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7311",
+      "name": "Оптический рефлектометр (MM. 1300/850нм, 20/24dB, VFL+OPM, кабельный тестер, фонарь)",
+      "usd": 1800,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 110,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7320",
+      "name": "Оптический рефлектометр (SM. 1310/1550нм, 32/30dB, VFL+OPM, кабельный тестер, фонарь)",
+      "usd": 1400,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 111,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-73XX-FC",
+      "name": "Адаптер FC для оптических рефлектометров KIWI-73XX",
+      "usd": 50,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 112,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-73XX-SC",
+      "name": "Адаптер SC для оптических рефлектометров KIWI-73XX",
+      "usd": 50,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 113,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7322",
+      "name": "Оптический рефлектометр (SM. 1310/1550/1625нм, с фильтром, 32/30/30dB, VFL+OPM, кабельный тестер, фонарь)",
+      "usd": 2200,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 114,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-OT520D",
+      "name": "Оптический рефлектометр (SM. 1310/1550нм, 24/22dB)",
+      "usd": 450,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 115,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7431",
+      "name": "Оптический рефлектометр, 1310/1550 нм, 38/37 дБ",
+      "usd": 3450,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 116,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7451",
+      "name": "Оптический рефлектометр, 1310/1550 нм, 45/43 дБ",
+      "usd": 5050,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 117,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7461",
+      "name": "Оптический рефлектометр, 1310/1550 нм, 50/48 дБ",
+      "usd": 8450,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 118,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7442",
+      "name": "Оптический рефлектометр, 1310/1550/1625 нм (с фильтром), 43/41/40 дБ",
+      "usd": 7000,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 119,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7444",
+      "name": "Оптический рефлектометр, 1310/1550/1650 нм (с фильтром), 42/40/39 дБ",
+      "usd": 7000,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 120,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-7430",
+      "name": "Оптический рефлектометр, 850/1300/1310/1550 нм, 23/28/38/36 дБ",
+      "usd": 5700,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 121,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-74XX-FC",
+      "name": "Адаптер FC для оптических рефлектометров KIWI-74XX",
+      "usd": 80,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 122,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-74XX-SC",
+      "name": "Адаптер SC для оптических рефлектометров KIWI-74XX",
+      "usd": 80,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 123,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-74XX-LC",
+      "name": "Адаптер LC для оптических рефлектометров KIWI-74XX",
+      "usd": 120,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 124,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "LS",
+      "name": "Опция для рефлектометра 74XX: Источник излучения (через порт рефлектометра)",
+      "usd": 200,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 125,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "PM",
+      "name": "Опция для рефлектометра 74XX: Измеритель мощности",
+      "usd": 200,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 126,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "FP",
+      "name": "Опция для рефлектометра 74XX: Видеомикроскоп",
+      "usd": 1350,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 127,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "LM",
+      "name": "Опция для рефлектометра 74XX: Функция интеллектуального анализа линии",
+      "usd": 1200,
+      "sectionTitle": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "row": 128,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-9100",
+      "name": "Анализатор антенно-фидерных устройств (АФУ) 1МГц-4ГГц",
+      "usd": 3700,
+      "sectionTitle": "Радиочастотные анализаторы",
+      "vendor": "KIWI",
+      "row": 131,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-9100A",
+      "name": "Анализатор антенно-фидерных устройств (АФУ) 1МГц-6ГГц + Анализатор спектра 0,3-4ГГц",
+      "usd": 6400,
+      "sectionTitle": "Радиочастотные анализаторы",
+      "vendor": "KIWI",
+      "row": 132,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-9100B",
+      "name": "Анализатор антенно-фидерных устройств (АФУ) 1МГц-6ГГц",
+      "usd": 4400,
+      "sectionTitle": "Радиочастотные анализаторы",
+      "vendor": "KIWI",
+      "row": 133,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-9200",
+      "name": "Анализатор спектра 9кГц-6ГГц",
+      "usd": 9650,
+      "sectionTitle": "Радиочастотные анализаторы",
+      "vendor": "KIWI",
+      "row": 134,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6190",
+      "name": "Оптический сварочный аппарат KIWI-6190 (комплект)",
+      "usd": 1600,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 138,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6195",
+      "name": "Оптический сварочный аппарат KIWI-6195 (комплект)",
+      "usd": 1800,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 139,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6500",
+      "name": "Оптический сварочный аппарат KIWI-6500 (комплект)",
+      "usd": 2500,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 140,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6550",
+      "name": "Оптический сварочный аппарат KIWI-6550 (комплект)",
+      "usd": 2800,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 141,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6555-2",
+      "name": "Оптический сварочный аппарат KIWI-6555 (комплект, 2 нагревателя)",
+      "usd": 4500,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 142,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6555-1",
+      "name": "Оптический сварочный аппарат KIWI-6555 (комплект, 1 нагреватель)",
+      "usd": 4000,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 143,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6201",
+      "name": "Электроды для сварок KIWI 6100",
+      "usd": 50,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 144,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6202",
+      "name": "Электроды для сварок KIWI-6130, KIWI-6170, KIWI-6180, KIWI-6190, KIWI-6195, KIWI-6500",
+      "usd": 50,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 145,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6204",
+      "name": "Электроды для сварок KIWI-6400",
+      "usd": 50,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 146,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6231",
+      "name": "Скалыватель оптический (для KIWI-6100/6130/6170/6180/6190/6195)",
+      "usd": 300,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 147,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6231-VFL",
+      "name": "Опция VFL для скалывателя KIWI-6231",
+      "usd": 50,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 148,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6330",
+      "name": "Скалыватель оптический c автоматическим контейнером для сбора осколков",
+      "usd": 350,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 149,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6240",
+      "name": "Скалыватель оптический c автоматическим поворотом лезвия",
+      "usd": 400,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 150,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6321",
+      "name": "Лезвие для скалывателя KIWI-6231/KIWI-6330",
+      "usd": 60,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 151,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6240-BL",
+      "name": "Лезвие для скалывателя KIWI-6240",
+      "usd": 80,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 152,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6195-1",
+      "name": "Источник питания для KIWI-6190/KIWI-6195/KIWI-6500",
+      "usd": 160,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 153,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6195-2",
+      "name": "Батарея для KIWI-6190/KIWI-6195/KIWI-6500",
+      "usd": 200,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 154,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6190-BAG",
+      "name": "Сумка-рабочий столик для сварочных аппаратов KIWI",
+      "usd": 50,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 155,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6550-BTR",
+      "name": "Батарея для KIWI-6550",
+      "usd": 200,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 156,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6550-ADC",
+      "name": "Источник питания для KIWI-6550",
+      "usd": 160,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 157,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-6555-BTR",
+      "name": "Батарея для KIWI-6555",
+      "usd": 200,
+      "sectionTitle": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "row": 158,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-KIT-STD",
+      "name": "Комплект для монтажа оптики (25 предметов), аналогичен НИМ-25",
+      "usd": 550,
+      "sectionTitle": "Инструменты для монтажа ВОЛС",
+      "vendor": "KIWI",
+      "row": 161,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-KIT-FTTH",
+      "name": "Мини-комплект монтажника для сетей FTTH",
+      "usd": 250,
+      "sectionTitle": "Инструменты для монтажа ВОЛС",
+      "vendor": "KIWI",
+      "row": 162,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-KIT-CLN",
+      "name": "Набор для очистки оптических коннекторов и адаптеров",
+      "usd": 200,
+      "sectionTitle": "Инструменты для монтажа ВОЛС",
+      "vendor": "KIWI",
+      "row": 163,
+      "descriptionRaw": ""
+    },
+    {
+      "articul": "KIWI-СS3",
+      "name": "Стриппер KIWI-CS3 для удаления буферной оболочки 250 мкм, 900 мкм и 3 мм",
+      "usd": 20,
+      "sectionTitle": "Инструменты для монтажа ВОЛС",
+      "vendor": "KIWI",
+      "row": 164,
+      "descriptionRaw": ""
+    }
+  ],
+  "sections": [
+    {
+      "title": "Анализаторы потоков E1",
+      "vendor": "KIWI",
+      "productCount": 1
+    },
+    {
+      "title": "Измерительное оборудование для ADSL линий",
+      "vendor": "KIWI",
+      "productCount": 5
+    },
+    {
+      "title": "Анализаторы Gigabit Ethernet",
+      "vendor": "KIWI",
+      "productCount": 2
+    },
+    {
+      "title": "Анализаторы 10G Ethernet",
+      "vendor": "KIWI",
+      "productCount": 2
+    },
+    {
+      "title": "Модули SFP",
+      "vendor": "KIWI",
+      "productCount": 4
+    },
+    {
+      "title": "Модули SFP+",
+      "vendor": "KIWI",
+      "productCount": 4
+    },
+    {
+      "title": "Оптическое измерительное оборудование",
+      "vendor": "KIWI",
+      "productCount": 56
+    },
+    {
+      "title": "Универсальные тестеры оптика+витая пара",
+      "vendor": "KIWI",
+      "productCount": 8
+    },
+    {
+      "title": "Оптические рефлектометры",
+      "vendor": "KIWI",
+      "productCount": 28
+    },
+    {
+      "title": "Радиочастотные анализаторы",
+      "vendor": "KIWI",
+      "productCount": 4
+    },
+    {
+      "title": "Оптические сварки и акксессуары",
+      "vendor": "KIWI",
+      "productCount": 21
+    },
+    {
+      "title": "Инструменты для монтажа ВОЛС",
+      "vendor": "KIWI",
+      "productCount": 4
+    }
+  ],
+  "brands": [
+    "KIWI"
+  ]
+}
